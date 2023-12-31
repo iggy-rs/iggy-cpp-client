@@ -1,0 +1,27 @@
+{
+	"name": "Iggy C++ Client",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers-contrib/features/act:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"GitHub.vscode-pull-request-github",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"eamodio.gitlens",
+				"github.copilot",
+				"github.vscode-github-actions",
+				"mads-hartmann.bash-ide-vscode",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.cpptools-extension-pack",
+				"stuart.unique-window-colors",
+				"styled-components.vscode-styled-components",
+				"vscode-icons-team.vscode-icons"
+			]		
+		}
+	}
+}
