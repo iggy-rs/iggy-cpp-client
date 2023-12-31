@@ -1,0 +1,39 @@
+name: ci
+
+env:
+  CTEST_NO_TESTS_ACTION: error
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
+
+on:
+  push:
+    paths:
+      - "**.c"
+      - "**.cpp"
+      - "**.h"
+      - "**/CMakeLists.txt"
+      - "**.cmake"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  core:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, debian-latest, macos-latest]
+        shared: [true, false]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Configure
+        uses: threeal/cmake-action@v1.3.0
+        with:
+          generator: Ninja
+          c-compiler: clang
+          cxx-compiler: clang++
+      - name: Build
+        run: cmake --build build
+      - name: Unit Tests
+        run: build/iggy_cpp_test
+    
