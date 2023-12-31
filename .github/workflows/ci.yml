@@ -18,8 +18,7 @@ jobs:
   core:
     strategy:
       matrix:
-        os: [ubuntu-latest, debian-latest, macos-latest]
-        shared: [true, false]
+        os: [ubuntu-20.04, ubuntu-22.04, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
