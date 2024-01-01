@@ -22,8 +22,24 @@ RUN vcpkg integrate install \
     && vcpkg install argh \
     && vcpkg install benchmark \
     && vcpkg install libuv \
-    && vcpkg install lz4 \
-    && vcpkg install ngtcp2 \
-    && vcpkg install simdjson \
+    && vcpkg install nlohmann-json \
     && vcpkg install spdlog \
+    && vcpkg install uwebsockets \
     && vcpkg install wolfssl
+
+# Options for QUIC
+# ----------------
+# lsquic (liblsquic in vcpkg) requires BoringSSL, which is quite large
+# ngtcp2 (unofficial-ngtcp2 in vcpkg) is not built with SSL, but supports WolfSSL
+# msquic requires OpenSSL, very heavy, and is quite complex to integrate
+#
+# RECOMMEND: custom build of ngtcp2 with WolfSSL
+
+# Options for HTTP/HTTPS
+# ----------------------
+# cpp-httplib requires OpenSSL and is sync-only, but has a very easy-to-use API
+# libwebsockets works with OpenSSL and mbedTLS and is async, but is much lower-level
+# tlsuv works with OpenSSL and mbedTLS (with extensibility) *and* is async & easy to use, but under development and 
+# uWebSockets works with OpenSSL, WolfSSL and libuv, is async, header-only and has a nice API
+#
+# RECOMMEND: uWebSockets with nlohmann-json; for high-performance reads, simdjson

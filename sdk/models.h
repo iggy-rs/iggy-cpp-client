@@ -128,5 +128,12 @@ public:
     /// @brief Helper that reads the Stats object from a stream.
     friend std::istream& operator>>(std::istream& is, Stats& stats);
 };
+
+/// @brief Helper that writes the Stats object into a stream.
+std::ostream& operator<<(std::ostream& os, const Stats& stats);
+
+/// @brief Helper that reads the Stats object from a stream.
+std::istream& operator>>(std::istream& is, Stats& stats);
+
 }  // namespace models
 }  // namespace iggy
