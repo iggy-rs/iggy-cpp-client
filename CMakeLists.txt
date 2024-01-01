@@ -20,7 +20,7 @@ FetchContent_MakeAvailable(googletest)
 add_library(
   iggy
 
-  sdk/message.cc
+  sdk/models.cc
 )
 
 # set up GoogleTest
@@ -29,7 +29,7 @@ enable_testing()
 add_executable(
   iggy_cpp_test
 
-  tests/message_test.cc
+  tests/models_test.cc
 )
 target_link_libraries(
   iggy_cpp_test
