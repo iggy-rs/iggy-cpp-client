@@ -22,6 +22,18 @@ add_library(
   sdk/models.cc
 )
 
+add_executable(
+  iggy_cmd
+
+  sdk/iggy_cmd.cc
+)
+target_include_directories(iggy_cmd PRIVATE ${argh_INCLUDE_DIR})
+target_link_libraries(
+  iggy_cmd
+
+  iggy
+)
+
 # set up GoogleTest
 include(FetchContent)
 FetchContent_Declare(

@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "argh",
+    "benchmark",
+    "fmt",
+    "libuv",
+    "nlohmann-json",
+    "spdlog",
+    "uwebsockets",
+    "wolfssl"
+  ]
+}

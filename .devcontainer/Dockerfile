@@ -17,16 +17,6 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 RUN sudo apt-get update \
     && sudo apt-get install clang-format clang-tidy doxygen graphviz -y
 
-# Install C++ dependencies using vcpkg
-RUN vcpkg integrate install \
-    && vcpkg install argh \
-    && vcpkg install benchmark \
-    && vcpkg install libuv \
-    && vcpkg install nlohmann-json \
-    && vcpkg install spdlog \
-    && vcpkg install uwebsockets \
-    && vcpkg install wolfssl
-
 # Options for QUIC
 # ----------------
 # lsquic (liblsquic in vcpkg) requires BoringSSL, which is quite large
