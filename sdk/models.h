@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sys/types.h>
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -11,16 +12,16 @@ namespace models {
 typedef float percent_t;
 
 /// @brief Mapping for absolute times and time durations; currently in seconds.
-typedef unsigned long long time_val_t;
+typedef uint64_t time_val_t;
 
 /// @brief Mapping for values that measure byte counts.
-typedef unsigned long long byte_cnt_t;
+typedef uint64_t byte_cnt_t;
 
 /// @brief Mapping for values that measure object counts.
-typedef unsigned int obj_cnt_t;
+typedef uint32_t obj_cnt_t;
 
 /// @brief Mapping for values that measure (potentially very large) message counts.
-typedef unsigned long long msg_cnt_t;
+typedef uint64_t msg_cnt_t;
 
 /**
  * @class Stats

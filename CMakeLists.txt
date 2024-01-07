@@ -15,7 +15,6 @@ find_package(argh CONFIG REQUIRED)
 find_package(benchmark CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(yyjson CONFIG REQUIRED)
 
 add_library(
   iggy
