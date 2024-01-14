@@ -19,7 +19,7 @@ jobs:
   core:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest, macos-latest]
+        os: [ubuntu-20.04, ubuntu-22.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -32,6 +32,10 @@ jobs:
           generator: Ninja
           c-compiler: clang
           cxx-compiler: clang++
+      - name: Install Depedencies
+        run: |
+          vcpkg integrate install
+          vcpkg install
       - name: Build
         run: cmake --build build
       - name: Unit Tests
