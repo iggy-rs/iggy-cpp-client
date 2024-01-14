@@ -36,7 +36,7 @@ jobs:
           generator: Ninja
           c-compiler: clang
           cxx-compiler: clang++
-          options: -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+          options: CMAKE_TOOLCHAIN_FILE='/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake'
       - name: Build
         run: cmake --build build
       - name: Unit Tests
