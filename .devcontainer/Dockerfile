@@ -2,9 +2,6 @@ FROM mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04
 
 ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="3.27.2"
 
-# set up home for vcpkg
-ENV VCPKG_ROOT /usr/vcpkg
-
 # Optionally install the cmake for vcpkg
 COPY ./reinstall-cmake.sh /tmp/
 
@@ -15,7 +12,7 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 # install basic tools
 RUN sudo apt-get update \
-    && sudo apt-get install clang-format clang-tidy doxygen graphviz -y
+    && sudo apt-get install clang-format clang-tidy doxygen iputils-ping graphviz -y
 
 # Options for QUIC
 # ----------------

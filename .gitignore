@@ -33,3 +33,6 @@
 
 # CMake
 build/
+
+# E2E test
+.e2e_deploy/
