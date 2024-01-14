@@ -10,7 +10,6 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
 endif()
 
 # set up library dependencies
-include(/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake)
 find_package(argh CONFIG REQUIRED)
 find_package(benchmark CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
