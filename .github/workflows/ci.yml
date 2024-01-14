@@ -37,7 +37,7 @@ jobs:
           c-compiler: clang
           cxx-compiler: clang++
       - name: Build
-        run: cmake --build build
+        run: cmake --build build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
       - name: Unit Tests
         run: build/iggy_cpp_test
     
