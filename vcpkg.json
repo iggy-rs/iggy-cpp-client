@@ -3,6 +3,7 @@
     "argh",
     "benchmark",
     "fmt",
+    "icu",
     "libuv",
     "nlohmann-json",
     "spdlog",

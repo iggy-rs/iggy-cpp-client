@@ -58,6 +58,7 @@ private:
     std::string kernel_version;
 
 public:
+    // TODO: when we add the full constructor ensure convertToUTF8() called on all strings
     Stats() = default;
 
     /// @brief Get the server process ID (PID)

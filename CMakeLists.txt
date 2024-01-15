@@ -19,6 +19,7 @@ add_library(
   iggy
 
   sdk/models.cc
+  sdk/utils.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 
