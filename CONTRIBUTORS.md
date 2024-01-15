@@ -16,6 +16,8 @@ Our continuous integration uses GitHub Actions, and sometimes it's more convenie
 act -P ubuntu-20.04=catthehacker/ubuntu:full-20.04 -P ubuntu-22.04=catthehacker/ubuntu:full-22.04
 ```
 
+If you want to do a quicker test, add `--matrix=os:ubuntu-22.04` to run just a single matrix variant.
+
 Once it's working well locally, you can push and the CI job will automatically run the full matrix for you.
 
 ## Resources
