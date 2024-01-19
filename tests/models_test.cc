@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include "../sdk/message.h"
+#include "../sdk/models.h"
 
-TEST(MessageTest, DefaultConstructor) {
+TEST(ModelsTest, DefaultConstructor) {
     // Create a Message object using the default constructor
-    Message message;
+    iggy::models::Stats stats;
 
     // Perform assertions to verify the expected behavior
     // For example, you can check if the message object is not null
-    ASSERT_NE(nullptr, &message);
+    ASSERT_NE(nullptr, &stats);
 }
