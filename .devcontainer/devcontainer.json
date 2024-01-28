@@ -24,11 +24,13 @@
 				"github.copilot",
 				"github.vscode-github-actions",
 				"mads-hartmann.bash-ide-vscode",
+				"matepek.vscode-catch2-test-adapter",
 				"ms-azuretools.vscode-docker",
 				"ms-vscode.cpptools-extension-pack",
 				"stuart.unique-window-colors",
 				"styled-components.vscode-styled-components",
 				"vscode-icons-team.vscode-icons"
+				
 			]		
 		}
 	}
