@@ -2,8 +2,10 @@
   "dependencies": [
     "argh",
     "benchmark",
+    "cpptoml",
     "fmt",
     "icu",
+    "libsodium",
     "libuv",
     "nlohmann-json",
     "spdlog",

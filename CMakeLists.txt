@@ -12,12 +12,15 @@ endif()
 # set up library dependencies
 find_package(argh CONFIG REQUIRED)
 find_package(benchmark CONFIG REQUIRED)
+find_package(cpptoml CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(unofficial-sodium CONFIG REQUIRED)
 
 add_library(
   iggy
 
+  sdk/cli/cli.cc
   sdk/models.cc
   sdk/utils.cc
 )
