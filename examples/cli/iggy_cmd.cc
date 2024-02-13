@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "argh.h"
-#include "cli/cli.h"
+#include "cli.h"
 #include "spdlog/spdlog.h"
 
 int main(int, char* argv[]) {
@@ -12,7 +12,7 @@ int main(int, char* argv[]) {
         spdlog::set_level(spdlog::level::debug);
     }
 
-    if (cmdl[iggy::cli::HELP_FLAGS] || (cmdl.pos_args().size() != 2)) {
+    if (cmdl[iggy::cli::HELP_FLAGS] || (cmdl.pos_args().size() != 3)) {
         iggy::cli::print_usage(cmdl[0]);
         return EXIT_SUCCESS;
     }

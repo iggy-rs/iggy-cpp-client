@@ -20,7 +20,6 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 add_library(
   iggy
 
-  sdk/cli/cli.cc
   sdk/models.cc
   sdk/utils.cc
 )
@@ -29,7 +28,8 @@ target_compile_features(iggy PRIVATE cxx_std_17)
 add_executable(
   iggy_cmd
 
-  sdk/iggy_cmd.cc
+  examples/cli/cli.cc
+  examples/cli/iggy_cmd.cc
 )
 target_include_directories(iggy_cmd PRIVATE ${argh_INCLUDE_DIR})
 target_link_libraries(
