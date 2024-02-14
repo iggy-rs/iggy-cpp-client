@@ -55,7 +55,7 @@ class SerializedCommand {
 private:
     uint32_t length;
     CommandCode command_code;
-    std::vector<char> payload;
+    std::vector<unsigned char> payload;
 
 public:
     SerializedCommand() = default;
@@ -64,11 +64,24 @@ public:
 namespace shared {
 enum ConsumerKind { CONSUMER = 1, CONSUMER_GROUP = 2 };
 
-class Consumer {};
+class Consumer {
+private:
+    ConsumerKind kind;
+    uint32_t id;
+public:
+    Consumer(ConsumerKind kind, uint32_t id);
+    ConsumerKind getKind();
+    uint32_t getId();
+};
 
 enum IdKind { NUMERIC = 1, STRING = 2 };
 
-class Identifier {};
+class Identifier {
+private:
+    IdKind kind;
+    uint8_t length;
+    std::vector<unsigned char> value;
+};
 
 class PolledMessages {};
 

@@ -9,6 +9,9 @@ if(BUILD_TESTS)
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
 
+  # for E2E tests, controlling Docker containers
+  find_package(reproc++ CONFIG REQUIRED)
+
   # set up GoogleTest
   enable_testing()
 
@@ -22,6 +25,21 @@ if(BUILD_TESTS)
 
     iggy
     GTest::gtest_main
+    reproc++
+  )
+
+  add_executable(
+    iggy_e2e_test
+
+    e2e_testutils.cc
+    ping_cmd_test.cc
+  )
+  target_link_libraries(
+    iggy_e2e_test
+
+    iggy
+    GTest::gtest_main
+    reproc++
   )
 
   include(GoogleTest)
