@@ -11,7 +11,9 @@ namespace iggy {
  * @brief All related types for the binary format used in Iggy's QUIC transport.
  *
  * The definitions \htmlonly <a href="https://docs.iggy.rs/specification/binary">binary specification</a> \endhtmlonly
- * which should be taken as canonical; E2E conformance tests will be used to ensure client stays in line.
+ * which should be taken as canonical; E2E conformance tests will be used to ensure client stays in line. I am not sure
+ * about this design yet; ideally I want minimal duplication between the binary and JSON variations, and so may
+ * introduce format-specific serializers. This is less natural in C++ than Rust.
  */
 namespace binary {
 

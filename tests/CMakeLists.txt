@@ -26,6 +26,7 @@ if(BUILD_TESTS)
     iggy
     GTest::gtest_main
     reproc++
+    unofficial-sodium::sodium
   )
 
   add_executable(
@@ -40,6 +41,7 @@ if(BUILD_TESTS)
     iggy
     GTest::gtest_main
     reproc++
+    unofficial-sodium::sodium
   )
 
   include(GoogleTest)

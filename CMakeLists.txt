@@ -20,10 +20,12 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 add_library(
   iggy
 
+  sdk/client.cc
   sdk/models.cc
   sdk/utils.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
+target_include_directories(iggy PRIVATE ${unofficial-sodium_DIR}/../../include)
 
 add_executable(
   iggy_cmd
@@ -36,6 +38,7 @@ target_link_libraries(
   iggy_cmd
 
   iggy
+  unofficial-sodium::sodium
 )
 
 if (BUILD_TESTS)
