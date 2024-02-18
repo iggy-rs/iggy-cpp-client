@@ -92,9 +92,6 @@ struct Options {
         if (hostname.empty()) {
             throw std::invalid_argument("Hostname cannot be empty");
         }
-        if (port < 0 || port > 65535) {
-            throw std::invalid_argument("Port must be between 0 and 65535");
-        }
     }
 };
 
