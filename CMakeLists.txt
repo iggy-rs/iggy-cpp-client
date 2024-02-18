@@ -10,7 +10,6 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
 endif()
 
 # set up library dependencies
-find_package(argh CONFIG REQUIRED)
 find_package(benchmark CONFIG REQUIRED)
 find_package(cpptoml CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
@@ -26,20 +25,6 @@ add_library(
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE ${unofficial-sodium_DIR}/../../include)
-
-add_executable(
-  iggy_cmd
-
-  examples/cli/cli.cc
-  examples/cli/iggy_cmd.cc
-)
-target_include_directories(iggy_cmd PRIVATE ${argh_INCLUDE_DIR})
-target_link_libraries(
-  iggy_cmd
-
-  iggy
-  unofficial-sodium::sodium
-)
 
 if (BUILD_TESTS)
   add_subdirectory(tests)

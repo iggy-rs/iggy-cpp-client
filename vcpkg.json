@@ -1,6 +1,5 @@
 {
   "dependencies": [
-    "argh",
     "benchmark",
     "cpptoml",
     "fmt",

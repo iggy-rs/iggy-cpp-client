@@ -1,33 +1,149 @@
 #pragma once
 
-#include <sys/types.h>
-#include <cstdint>
-#include <iostream>
 #include <string>
+#include <unordered_map>
+#include <vector>
+#include "types.h"
 
 namespace iggy {
 namespace model {
-
-/// @brief Mapping for fractional values between 0 and 1.
-typedef float percent_t;
-
-/// @brief Mapping for absolute times and time durations; currently in seconds.
-typedef uint64_t time_val_t;
-
-/// @brief Mapping for values that measure byte counts.
-typedef uint64_t byte_cnt_t;
-
-/// @brief Mapping for values that measure object counts.
-typedef uint32_t obj_cnt_t;
-
-/// @brief Mapping for values that measure (potentially very large) message counts.
-typedef uint64_t msg_cnt_t;
 
 class Model {
 public:
     virtual ~Model() = default;
 };
 
+namespace shared {
+/**
+ * @brief Discriminator to allow correct decoding of identifier bytes.
+ */
+enum IdKind { NUMERIC = 1, STRING = 2 };
+
+/**
+ * @brief An identifier for a stream or a topic.
+ */
+class Identifier : Model {
+private:
+    IdKind kind;
+    uint8_t length;
+    std::vector<unsigned char> value;
+
+public:
+    Identifier(IdKind kind, uint8_t length, std::vector<unsigned char> value)
+        : kind(kind)
+        , length(length)
+        , value(value) {}
+    IdKind getKind() { return kind; }
+    uint8_t getLength() { return length; }
+    std::vector<unsigned char> getValue() { return value; }
+};
+
+enum ConsumerKind { CONSUMER = 1, CONSUMER_GROUP = 2 };
+
+/**
+ * @brief A consumer of a message stream; may be part of a consumer group.
+ */
+class Consumer : Model {
+private:
+    ConsumerKind kind;
+    uint32_t id;
+
+public:
+    Consumer(ConsumerKind kind, uint32_t id)
+        : kind(kind)
+        , id(id) {}
+    ConsumerKind getKind() { return kind; }
+    uint32_t getId() { return id; }
+};
+
+class ConsumerOffsetInfo : Model {
+
+};
+};
+
+namespace message {
+
+/**
+ * @brief Current state of the message on the server.
+ */
+enum MessageState {
+    AVAILABLE = 1,
+    UNAVAILABLE = 10,
+    POISONED = 20,
+    MARKED_FOR_DELETION = 30
+};
+
+typedef std::string HeaderKey;
+
+enum HeaderKind {
+    RAW = 1,
+    STRING = 2,
+    BOOL = 3,
+    INT8 = 4,
+    INT16 = 5,
+    INT32 = 6,
+    INT64 = 7,
+    INT128 = 8,
+    UINT8 = 9,
+    UINT16 = 10,
+    UINT32 = 11,
+    UINT64 = 12,
+    UINT128 = 13,
+    FLOAT32 = 14,
+    FLOAT64 = 15
+};
+
+class HeaderValue : Model {
+private:
+    HeaderKind kind;
+    std::vector<unsigned char> value;
+public:
+    HeaderValue(HeaderKind kind, std::vector<unsigned char> value)
+        : kind(kind)
+        , value(value) {}
+
+    HeaderKind getKind() const { return kind; }
+    std::vector<unsigned char> getValue() const { return value; }
+};
+
+class Message : Model {
+private:
+    uint64_t offset;
+    MessageState state;
+    uint64_t timestamp;
+    uint128_t id;
+    uint32_t checksum;
+    std::unordered_map<HeaderKey, HeaderValue> headers;
+    uint32_t length;
+    std::vector<unsigned char> payload;
+public:
+    uint64_t getOffset() const { return offset; }
+    MessageState getState() const { return state; }
+    uint64_t getTimestamp() const { return timestamp; }
+    uint128_t getId() const { return id; }
+    uint32_t getChecksum() const { return checksum; }
+    std::unordered_map<HeaderKey, HeaderValue> getHeaders() const { return headers; }
+    uint32_t getLength() const { return length; }
+    std::vector<unsigned char> getPayload() const { return payload; }
+};
+
+class PolledMessages : Model {
+private:
+    uint32_t partition_id;
+    uint64_t current_offset;
+    std::vector<Message> messages;
+public:
+    uint32_t getPartitionId() const { return partition_id; }
+    uint64_t getCurrentOffset() const { return current_offset; }
+    std::vector<Message> getMessages() const { return messages; }
+};
+
+}  // namespace message
+
+/**
+ * @brief Models related to global system state.
+ */
+namespace system {
 /**
  * @class Stats
  * @brief Model class holding server performance statistics.
@@ -128,19 +244,8 @@ public:
 
     /// @brief Get the version of the OS kernel that the server process is running on.
     std::string getKernelVersion() const { return kernel_version; }
-
-    /// @brief Helper that writes the Stats object into a stream.
-    friend std::ostream& operator<<(std::ostream& os, const Stats& stats);
-
-    /// @brief Helper that reads the Stats object from a stream.
-    friend std::istream& operator>>(std::istream& is, Stats& stats);
 };
 
-/// @brief Helper that writes the Stats object into a stream.
-std::ostream& operator<<(std::ostream& os, const Stats& stats);
-
-/// @brief Helper that reads the Stats object from a stream.
-std::istream& operator>>(std::istream& is, Stats& stats);
-
-}  // namespace models
+}  // namespace system
+}  // namespace model
 }  // namespace iggy
