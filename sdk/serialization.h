@@ -2,7 +2,7 @@
 #include <string>
 
 namespace iggy {
-namespace utils {
+namespace serialization {
 std::string convertToUTF8(const std::string& source);
-}
+}  // namespace serialization
 }  // namespace iggy

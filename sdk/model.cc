@@ -1,5 +1,5 @@
-#include "models.h"
-#include "utils.h"
+#include "model.h"
+#include "serialization.h"
 
 std::ostream& iggy::models::operator<<(std::ostream& os, const iggy::models::Stats& stats) {
     size_t size = stats.os_version.size();
@@ -18,12 +18,12 @@ std::istream& iggy::models::operator>>(std::istream& is, iggy::models::Stats& st
     is.read(reinterpret_cast<char*>(&size), sizeof(size));
     stats.os_version.resize(size);
     is.read(&stats.os_version[0], size);
-    stats.os_version = iggy::utils::convertToUTF8(stats.os_version);
+    stats.os_version = iggy::serialization::convertToUTF8(stats.os_version);
 
     is.read(reinterpret_cast<char*>(&size), sizeof(size));
     stats.kernel_version.resize(size);
     is.read(&stats.kernel_version[0], size);
-    stats.kernel_version = iggy::utils::convertToUTF8(stats.kernel_version);
+    stats.kernel_version = iggy::serialization::convertToUTF8(stats.kernel_version);
 
     return is;
 }

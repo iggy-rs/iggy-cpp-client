@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "../sdk/models.h"
+#include "../sdk/model.h"
 
-TEST(ModelsTest, DefaultConstructor) {
+TEST(ModelTest, DefaultConstructor) {
     // Create a Message object using the default constructor
     iggy::models::Stats stats;
 

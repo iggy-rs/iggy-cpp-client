@@ -21,8 +21,8 @@ add_library(
   iggy
 
   sdk/client.cc
-  sdk/models.cc
-  sdk/utils.cc
+  sdk/model.cc
+  sdk/serialization.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE ${unofficial-sodium_DIR}/../../include)

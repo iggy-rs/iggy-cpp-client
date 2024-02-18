@@ -3,7 +3,7 @@
 #include <sodium.h>
 #include <stdexcept>
 #include <string>
-#include "models.h"
+#include "model.h"
 
 namespace iggy {
 namespace transport {

@@ -3,12 +3,17 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "command.h"
 
 namespace iggy {
 
 /**
+ * @namespace serialization 
+ */
+namespace serialization {
+/**
  * @namespace binary
- * @brief All related types for the binary format used in Iggy's QUIC transport.
+ * @brief All related types for the binary format used in Iggy's TCP and QUIC transports.
  *
  * The definitions \htmlonly <a href="https://docs.iggy.rs/specification/binary">binary specification</a> \endhtmlonly
  * which should be taken as canonical; E2E conformance tests will be used to ensure client stays in line. I am not sure
@@ -63,127 +68,6 @@ public:
     SerializedCommand() = default;
 };
 
-namespace shared {
-enum ConsumerKind { CONSUMER = 1, CONSUMER_GROUP = 2 };
-
-class Consumer {
-private:
-    ConsumerKind kind;
-    uint32_t id;
-public:
-    Consumer(ConsumerKind kind, uint32_t id);
-    ConsumerKind getKind();
-    uint32_t getId();
-};
-
-enum IdKind { NUMERIC = 1, STRING = 2 };
-
-class Identifier {
-private:
-    IdKind kind;
-    uint8_t length;
-    std::vector<unsigned char> value;
-};
-
-class PolledMessages {};
-
-class Message {};
-
-class ConsumerOffsetInfo {};
-}  // namespace shared
-
-namespace command {
-class Command {
-public:
-    virtual CommandCode getCommandCode() = 0;
-    virtual SerializedCommand serialize() = 0;
-};
-
-namespace stream {
-class GetStream {};
-class GetStreams {};
-class CreateStream {};
-class DeleteStream {};
-}  // namespace stream
-
-namespace topic {
-class GetTopic {};
-class GetTopics {};
-class CreateTopic {};
-}  // namespace topic
-
-namespace partition {
-class CreatePartitions {};
-class DeletePartitions {};
-}  // namespace partition
-
-namespace message {
-enum PollingKind { OFFSET = 1, TIMESTAMP = 2, FIRST = 3, LAST = 4, NEXT = 5 };
-
-class PollingStrategy {};
-class PolledMessages {};
-
-enum PartitioningKind { BALANCED = 1, PARITION_ID = 2, MESSAGES_KEY = 3 };
-
-typedef std::string HeaderKey;
-
-enum HeaderKind {
-    RAW = 1,
-    STRING = 2,
-    BOOL = 3,
-    INT8 = 4,
-    INT16 = 5,
-    INT32 = 6,
-    INT64 = 7,
-    INT128 = 8,
-    UINT8 = 9,
-    UINT16 = 10,
-    UINT32 = 11,
-    UINT64 = 12,
-    UINT128 = 13,
-    FLOAT32 = 14,
-    FLOAT64 = 15
-};
-
-class HeaderValue {};
-
-class Message {};
-class SendMessages : public Command {
-public:
-    CommandCode getCommandCode() override { return command_code; }
-
-    static const CommandCode command_code = CommandCode::SEND_MESSAGES;
-};
-
-}  // namespace message
-
-namespace consumeroffset {
-class GetConsumerOffset {
-public:
-    static const CommandCode command_code = CommandCode::GET_CONSUMER_OFFSET;
-};
-class StoreConsumerOffset {
-public:
-    static const CommandCode command_code = CommandCode::GET_CONSUMER_OFFSET;
-};
-}  // namespace consumeroffset
-
-namespace consumergroup {
-class GetConsumerGroup {};
-class GetConsumerGroups {};
-class CreateConsumerGroup {};
-class DeleteConsumerGroup {};
-class JoinConsumerGroup {};
-class LeaveConsumerGroup {};
-}  // namespace consumergroup
-
-namespace system {
-class Ping {};
-class GetMe {};
-class GetClient {};
-class GetClients {};
-class GetStats {};
-}  // namespace system
-}  // namespace command
 }  // namespace binary
+}  // namespace serialization
 }  // namespace iggy

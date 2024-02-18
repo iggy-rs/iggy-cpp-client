@@ -18,7 +18,7 @@ if(BUILD_TESTS)
   add_executable(
     iggy_cpp_test
 
-    models_test.cc
+    model_test.cc
   )
   target_link_libraries(
     iggy_cpp_test

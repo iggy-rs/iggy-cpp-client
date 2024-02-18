@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <unicode/ucnv.h>
-#include "utils.h"
+#include "serialization.h"
 
-std::string iggy::utils::convertToUTF8(const std::string& source) {
+std::string iggy::serialization::convertToUTF8(const std::string& source) {
     UErrorCode status = U_ZERO_ERROR;
     char target[256];
 
