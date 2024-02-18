@@ -2,10 +2,13 @@
   "dependencies": [
     "argh",
     "benchmark",
+    "cpptoml",
     "fmt",
     "icu",
+    "libsodium",
     "libuv",
     "nlohmann-json",
+    "reproc",
     "spdlog",
     "uwebsockets",
     "wolfssl"

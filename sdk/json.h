@@ -1,14 +1,23 @@
 #pragma once
 
-#include "protocol.h"
-
 namespace iggy {
-namespace formats {
+namespace serialization {
 
-class JsonFormat : public WireFormat {
+/**
+ * @namespace json
+ * @brief All related types for the JSON format used in Iggy's HTTP REST transport.
+ */
+namespace json {
+
+/**
+ * @class JsonWireFormat
+ * @brief Binary serialization and deserialization for Iggy's protocol.   
+ */
+class JsonWireFormat : WireFormat {
 public:
-    JsonFormat() = default;
-};
+    JsonWireFormat() = default;
+}
 
-}  // namespace formats
+}  // namespace json
+}  // namespace serialization
 }  // namespace iggy
