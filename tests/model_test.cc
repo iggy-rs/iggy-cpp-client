@@ -3,7 +3,7 @@
 
 TEST(ModelTest, DefaultConstructor) {
     // Create a Message object using the default constructor
-    iggy::models::Stats stats;
+    iggy::model::Stats stats;
 
     // Perform assertions to verify the expected behavior
     // For example, you can check if the message object is not null

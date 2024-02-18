@@ -13,7 +13,10 @@ namespace iggy {
  */
 namespace command {
 
-class Command {};
+class Command {
+public:
+    virtual ~Command() = default;
+};
 
 /**
  * @namespace shared

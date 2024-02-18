@@ -2,7 +2,7 @@
 #include <unicode/ucnv.h>
 #include "serialization.h"
 
-std::string iggy::serialization::convertToUTF8(const std::string& source) {
+std::string iggy::serialization::Serializer::convertToUTF8(const std::string& source) {
     UErrorCode status = U_ZERO_ERROR;
     char target[256];
 

@@ -6,7 +6,7 @@
 #include <string>
 
 namespace iggy {
-namespace models {
+namespace model {
 
 /// @brief Mapping for fractional values between 0 and 1.
 typedef float percent_t;
@@ -23,6 +23,11 @@ typedef uint32_t obj_cnt_t;
 /// @brief Mapping for values that measure (potentially very large) message counts.
 typedef uint64_t msg_cnt_t;
 
+class Model {
+public:
+    virtual ~Model() = default;
+};
+
 /**
  * @class Stats
  * @brief Model class holding server performance statistics.
@@ -33,7 +38,7 @@ typedef uint64_t msg_cnt_t;
  * @see [GetStats definition](https://docs.iggy.rs/specification/binary#get-stats)
  * @see [stats.rs](https://github.com/iggy-rs/iggy/blob/master/iggy/src/models/stats.rs)
  */
-class Stats {
+class Stats : Model {
 private:
     pid_t process_id;
     percent_t cpu_usage;

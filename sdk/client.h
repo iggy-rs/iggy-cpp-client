@@ -116,7 +116,7 @@ public:
     /**
      * @brief Get the Iggy server's performance statistics.
      */
-    iggy::models::Stats getStats();
+    iggy::model::Stats getStats();
 };
 };  // namespace client
 };  // namespace iggy
