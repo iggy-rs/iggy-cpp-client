@@ -17,3 +17,7 @@ void iggy::client::Client::ping() {
     ping_process.start(ping_args, options);
     ping_process.wait(reproc::milliseconds(5000));
 }
+
+iggy::models::Stats iggy::client::Client::getStats() {
+    return iggy::models::Stats();
+}

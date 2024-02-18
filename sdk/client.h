@@ -3,6 +3,7 @@
 #include <sodium.h>
 #include <stdexcept>
 #include <string>
+#include "models.h"
 
 namespace iggy {
 namespace transport {
@@ -111,6 +112,11 @@ public:
      * @brief Send a synchronous ping to the server to check if it is alive.
      */
     void ping();
+
+    /**
+     * @brief Get the Iggy server's performance statistics.
+     */
+    iggy::models::Stats getStats();
 };
 };  // namespace client
 };  // namespace iggy
