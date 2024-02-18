@@ -5,11 +5,11 @@
 
 namespace iggy {
 namespace serialization {
-    class Serializer {
+    class WireFormat {
     private:
         std::string convertToUTF8(const std::string& source);
     public:
-        virtual ~Serializer() = 0;
+        virtual ~WireFormat() = 0;
 
         template <typename T, typename std::enable_if<std::is_base_of<iggy::model::Model, T>::value>::type* = nullptr>
         T read(std::istream& in);

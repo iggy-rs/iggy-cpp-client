@@ -19,5 +19,6 @@ void iggy::client::Client::ping() {
 }
 
 iggy::model::Stats iggy::client::Client::getStats() {
+    // temporary! need to send GetStats command to server then use WireFormat to read the response
     return iggy::model::Stats();
 }

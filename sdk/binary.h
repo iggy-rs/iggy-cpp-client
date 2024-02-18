@@ -1,15 +1,6 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
-#include <vector>
-#include "command.h"
-
 namespace iggy {
-
-/**
- * @namespace serialization 
- */
 namespace serialization {
 /**
  * @namespace binary
@@ -55,18 +46,13 @@ enum CommandCode {
 };
 
 /**
- * @class SerializedCommand
- * @brief Command header and payload for the Iggy binary protocol.
+ * @class BinaryWireFormat
+ * @brief Simple binary serialization and deserialization for Iggy's protocol.   
  */
-class SerializedCommand {
-private:
-    uint32_t length;
-    CommandCode command_code;
-    std::vector<unsigned char> payload;
-
+class BinaryWireFormat : WireFormat {
 public:
-    SerializedCommand() = default;
-};
+    BinaryWireFormat() = default;
+}
 
 }  // namespace binary
 }  // namespace serialization
