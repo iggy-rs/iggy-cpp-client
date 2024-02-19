@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -13,6 +14,9 @@ public:
     virtual ~Model() = default;
 };
 
+/**
+ * @brief Models shared across multiple functional groups.
+ */
 namespace shared {
 /**
  * @brief Discriminator to allow correct decoding of identifier bytes.
@@ -56,22 +60,35 @@ public:
     uint32_t getId() { return id; }
 };
 
+/**
+ * @brief Current state of the client's position reading the stream via a consumer or consumer group.
+ */
 class ConsumerOffsetInfo : Model {
+private:
+    uint32_t partitionId;
+    uint64_t currentOffset;
+    uint64_t storedOffset;
 
+public:
+    ConsumerOffsetInfo(uint32_t partitionId, uint64_t currentOffset, uint64_t storedOffset)
+        : partitionId(partitionId)
+        , currentOffset(currentOffset)
+        , storedOffset(storedOffset) {}
+    uint32_t getPartitionId() { return partitionId; }
+    uint64_t getCurrentOffset() { return currentOffset; }
+    uint64_t getStoredOffset() { return storedOffset; }
 };
-};
+};  // namespace shared
 
+/**
+ * @brief Models related to messages consumed and sent to the Iggy server.
+ */
 namespace message {
 
 /**
  * @brief Current state of the message on the server.
  */
-enum MessageState {
-    AVAILABLE = 1,
-    UNAVAILABLE = 10,
-    POISONED = 20,
-    MARKED_FOR_DELETION = 30
-};
+enum MessageState { AVAILABLE = 1, UNAVAILABLE = 10, POISONED = 20, MARKED_FOR_DELETION = 30 };
 
 typedef std::string HeaderKey;
 
@@ -93,10 +110,14 @@ enum HeaderKind {
     FLOAT64 = 15
 };
 
+/**
+ * @brief A value of various types associated with the message header -- message metadata.
+ */
 class HeaderValue : Model {
 private:
     HeaderKind kind;
     std::vector<unsigned char> value;
+
 public:
     HeaderValue(HeaderKind kind, std::vector<unsigned char> value)
         : kind(kind)
@@ -106,25 +127,70 @@ public:
     std::vector<unsigned char> getValue() const { return value; }
 };
 
+/**
+ * @brief A message consumed or sent to the server, with binary payload and flexible metadata.
+ */
 class Message : Model {
 private:
-    uint64_t offset;
-    MessageState state;
-    uint64_t timestamp;
+    // core message state
     uint128_t id;
-    uint32_t checksum;
     std::unordered_map<HeaderKey, HeaderValue> headers;
     uint32_t length;
     std::vector<unsigned char> payload;
+
+    // message state set on the server-side
+    std::optional<uint64_t> offset;
+    std::optional<MessageState> state;
+    std::optional<uint64_t> timestamp;
+    std::optional<uint32_t> checksum;
+
 public:
-    uint64_t getOffset() const { return offset; }
-    MessageState getState() const { return state; }
-    uint64_t getTimestamp() const { return timestamp; }
+    /**
+     * @brief Fully-qualified message constructor; @ref isComplete will be true.
+     */
+    Message(uint128_t id,
+            std::unordered_map<HeaderKey, HeaderValue> headers,
+            uint32_t length,
+            std::vector<unsigned char> payload,
+            std::optional<uint64_t> offset,
+            std::optional<MessageState> state,
+            std::optional<uint64_t> timestamp,
+            std::optional<uint32_t> checksum)
+        : id(id)
+        , headers(headers)
+        , length(length)
+        , payload(payload)
+        , offset(offset)
+        , state(state)
+        , timestamp(timestamp)
+        , checksum(checksum) {}
+
+    /**
+     * @brief Simpler constructor for a message to be delivered to the server; @ref isComplete will be false.
+     */
+    Message(uint128_t id, std::unordered_map<HeaderKey, HeaderValue> headers, uint32_t length, std::vector<unsigned char> payload)
+        : Message(id,
+                  headers,
+                  length,
+                  payload,
+                  std::optional<uint64_t>(),
+                  std::optional<MessageState>(),
+                  std::optional<uint64_t>(),
+                  std::optional<uint32_t>()) {}
+
     uint128_t getId() const { return id; }
-    uint32_t getChecksum() const { return checksum; }
     std::unordered_map<HeaderKey, HeaderValue> getHeaders() const { return headers; }
     uint32_t getLength() const { return length; }
     std::vector<unsigned char> getPayload() const { return payload; }
+    std::optional<uint64_t> getOffset() const { return offset; }
+    std::optional<MessageState> getState() const { return state; }
+    std::optional<uint64_t> getTimestamp() const { return timestamp; }
+    std::optional<uint32_t> getChecksum() const { return checksum; }
+
+    /**
+     * @brief Check if the message has all the server-side fields set.
+     */
+    bool isComplete() const { return offset.has_value() && state.has_value() && timestamp.has_value() && checksum.has_value(); }
 };
 
 class PolledMessages : Model {
@@ -132,7 +198,13 @@ private:
     uint32_t partition_id;
     uint64_t current_offset;
     std::vector<Message> messages;
+
 public:
+    PolledMessages(uint32_t partition_id, uint64_t current_offset, std::vector<Message> messages)
+        : partition_id(partition_id)
+        , current_offset(current_offset)
+        , messages(messages) {}
+
     uint32_t getPartitionId() const { return partition_id; }
     uint64_t getCurrentOffset() const { return current_offset; }
     std::vector<Message> getMessages() const { return messages; }
@@ -144,6 +216,7 @@ public:
  * @brief Models related to global system state.
  */
 namespace system {
+
 /**
  * @class Stats
  * @brief Model class holding server performance statistics.
