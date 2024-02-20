@@ -22,27 +22,134 @@ public:
  * @brief Commands related to managing Iggy streams.
  */
 namespace stream {
-class GetStream : Command {};
+class GetStream : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+public:
+    GetStream(iggy::model::shared::Identifier streamId)
+        : streamId(streamId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+};
+
 class GetStreams : Command {};
-class CreateStream : Command {};
-class DeleteStream : Command {};
+class CreateStream : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    std::string name;
+
+public:
+    CreateStream(iggy::model::shared::Identifier streamId, std::string name)
+        : streamId(streamId)
+        , name(name) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    std::string getName() const { return name; }
+};
+
+class DeleteStream : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+public:
+    DeleteStream(iggy::model::shared::Identifier streamId)
+        : streamId(streamId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+};
 }  // namespace stream
 
 /**
  * @brief Commands related to managing Iggy topics.
  */
 namespace topic {
-class GetTopic : Command {};
-class GetTopics : Command {};
-class CreateTopic : Command {};
+class GetTopic : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+
+public:
+    GetTopic(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId)
+        : streamId(streamId)
+        , topicId(topicId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+};
+
+class GetTopics : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+public:
+    GetTopics(iggy::model::shared::Identifier streamId)
+        : streamId(streamId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+};
+
+class CreateTopic : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    uint32_t topicId;
+    uint32_t partitionsCount;
+    std::optional<uint32_t> messageExpiry;
+    std::string name;
+
+public:
+    CreateTopic(iggy::model::shared::Identifier streamId, uint32_t topicId, uint32_t partitionsCount,
+                std::optional<uint32_t> messageExpiry, std::string name)
+        : streamId(streamId)
+        , topicId(topicId)
+        , partitionsCount(partitionsCount)
+        , messageExpiry(messageExpiry)
+        , name(name) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    uint32_t getTopicId() const { return topicId; }
+    uint32_t getPartitionsCount() const { return partitionsCount; }
+    std::optional<uint32_t> getMessageExpiry() const { return messageExpiry; }
+    std::string getName() const { return name; }
+};
 }  // namespace topic
 
 /**
  * @brief Commands related to managing Iggy partitions.
  */
 namespace partition {
-class CreatePartitions : Command {};
-class DeletePartitions : Command {};
+class CreatePartitions : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t partitionsCount;
+
+public:
+    CreatePartitions(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                     uint32_t partitionsCount)
+        : streamId(streamId)
+        , topicId(topicId)
+        , partitionsCount(partitionsCount) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getPartitionsCount() const { return partitionsCount; }
+};
+
+class DeletePartitions : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t partitionsCount;
+
+public:
+    DeletePartitions(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                     uint32_t partitionsCount)
+        : streamId(streamId)
+        , topicId(topicId)
+        , partitionsCount(partitionsCount) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getPartitionsCount() const { return partitionsCount; }
+};
 }  // namespace partition
 
 /**

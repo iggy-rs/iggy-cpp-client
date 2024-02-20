@@ -7,8 +7,15 @@
 #include "types.h"
 
 namespace iggy {
+
+/**
+ * @brief Value objects used in the Iggy protocol.
+ */
 namespace model {
 
+/**
+ * @brief Base class for all value objects used in the Iggy protocol.
+ */
 class Model {
 public:
     virtual ~Model() = default;
@@ -42,6 +49,9 @@ public:
     std::vector<unsigned char> getValue() { return value; }
 };
 
+/**
+ * @brief Discriminator to allow correct decoding of consumer kind bytes.
+ */
 enum ConsumerKind { CONSUMER = 1, CONSUMER_GROUP = 2 };
 
 /**
@@ -59,26 +69,153 @@ public:
     ConsumerKind getKind() { return kind; }
     uint32_t getId() { return id; }
 };
+};  // namespace shared
+
+
+namespace partition {
 
 /**
- * @brief Current state of the client's position reading the stream via a consumer or consumer group.
+ * @brief Metadata describing a partition of a topic.
  */
-class ConsumerOffsetInfo : Model {
+class Partition : Model {
 private:
-    uint32_t partitionId;
+    uint32_t id;
+    uint64_t createdAt;
+    uint32_t segmentsCount;
     uint64_t currentOffset;
-    uint64_t storedOffset;
+    uint64_t sizeBytes;
+    uint64_t messagesCount;
 
 public:
-    ConsumerOffsetInfo(uint32_t partitionId, uint64_t currentOffset, uint64_t storedOffset)
-        : partitionId(partitionId)
+    Partition(uint32_t id,
+              uint64_t createdAt,
+              uint32_t segmentsCount,
+              uint64_t currentOffset,
+              uint64_t sizeBytes,
+              uint64_t messagesCount)
+        : id(id)
+        , createdAt(createdAt)
+        , segmentsCount(segmentsCount)
         , currentOffset(currentOffset)
-        , storedOffset(storedOffset) {}
-    uint32_t getPartitionId() { return partitionId; }
+        , sizeBytes(sizeBytes)
+        , messagesCount(messagesCount) {}
+    uint32_t getId() { return id; }
+    uint64_t getCreatedAt() { return createdAt; }
+    uint32_t getSegmentsCount() { return segmentsCount; }
     uint64_t getCurrentOffset() { return currentOffset; }
-    uint64_t getStoredOffset() { return storedOffset; }
+    uint64_t getSizeBytes() { return sizeBytes; }
+    uint64_t getMessagesCount() { return messagesCount; }
 };
-};  // namespace shared
+};  // namespace partition
+
+/**
+ * @brief Models related to topic metadata.
+ */
+namespace topic {
+
+/**
+ * @brief Metadata describing a topic at a summary level.
+ */
+class Topic : Model {
+private:
+    uint32_t id;
+    uint64_t createdAt;
+    std::string name;
+    uint64_t sizeBytes;
+    std::optional<uint32_t> messageExpiry;
+    std::optional<uint64_t> maxTopicSize;
+    uint8_t replicationFactor;
+    uint64_t messagesCount;
+    uint32_t partitionsCount;
+public:
+    Topic(uint32_t id,
+          uint64_t createdAt,
+          std::string name,
+          uint64_t sizeBytes,
+          std::optional<uint32_t> messageExpiry,
+          std::optional<uint64_t> maxTopicSize,
+          uint8_t replicationFactor,
+          uint64_t messagesCount,
+          uint32_t partitionsCount)
+        : id(id)
+        , createdAt(createdAt)
+        , name(name)
+        , sizeBytes(sizeBytes)
+        , messageExpiry(messageExpiry)
+        , maxTopicSize(maxTopicSize)
+        , replicationFactor(replicationFactor)
+        , messagesCount(messagesCount)
+        , partitionsCount(partitionsCount) {}
+    uint32_t getId() { return id; }
+    uint64_t getCreatedAt() { return createdAt; }
+    std::string getName() { return name; }
+    uint64_t getSizeBytes() { return sizeBytes; }
+    std::optional<uint32_t> getMessageExpiry() { return messageExpiry; }
+    std::optional<uint64_t> getMaxTopicSize() { return maxTopicSize; }
+    uint8_t getReplicationFactor() { return replicationFactor; }
+    uint64_t getMessagesCount() { return messagesCount; }
+    uint32_t getPartitionsCount() { return partitionsCount; }
+};
+
+/**
+ * @brief Metadata describing a topic, including partition details.
+ */
+class TopicDetails : Model {
+private:
+    uint32_t id;
+    uint64_t createdAt;
+    std::string name;
+    uint64_t sizeBytes;
+    std::optional<uint32_t> messageExpiry;
+    std::optional<uint64_t> maxTopicSize;
+    uint8_t replicationFactor;
+    uint64_t messagesCount;
+    uint32_t partitionsCount;
+    std::vector<partition::Partition> partitions;
+};
+};  // namespace topic
+
+/**
+ * @brief Models related to message stream metadata. 
+ */
+namespace stream {
+
+/**
+ * @brief Metadata describing a message stream including topic details. 
+ */
+class StreamDetails : Model {
+private:
+    uint32_t id;
+    uint64_t createdAt;
+    std::string name;
+    uint64_t sizeBytes;
+    uint64_t messagesCount;
+    uint32_t topicsCount;
+    std::vector<topic::Topic> topics;
+public:
+    StreamDetails(uint32_t id,
+                  uint64_t createdAt,
+                  std::string name,
+                  uint64_t sizeBytes,
+                  uint64_t messagesCount,
+                  uint32_t topicsCount,
+                  std::vector<topic::Topic> topics)
+        : id(id)
+        , createdAt(createdAt)
+        , name(name)
+        , sizeBytes(sizeBytes)
+        , messagesCount(messagesCount)
+        , topicsCount(topicsCount)
+        , topics(topics) {}
+    uint32_t getId() { return id; }
+    uint64_t getCreatedAt() { return createdAt; }
+    std::string getName() { return name; }
+    uint64_t getSizeBytes() { return sizeBytes; }
+    uint64_t getMessagesCount() { return messagesCount; }
+    uint32_t getTopicsCount() { return topicsCount; }
+    std::vector<topic::Topic> getTopics() { return topics; }
+};
+}; // namespace stream
 
 /**
  * @brief Models related to messages consumed and sent to the Iggy server.
@@ -92,6 +229,9 @@ enum MessageState { AVAILABLE = 1, UNAVAILABLE = 10, POISONED = 20, MARKED_FOR_D
 
 typedef std::string HeaderKey;
 
+/**
+ * @brief Discriminator to allow correct decoding of header value bytes representing different value types.
+ */
 enum HeaderKind {
     RAW = 1,
     STRING = 2,
@@ -216,9 +356,129 @@ public:
 }  // namespace message
 
 /**
+ * @brief Information about server-managed stream consumer offsets.
+ */
+namespace consumeroffset {
+
+/**
+ * @brief Current state of the client's position reading the stream via a consumer or consumer group.
+ */
+class ConsumerOffsetInfo : Model {
+private:
+    uint32_t partitionId;
+    uint64_t currentOffset;
+    uint64_t storedOffset;
+
+public:
+    ConsumerOffsetInfo(uint32_t partitionId, uint64_t currentOffset, uint64_t storedOffset)
+        : partitionId(partitionId)
+        , currentOffset(currentOffset)
+        , storedOffset(storedOffset) {}
+    uint32_t getPartitionId() { return partitionId; }
+    uint64_t getCurrentOffset() { return currentOffset; }
+    uint64_t getStoredOffset() { return storedOffset; }
+};
+};
+
+/**
+ * @brief Models related to consumer groups, which are used to coordinate message consumption across multiple clients.
+ */
+namespace consumergroup {
+
+class ConsumerGroupMember : Model {
+private:
+    uint32_t id;
+    uint32_t partitionsCount;
+    std::vector<uint32_t> partitions;
+
+public:
+    ConsumerGroupMember(uint32_t id, uint32_t partitionsCount, std::vector<uint32_t> partitions)
+        : id(id)
+        , partitionsCount(partitionsCount)
+        , partitions(partitions) {}
+    uint32_t getId() { return id; }
+    uint32_t getPartitionsCount() { return partitionsCount; }
+    std::vector<uint32_t> getPartitions() { return partitions; }
+};
+
+class ConsumerGroupDetails : Model {
+private:
+    uint32_t id;
+    std::string name;
+    uint32_t paritionsCount;
+    uint32_t membersCount;
+    std::vector<ConsumerGroupMember> members;
+
+public:
+    ConsumerGroupDetails(uint32_t id, std::string name, uint32_t paritionsCount, uint32_t membersCount, std::vector<ConsumerGroupMember> members)
+        : id(id)
+        , name(name)
+        , paritionsCount(paritionsCount)
+        , membersCount(membersCount)
+        , members(members) {}
+    uint32_t getId() { return id; }
+    std::string getName() { return name; }
+    uint32_t getParitionsCount() { return paritionsCount; }
+    uint32_t getMembersCount() { return membersCount; }
+    std::vector<ConsumerGroupMember> getMembers() { return members; }
+};
+};  // namespace consumergroup
+
+/**
  * @brief Models related to global system state.
  */
 namespace system {
+
+/**
+ * @brief Summary of the consumer groups that a client has joined.
+ */
+class ConsumerGroupInfo : Model {
+private:
+    uint32_t streamId;
+    uint32_t topicId;
+    uint32_t consumerGroupId;
+public:
+    ConsumerGroupInfo(uint32_t streamId, uint32_t topicId, uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+    uint32_t getStreamId() { return streamId; }
+    uint32_t getTopicId() { return topicId; }
+    uint32_t getConsumerGroupId() { return consumerGroupId; }
+};
+
+/**
+ * @brief Information about a client connected to the server.
+ */
+class ClientInfoDetails : Model {
+private:
+    uint32_t clientId;
+    std::optional<uint32_t> userId;
+    std::string address;
+    std::string transport;
+    uint32_t consumerGroupsCount;
+    std::vector<ConsumerGroupInfo> consumerGroups;
+
+public:
+    ClientInfoDetails(uint32_t clientId,
+                      std::optional<uint32_t> userId,
+                      std::string address,
+                      std::string transport,
+                      uint32_t consumerGroupsCount,
+                      std::vector<ConsumerGroupInfo> consumerGroups)
+        : clientId(clientId)
+        , userId(userId)
+        , address(address)
+        , transport(transport)
+        , consumerGroupsCount(consumerGroupsCount)
+        , consumerGroups(consumerGroups) {}
+    uint32_t getClientId() { return clientId; }
+    std::optional<uint32_t> getUserId() { return userId; }
+    std::string getAddress() { return address; }
+    std::string getTransport() { return transport; }
+    uint32_t getConsumerGroupsCount() { return consumerGroupsCount; }
+    std::vector<ConsumerGroupInfo> getConsumerGroups() { return consumerGroups; }
+};
 
 /**
  * @brief Model class holding server performance statistics.
