@@ -193,6 +193,9 @@ public:
     bool isComplete() const { return offset.has_value() && state.has_value() && timestamp.has_value() && checksum.has_value(); }
 };
 
+/**
+ * @brief Carrier object for all the messages polled from the server,
+ */
 class PolledMessages : Model {
 private:
     uint32_t partition_id;
@@ -218,7 +221,6 @@ public:
 namespace system {
 
 /**
- * @class Stats
  * @brief Model class holding server performance statistics.
  *
  * This class is used to represent the result of the GetStats call,

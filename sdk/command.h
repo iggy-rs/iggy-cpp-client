@@ -19,7 +19,6 @@ public:
 };
 
 /**
- * @namespace stream
  * @brief Commands related to managing Iggy streams.
  */
 namespace stream {
@@ -30,7 +29,6 @@ class DeleteStream : Command {};
 }  // namespace stream
 
 /**
- * @namespace topic
  * @brief Commands related to managing Iggy topics.
  */
 namespace topic {
@@ -40,7 +38,6 @@ class CreateTopic : Command {};
 }  // namespace topic
 
 /**
- * @namespace partition
  * @brief Commands related to managing Iggy partitions.
  */
 namespace partition {
@@ -49,7 +46,6 @@ class DeletePartitions : Command {};
 }  // namespace partition
 
 /**
- * @namespace message
  * @brief Commands related to reading and writing messages.
  */
 namespace message {
@@ -98,41 +94,234 @@ public:
 };
 
 enum PartitioningKind { BALANCED = 1, PARITION_ID = 2, MESSAGES_KEY = 3 };
-class Partitioning {};
+
+/**
+ * @brief Layout for how to partition the messages being sent in @ref SendMessages. 
+ */
+class Partitioning {
+private:
+    PartitioningKind kind;
+    uint8_t length;
+    std::vector<unsigned char> value;
+
+public:
+    Partitioning(PartitioningKind kind, uint8_t length, std::vector<unsigned char> value)
+        : kind(kind)
+        , length(length)
+        , value(value) {}
+
+    PartitioningKind getKind() const { return kind; }
+    uint8_t getLength() const { return length; }
+    std::vector<unsigned char> getValue() const { return value; }
+};
 class SendMessages : Command {};
 
 }  // namespace message
 
 /**
- * @namespace consumeroffset
  * @brief Commands related to managing server-side managed stream consumer offsets.
  */
 namespace consumeroffset {
-class GetConsumerOffset : Command {};
-class StoreConsumerOffset : Command {};
+
+/**
+ * @brief Command to retrieve a server-side managed consumer offset.
+ */
+class GetConsumerOffset : Command {
+private:
+    iggy::model::shared::Consumer consumer;
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t partitionId;
+public:
+    GetConsumerOffset(iggy::model::shared::Consumer consumer, iggy::model::shared::Identifier streamId,
+                      iggy::model::shared::Identifier topicId, uint32_t partitionId)
+        : consumer(consumer)
+        , streamId(streamId)
+        , topicId(topicId)
+        , partitionId(partitionId) {}
+
+    iggy::model::shared::Consumer getConsumer() const { return consumer; }
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getPartitionId() const { return partitionId; }
+};
+
+/**
+ * @brief Command to store a server-side managed consumer offset.
+ */
+class StoreConsumerOffset : Command {
+private:
+    iggy::model::shared::Consumer consumer;
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t partitionId;
+    uint64_t offset;
+public:
+    StoreConsumerOffset(iggy::model::shared::Consumer consumer, iggy::model::shared::Identifier streamId,
+                        iggy::model::shared::Identifier topicId, uint32_t partitionId, uint64_t offset)
+        : consumer(consumer)
+        , streamId(streamId)
+        , topicId(topicId)
+        , partitionId(partitionId)
+        , offset(offset) {}
+
+    iggy::model::shared::Consumer getConsumer() const { return consumer; }
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getPartitionId() const { return partitionId; }
+    uint64_t getOffset() const { return offset; } 
+};
+
 }  // namespace consumeroffset
 
 /**
- * @namespace consumergroup
  * @brief Commands related to managing server-side managed stream consumer groups.
  */
 namespace consumergroup {
-class GetConsumerGroup : Command {};
-class GetConsumerGroups : Command {};
-class CreateConsumerGroup : Command {};
-class DeleteConsumerGroup : Command {};
-class JoinConsumerGroup : Command {};
-class LeaveConsumerGroup : Command {};
+
+/**
+ * @brief Command to retrieve details on a server-side managed consumer group.
+ */
+class GetConsumerGroup : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t consumerGroupId;
+public:
+    GetConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                     uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getConsumerGroupId() const { return consumerGroupId; }
+};
+
+/**
+ * @brief Command to retrieve details on all server-side managed consumer groups for a given stream and topic.
+ */
+class GetConsumerGroups : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+
+public:
+    GetConsumerGroups(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId)
+        : streamId(streamId)
+        , topicId(topicId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+};
+
+class CreateConsumerGroup : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t consumerGroupId;
+
+public:
+    CreateConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                        uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getConsumerGroupId() const { return consumerGroupId; }
+};
+
+class DeleteConsumerGroup : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t consumerGroupId;
+public:
+    DeleteConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                        uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getConsumerGroupId() const { return consumerGroupId; }    
+};
+
+class JoinConsumerGroup : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t consumerGroupId;
+public:
+    JoinConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                      uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getConsumerGroupId() const { return consumerGroupId; }
+};
+
+class LeaveConsumerGroup : Command {
+private:
+    iggy::model::shared::Identifier streamId;
+    iggy::model::shared::Identifier topicId;
+    uint32_t consumerGroupId;
+public:
+    LeaveConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId,
+                       uint32_t consumerGroupId)
+        : streamId(streamId)
+        , topicId(topicId)
+        , consumerGroupId(consumerGroupId) {}
+
+    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    uint32_t getConsumerGroupId() const { return consumerGroupId; }
+};
+
 }  // namespace consumergroup
 
 /**
  * @brief Commands related to global system state.
  */
 namespace system {
+/**
+ * @brief Simple ping command to check if the server is alive.
+ */
 class Ping : Command {};
+
+/**
+ * @brief Command to get information about the calling client.
+ */
 class GetMe : Command {};
-class GetClient : Command {};
+
+/**
+ * @brief Command to get information about a specific client.
+ */
+class GetClient : Command {
+private:
+    uint32_t clientId;
+public:
+    GetClient(uint32_t clientId)
+        : clientId(clientId) {}
+
+    uint32_t getClientId() const { return clientId; }
+};
+
+/**
+ * @brief Command to get the full list of clients on the server.
+ */
 class GetClients : Command {};
+
+/**
+ * @brief Command to get information about the server's performance
+ */
 class GetStats : Command {};
 }  // namespace system
 }  // namespace command
