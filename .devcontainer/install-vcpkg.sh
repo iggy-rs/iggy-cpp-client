@@ -89,7 +89,8 @@ install_debian_packages() {
         pkg-config
         bash-completion
         ninja-build
-        git)
+        git
+        libtool)
 
     if ! dpkg -s "${package_list[@]}" >/dev/null 2>&1; then
         apt_get_update_if_needed

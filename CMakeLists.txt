@@ -17,6 +17,42 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 # these do not correctly support CMake
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
 
+# customize the builds of key networking components; WolfSSL is not 
+# well supported in vcpkg and we want to have more control here
+include(ExternalProject)
+execute_process(COMMAND nproc OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NPROC)
+ExternalProject_Add(wolfssl
+    GIT_REPOSITORY https://github.com/wolfSSL/wolfssl
+    GIT_TAG v5.6.6-stable
+    PREFIX ${CMAKE_BINARY_DIR}/wolfssl
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-all --enable-harden --enable-keylog-export --disable-ech
+    BUILD_COMMAND make -j ${NPROC}
+    INSTALL_COMMAND make install
+    UPDATE_COMMAND ""
+)
+ExternalProject_Add(nghttp3
+    GIT_REPOSITORY https://github.com/ngtcp2/nghttp3.git
+    GIT_TAG v1.2.0
+    PREFIX ${CMAKE_BINARY_DIR}/nghttp3
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND git submodule update --init COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-lib-only
+    BUILD_COMMAND make -j ${NPROC}
+    INSTALL_COMMAND make install
+    UPDATE_COMMAND ""
+)
+ExternalProject_Add(ngtcp2
+    GIT_REPOSITORY https://github.com/ngtcp2/ngtcp2.git
+    GIT_TAG v1.3.0
+    PREFIX ${CMAKE_BINARY_DIR}/ngtcp2
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/wolfssl/lib/pkgconfig:${CMAKE_BINARY_DIR}/nghttp3/lib/pkgconfig --prefix=<INSTALL_DIR> --with-wolfssl --enable-asan --enable-lib-only
+    BUILD_COMMAND make -j ${NPROC}
+    INSTALL_COMMAND make install
+    UPDATE_COMMAND ""
+    DEPENDS nghttp3 wolfssl
+)
+
 add_library(
   iggy
 

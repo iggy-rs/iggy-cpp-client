@@ -4,7 +4,6 @@
     "libsodium",
     "libuv",
     "reproc",
-    "spdlog",
-    "wolfssl"
+    "spdlog"
   ]
 }
