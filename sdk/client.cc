@@ -3,23 +3,9 @@
 #include <string>
 #include <vector>
 
-/* Loop wakeup handler */
-void on_wakeup(struct us_loop_t* loop) {}
-
-/* Loop pre iteration handler */
-void on_pre(struct us_loop_t* loop) {}
-
-/* Loop post iteration handler */
-void on_post(struct us_loop_t* loop) {}
-
 iggy::client::Client::Client(Options& options) {
     // to make more natural interface for setting options we use a struct, so need to validate it.
     options.validate();
-
-    // does nothing for now, but will be used to set up the client connection with uSockets
-    struct us_loop_t* loop = us_create_loop(0, on_wakeup, on_pre, on_post, 0);
-    us_loop_run(loop);
-    us_loop_free(loop);
 }
 
 void iggy::client::Client::ping() {

@@ -10,17 +10,12 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
 endif()
 
 # set up library dependencies
-find_package(benchmark CONFIG REQUIRED)
-find_package(cpptoml CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
-find_package(OpenSSL REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
 
 # these do not correctly support CMake
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
-find_path(USOCKETS_INCLUDE_DIR libusockets.h REQUIRED)
-find_library(USOCKETS_LIB uSockets REQUIRED)
 
 add_library(
   iggy

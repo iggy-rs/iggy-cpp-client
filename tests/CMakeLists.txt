@@ -28,9 +28,6 @@ if(BUILD_TESTS)
     libuv::uv_a
     reproc++
     unofficial-sodium::sodium
-    ${USOCKETS_LIB}
-    OpenSSL::SSL
-    OpenSSL::Crypto
   )
 
   add_executable(
@@ -49,9 +46,6 @@ if(BUILD_TESTS)
     libuv::uv_a
     reproc++
     unofficial-sodium::sodium
-    ${USOCKETS_LIB}
-    OpenSSL::SSL
-    OpenSSL::Crypto
   )
 
   include(GoogleTest)

@@ -1,18 +1,10 @@
 {
   "dependencies": [
-    "benchmark",
-    "cpptoml",
-    "fmt",
     "icu",
     "libsodium",
-    "nlohmann-json",
+    "libuv",
     "reproc",
     "spdlog",
-    {
-      "name": "usockets",
-      "features": [
-        "ssl"
-      ]
-    }
+    "wolfssl"
   ]
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libusockets.h>
 #include <sodium.h>
 #include <stdexcept>
 #include <string>
