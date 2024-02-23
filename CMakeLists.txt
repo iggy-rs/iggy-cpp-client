@@ -13,8 +13,14 @@ endif()
 find_package(benchmark CONFIG REQUIRED)
 find_package(cpptoml CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
+
+# these do not correctly support CMake
+find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
+find_path(USOCKETS_INCLUDE_DIR libusockets.h REQUIRED)
+find_library(USOCKETS_LIB uSockets REQUIRED)
 
 add_library(
   iggy
@@ -24,7 +30,7 @@ add_library(
   sdk/serialization.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
-target_include_directories(iggy PRIVATE ${unofficial-sodium_DIR}/../../include)
+target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${USOCKETS_INCLUDE_DIR})
 
 if (BUILD_TESTS)
   add_subdirectory(tests)

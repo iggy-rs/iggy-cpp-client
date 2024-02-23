@@ -5,11 +5,14 @@
     "fmt",
     "icu",
     "libsodium",
-    "libuv",
     "nlohmann-json",
     "reproc",
     "spdlog",
-    "uwebsockets",
-    "wolfssl"
+    {
+      "name": "usockets",
+      "features": [
+        "ssl"
+      ]
+    }
   ]
 }
