@@ -18,7 +18,7 @@ void iggy::client::Client::ping() {
     ping_process.wait(reproc::milliseconds(5000));
 }
 
-iggy::model::Stats iggy::client::Client::getStats() {
+iggy::model::system::Stats iggy::client::Client::getStats() {
     // temporary! need to send GetStats command to server then use WireFormat to read the response
-    return iggy::model::Stats();
+    return iggy::model::system::Stats();
 }

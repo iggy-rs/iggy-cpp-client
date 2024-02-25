@@ -25,6 +25,7 @@ if(BUILD_TESTS)
 
     iggy
     GTest::gtest_main
+    libuv::uv_a
     reproc++
     unofficial-sodium::sodium
   )
@@ -38,8 +39,11 @@ if(BUILD_TESTS)
   target_link_libraries(
     iggy_e2e_test
 
+    PRIVATE
+
     iggy
     GTest::gtest_main
+    libuv::uv_a
     reproc++
     unofficial-sodium::sodium
   )
