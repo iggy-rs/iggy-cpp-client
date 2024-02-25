@@ -1,5 +1,6 @@
 {
   "dependencies": [
+    "ada-url",
     "icu",
     "libsodium",
     "libuv",
