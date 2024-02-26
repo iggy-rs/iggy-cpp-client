@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "ada-url",
+    "catch2",
     "icu",
     "libsodium",
     "libuv",

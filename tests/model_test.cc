@@ -1,11 +1,8 @@
-#include <gtest/gtest.h>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 #include "../sdk/model.h"
 
-TEST(ModelTest, DefaultConstructor) {
-    // Create a Message object using the default constructor
+TEST_CASE("simple test for model objects", "[model]") {
     iggy::model::system::Stats stats;
-
-    // Perform assertions to verify the expected behavior
-    // For example, you can check if the message object is not null
-    ASSERT_NE(nullptr, &stats);
+    REQUIRE(&stats != nullptr);
 }
