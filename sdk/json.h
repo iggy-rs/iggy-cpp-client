@@ -1,5 +1,7 @@
 #pragma once
 
+#include "serialization.h"
+
 namespace iggy {
 namespace serialization {
 
@@ -13,7 +15,7 @@ namespace json {
  * @class JsonWireFormat
  * @brief Binary serialization and deserialization for Iggy's protocol.   
  */
-class JsonWireFormat : WireFormat {
+class JsonWireFormat : iggy::serialization::WireFormat {
 public:
     JsonWireFormat() = default;
 }

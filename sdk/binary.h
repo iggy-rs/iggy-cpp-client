@@ -1,5 +1,7 @@
 #pragma once
 
+#include "serialization.h"
+
 namespace iggy {
 namespace serialization {
 /**
@@ -49,7 +51,7 @@ enum CommandCode {
  * @class BinaryWireFormat
  * @brief Simple binary serialization and deserialization for Iggy's protocol.   
  */
-class BinaryWireFormat : WireFormat {
+class BinaryWireFormat : iggy::serialization::WireFormat {
 public:
     BinaryWireFormat() = default;
 }

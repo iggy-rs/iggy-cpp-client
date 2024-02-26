@@ -49,10 +49,29 @@ public:
     ProtocolDefinition() = default;
     ProtocolDefinition(const ProtocolDefinition& other) = default;
 
+    /**
+     * @brief Get the protocol name, e.g. iggy:tcp+tls.
+     */
     const std::string& getName() const { return name; }
+
+    /**
+     * @brief Gets the default port for the protocol, e.g. 443 for https.
+     */
     unsigned short getDefaultPort() const { return defaultPort; }
+
+    /**
+     * @brief Gets the transport for the protocol, e.g. iggy::net::transport::Transport::TCP.
+     */
     iggy::net::transport::Transport getTransport() const { return transport; };
+
+    /**
+     * @brief Tests whether the protocol supports TLS; insecure and TLS protocols should be separate. 
+     */
     bool isTlsSupported() const { return tlsSupported; }
+
+    /**
+     * @brief Gets the default message encoding used by the protocol, e.g. MessageEncoding::TEXT for JSON.
+     */
     MessageEncoding getMessageEncoding() const { return messageEncoding; }
 };
 
@@ -66,6 +85,7 @@ public:
 
     /**
      * @brief Factory method to create a logical address from a URL.
+     * @param url The URL to parse in the context of this provider and its defaults.
      */
     iggy::net::address::LogicalAddress createAddress(const std::string& url) const;
 
@@ -77,12 +97,13 @@ public:
     /**
      * @brief Given a normalized protocol name returns the definition with protocol metadata.
      */
-    virtual const ProtocolDefinition& getProtocolDefinition(const std::string& protocol) const;
+    virtual const ProtocolDefinition& getProtocolDefinition(const std::string& protocol) const = 0;
 
     /**
      * @brief Tests whether the given protocol is supported by this provider.
+     * @param protocol The protocol name to test.
      */
-    virtual const bool isSupported(const std::string& protocol) const;
+    virtual const bool isSupported(const std::string& protocol) const = 0;
 };
 
 };  // namespace protocol
