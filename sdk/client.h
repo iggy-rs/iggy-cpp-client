@@ -4,33 +4,10 @@
 #include <stdexcept>
 #include <string>
 #include "model.h"
+#include "net/iggy.h"
+#include "net/transport.h"
 
 namespace iggy {
-namespace transport {
-
-/**
- * @enum Transport
- * @brief Available network transports for the Iggy server. Not all currently supported by the C++ client.
- */
-enum Transport {
-    /**
-     * @brief Modern networking protocol from Google built on top of UDP.
-     *
-     * @ref [Wikipedia](https://en.wikipedia.org/wiki/QUIC)
-     */
-    QUIC,
-
-    /**
-     * @brief Classic HTTP REST encoded as JSON. Not recommended for high performance applications.
-     */
-    HTTP,
-
-    /**
-     * @brief Binary protocol over TCP/IP. This is the default transport.
-     */
-    TCP
-};
-};  // namespace transport
 namespace client {
 
 /**
@@ -52,10 +29,6 @@ public:
     ~Credentials() { sodium_memzero(&password[0], password.size()); }
 };
 
-const unsigned short DEFAULT_HTTP_PORT = 3000;
-const unsigned short DEFAULT_TCP_PORT = 8090;
-const unsigned short DEFAULT_QUIC_PORT = 8080;
-
 /**
  * @struct Options
  * @brief A struct to hold various options.
@@ -73,12 +46,12 @@ struct Options {
     /**
      * @brief The port the Iggy server is listening on; default depends on transport. Defaults to the DEFAULT_TCP_PORT.
      */
-    unsigned short port = DEFAULT_TCP_PORT;
+    unsigned short port = iggy::net::DEFAULT_TCP_PORT;
 
     /**
      * @brief The network transport to use when connecting to the server. Defaults to TCP.
      */
-    iggy::transport::Transport transport = iggy::transport::Transport::TCP;
+    iggy::net::transport::Transport transport = iggy::net::transport::Transport::TCP;
 
     /**
      * @brief The user credentials to use when connecting to the server.

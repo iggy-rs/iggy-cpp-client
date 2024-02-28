@@ -1,9 +1,11 @@
 #include "e2e_testutils.h"
 #include <chrono>
 #include <stdexcept>
+#include <string>
 #include <thread>
+#include <vector>
 
-void DockerTest::SetUp() {
+IggyRunner::IggyRunner() {
     // start the Docker process with stdout redirected to parent process
     std::vector<std::string> arguments = {"docker", "run", "-d", "--name", "iggy_test", "iggyrs/iggy:latest"};
     reproc::options options;
@@ -17,7 +19,7 @@ void DockerTest::SetUp() {
     std::this_thread::sleep_for(std::chrono::seconds(5));
 }
 
-void DockerTest::TearDown() {
+IggyRunner::~IggyRunner() {
     // stop the Docker process
     process.stop(reproc::stop_actions{{reproc::stop::terminate, reproc::milliseconds(5000)},
                                       {reproc::stop::kill, reproc::milliseconds(2000)},

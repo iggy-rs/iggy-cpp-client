@@ -10,11 +10,13 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
 endif()
 
 # set up library dependencies
+find_package(ada CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
 
 # these do not correctly support CMake
+find_path(ADA_INCLUDE_DIR ada.h REQUIRED)
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
 
 # customize the builds of key networking components; WolfSSL is not 
@@ -59,9 +61,12 @@ add_library(
   sdk/client.cc
   sdk/model.cc
   sdk/serialization.cc
+  sdk/net/address.cc
+  sdk/net/protocol.cc
+  sdk/net/iggy.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
-target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${USOCKETS_INCLUDE_DIR})
+target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${ADA_INCLUDE_DIR})
 
 if (BUILD_TESTS)
   add_subdirectory(tests)

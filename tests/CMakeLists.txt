@@ -1,19 +1,7 @@
 
-# set up GoogleTest
 if(BUILD_TESTS)
-  include(FetchContent)
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/dddb219c3eb96d7f9200f09b0a381f016e6b4562.zip
-  )
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  FetchContent_MakeAvailable(googletest)
-
-  # for E2E tests, controlling Docker containers
+  find_package(Catch2 CONFIG REQUIRED)
   find_package(reproc++ CONFIG REQUIRED)
-
-  # set up GoogleTest
-  enable_testing()
 
   add_executable(
     iggy_cpp_test
@@ -24,7 +12,8 @@ if(BUILD_TESTS)
     iggy_cpp_test
 
     iggy
-    GTest::gtest_main
+    Catch2::Catch2
+    Catch2::Catch2WithMain
     libuv::uv_a
     reproc++
     unofficial-sodium::sodium
@@ -42,12 +31,10 @@ if(BUILD_TESTS)
     PRIVATE
 
     iggy
-    GTest::gtest_main
+    Catch2::Catch2
+    Catch2::Catch2WithMain
     libuv::uv_a
     reproc++
     unofficial-sodium::sodium
   )
-
-  include(GoogleTest)
-  gtest_discover_tests(iggy_cpp_test)
 endif()
