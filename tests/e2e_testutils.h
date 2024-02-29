@@ -1,5 +1,9 @@
 #pragma once
+
+#include <catch.hpp>
 #include <reproc++/reproc.hpp>
+
+const std::string E2E_TAG = "[E2E Tests]";
 
 /**
  * @brief Test fixture that starts and stops a Docker container for each test.

@@ -4,7 +4,20 @@
         "titleBar.activeBackground": "#7A1C34",
         "titleBar.activeForeground": "#FEFBFC"
     },
-    "testMate.cpp.test.executables": "${workspaceFolder}/build/tests/**/*_test",
+    "testMate.cpp.test.advancedExecutables": [
+        {
+            "pattern": "${workspaceFolder}/build/tests/**/*_test",
+            "catch2": {
+                "testGrouping": {
+                    "groupByTags": {
+                        "tags": []
+                    }
+                }
+            }
+        }
+    ],
+    "testMate.cpp.log.logpanel": true,
+    "testMate.cpp.log.logfile": "/workspaces/iggy-cpp-client/testMate.log",
     "files.associations": {
         "any": "cpp",
         "array": "cpp",
