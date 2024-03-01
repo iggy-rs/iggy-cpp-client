@@ -20,10 +20,10 @@ TEST_CASE("check supported Iggy protocols", UT_TAG) {
 
     SECTION("create addresses") {
         auto [address, protocolName, host, port] =
-            GENERATE(table<std::string, std::string, std::string, int>({{"quic://localhost:1234", "quic", "localhost", 1234},
+            GENERATE(table<std::string, std::string, std::string, int>({{"quic://localhost", "quic", "localhost", 8080},
                                                                         {"tcp://localhost:1234", "tcp", "localhost", 1234},
                                                                         {"tcp+tls://localhost:1234", "tcp+tls", "localhost", 1234},
-                                                                        {"http://localhost:1234", "http", "localhost", 1234},
+                                                                        {"http://localhost", "http", "localhost", 3000},
                                                                         {"http+tls://localhost:1234", "http+tls", "localhost", 1234}}));
 
         auto addr = provider.createAddress(address);
