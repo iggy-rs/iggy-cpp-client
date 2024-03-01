@@ -67,6 +67,13 @@ add_library(
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${ADA_INCLUDE_DIR})
+target_link_libraries(
+  iggy PRIVATE
+  
+  ada::ada
+  libuv::uv_a
+  unofficial-sodium::sodium
+)
 
 if (BUILD_TESTS)
   add_subdirectory(tests)

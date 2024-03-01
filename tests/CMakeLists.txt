@@ -7,6 +7,7 @@ if(BUILD_TESTS)
     iggy_cpp_test
 
     model_test.cc
+    iggy_protocol_provider_test.cc
   )
   target_link_libraries(
     iggy_cpp_test
@@ -14,9 +15,6 @@ if(BUILD_TESTS)
     iggy
     Catch2::Catch2
     Catch2::Catch2WithMain
-    libuv::uv_a
-    reproc++
-    unofficial-sodium::sodium
   )
 
   add_executable(
@@ -33,8 +31,6 @@ if(BUILD_TESTS)
     iggy
     Catch2::Catch2
     Catch2::Catch2WithMain
-    libuv::uv_a
     reproc++
-    unofficial-sodium::sodium
-  )
+)
 endif()

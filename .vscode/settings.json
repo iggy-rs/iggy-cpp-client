@@ -16,8 +16,6 @@
             }
         }
     ],
-    "testMate.cpp.log.logpanel": true,
-    "testMate.cpp.log.logfile": "/workspaces/iggy-cpp-client/testMate.log",
     "files.associations": {
         "any": "cpp",
         "array": "cpp",

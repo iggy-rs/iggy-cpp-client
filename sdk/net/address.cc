@@ -11,6 +11,7 @@ iggy::net::address::LogicalAddress::LogicalAddress(const std::string& url, const
     }
     auto value = parse_result.value();
     auto protocol = value.get_protocol();
+    protocol = protocol.substr(0, protocol.length() - 1);
     if (!protocolProvider->isSupported(protocol)) {
         throw std::invalid_argument("Unsupported protocol: " + protocol);
     }
