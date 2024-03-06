@@ -6,7 +6,7 @@ This is a collection of tips for developers of `iggy-cpp-client`. The initial co
 
 ## Tested configurations
 
-CI runs on ubuntu-20.04 and ubuntu-22.04, and the dev containers have been tested on both x64 and arm64 (MacOS 14.x, using latest VS Code and Docker Desktop).
+CI runs on ubuntu-20.04 and ubuntu-22.04, and the dev containers have been tested on both x64 and arm64 (macOS 14.x, using latest VS Code and Docker Desktop).
 
 ## HOWTO: Test GitHub Actions locally
 
