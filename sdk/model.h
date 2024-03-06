@@ -71,7 +71,6 @@ public:
 };
 };  // namespace shared
 
-
 namespace partition {
 
 /**
@@ -87,12 +86,7 @@ private:
     uint64_t messagesCount;
 
 public:
-    Partition(uint32_t id,
-              uint64_t createdAt,
-              uint32_t segmentsCount,
-              uint64_t currentOffset,
-              uint64_t sizeBytes,
-              uint64_t messagesCount)
+    Partition(uint32_t id, uint64_t createdAt, uint32_t segmentsCount, uint64_t currentOffset, uint64_t sizeBytes, uint64_t messagesCount)
         : id(id)
         , createdAt(createdAt)
         , segmentsCount(segmentsCount)
@@ -127,6 +121,7 @@ private:
     uint8_t replicationFactor;
     uint64_t messagesCount;
     uint32_t partitionsCount;
+
 public:
     Topic(uint32_t id,
           uint64_t createdAt,
@@ -176,12 +171,12 @@ private:
 };  // namespace topic
 
 /**
- * @brief Models related to message stream metadata. 
+ * @brief Models related to message stream metadata.
  */
 namespace stream {
 
 /**
- * @brief Metadata describing a message stream including topic details. 
+ * @brief Metadata describing a message stream including topic details.
  */
 class StreamDetails : Model {
 private:
@@ -192,6 +187,7 @@ private:
     uint64_t messagesCount;
     uint32_t topicsCount;
     std::vector<topic::Topic> topics;
+
 public:
     StreamDetails(uint32_t id,
                   uint64_t createdAt,
@@ -215,7 +211,7 @@ public:
     uint32_t getTopicsCount() { return topicsCount; }
     std::vector<topic::Topic> getTopics() { return topics; }
 };
-}; // namespace stream
+};  // namespace stream
 
 /**
  * @brief Models related to messages consumed and sent to the Iggy server.
@@ -378,7 +374,7 @@ public:
     uint64_t getCurrentOffset() { return currentOffset; }
     uint64_t getStoredOffset() { return storedOffset; }
 };
-};
+};  // namespace consumeroffset
 
 /**
  * @brief Models related to consumer groups, which are used to coordinate message consumption across multiple clients.
@@ -410,7 +406,11 @@ private:
     std::vector<ConsumerGroupMember> members;
 
 public:
-    ConsumerGroupDetails(uint32_t id, std::string name, uint32_t paritionsCount, uint32_t membersCount, std::vector<ConsumerGroupMember> members)
+    ConsumerGroupDetails(uint32_t id,
+                         std::string name,
+                         uint32_t paritionsCount,
+                         uint32_t membersCount,
+                         std::vector<ConsumerGroupMember> members)
         : id(id)
         , name(name)
         , paritionsCount(paritionsCount)
@@ -437,6 +437,7 @@ private:
     uint32_t streamId;
     uint32_t topicId;
     uint32_t consumerGroupId;
+
 public:
     ConsumerGroupInfo(uint32_t streamId, uint32_t topicId, uint32_t consumerGroupId)
         : streamId(streamId)

@@ -13,7 +13,7 @@ namespace json {
 
 /**
  * @class JsonWireFormat
- * @brief Binary serialization and deserialization for Iggy's protocol.   
+ * @brief Binary serialization and deserialization for Iggy's protocol.
  */
 class JsonWireFormat : iggy::serialization::WireFormat {
 public:

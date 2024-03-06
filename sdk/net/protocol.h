@@ -22,21 +22,20 @@ enum MessageEncoding { BINARY = 0, TEXT = 1 };
  */
 const std::string normalizeProtocolName(const std::string& protocol);
 
-
 /**
  * @brief Metadata about a protocol including its default port, transport, TLS support and message encoding.
  */
 class ProtocolDefinition {
 private:
     std::string name;
-    unsigned short defaultPort;
+    uint16_t defaultPort;
     iggy::net::transport::Transport transport;
     bool tlsSupported;
     MessageEncoding messageEncoding;
 
 public:
     ProtocolDefinition(const std::string& name,
-                       unsigned short defaultPort,
+                       uint16_t defaultPort,
                        iggy::net::transport::Transport transport,
                        bool tlsSupported,
                        MessageEncoding messageEncoding)
@@ -57,15 +56,15 @@ public:
     /**
      * @brief Gets the default port for the protocol, e.g. 443 for https.
      */
-    unsigned short getDefaultPort() const { return defaultPort; }
+    uint16_t getDefaultPort() const { return defaultPort; }
 
     /**
      * @brief Gets the transport for the protocol, e.g. iggy::net::transport::Transport::TCP.
      */
-    iggy::net::transport::Transport getTransport() const { return transport; };
+    iggy::net::transport::Transport getTransport() const { return transport; }
 
     /**
-     * @brief Tests whether the protocol supports TLS; insecure and TLS protocols should be separate. 
+     * @brief Tests whether the protocol supports TLS; insecure and TLS protocols should be separate.
      */
     bool isTlsSupported() const { return tlsSupported; }
 

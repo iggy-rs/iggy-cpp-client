@@ -6,15 +6,15 @@
 namespace iggy {
 namespace net {
 
-const unsigned short DEFAULT_HTTP_PORT = 3000;
-const unsigned short DEFAULT_TCP_PORT = 8090;
-const unsigned short DEFAULT_QUIC_PORT = 8080;
+const uint16_t DEFAULT_HTTP_PORT = 3000;
+const uint16_t DEFAULT_TCP_PORT = 8090;
+const uint16_t DEFAULT_QUIC_PORT = 8080;
 
-const std::string QUIC_PROTOCOL = "quic";
-const std::string TCP_PROTOCOL = "tcp";
-const std::string TCP_TLS_PROTOCOL = "tcp+tls";
-const std::string HTTP_PROTOCOL = "http";
-const std::string HTTP_TLS_PROTOCOL = "http+tls";
+const char QUIC_PROTOCOL[] = "quic";
+const char TCP_PROTOCOL[] = "tcp";
+const char TCP_TLS_PROTOCOL[] = "tcp+tls";
+const char HTTP_PROTOCOL[] = "http";
+const char HTTP_TLS_PROTOCOL[] = "http+tls";
 
 using iggy::net::protocol::MessageEncoding;
 using iggy::net::protocol::ProtocolDefinition;

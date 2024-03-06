@@ -1,9 +1,9 @@
 #include "client.h"
-#include <reproc++/reproc.hpp>
 #include <string>
 #include <vector>
+#include <reproc++/reproc.hpp>
 
-iggy::client::Client::Client(Options& options) {
+iggy::client::Client::Client(const Options& options) {
     // to make more natural interface for setting options we use a struct, so need to validate it.
     options.validate();
 }

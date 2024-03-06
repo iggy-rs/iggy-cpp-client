@@ -33,5 +33,6 @@
 				
 			]		
 		}
-	}
+	},
+	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-install.sh"
 }

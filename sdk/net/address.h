@@ -18,6 +18,7 @@ private:
     const iggy::net::protocol::ProtocolProvider* protocolProvider;
 
     const iggy::net::protocol::ProtocolDefinition& getProtocolDefinition() const;
+
 public:
     /**
      * @brief Construct a logical address from a URL.
@@ -30,7 +31,7 @@ public:
     /**
      * @brief Gets the protocol; you have a guarantee that it will be one of the supported protocols from ProtocolProvider.
      */
-    const std::string getProtocol() const noexcept { 
+    const std::string getProtocol() const noexcept {
         auto protocol = url.get_protocol();
         return protocol.substr(0, protocol.length() - 1);
     }
@@ -41,10 +42,10 @@ public:
     const std::string getHost() const noexcept { return url.get_hostname(); }
 
     /**
-     * @brief Gets the port to connect to; protocol default port will be substituted if not specified. 
+     * @brief Gets the port to connect to; protocol default port will be substituted if not specified.
      */
-    const unsigned short getPort() const;
+    const uint16_t getPort() const;
 };
-}; // namespace address
-}; // namespace net
-}; // namespace iggy
+};  // namespace address
+};  // namespace net
+};  // namespace iggy

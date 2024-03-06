@@ -1,6 +1,6 @@
 #pragma once
 
-#include <catch.hpp>
 #include <string>
+#include <catch.hpp>
 
-const std::string UT_TAG = "[Unit Tests]";
+const char UT_TAG[] = "[Unit Tests]";

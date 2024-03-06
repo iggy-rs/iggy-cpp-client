@@ -19,6 +19,7 @@ typedef uint32_t obj_cnt_t;
 typedef uint64_t msg_cnt_t;
 
 /// @brief Mapping for a 128-bit integer support; supports gcc, clang and ICC, not MSVC.
-/// @ref [https://quuxplusone.github.io/blog/2019/02/28/is-int128-integral](https://quuxplusone.github.io/blog/2019/02/28/is-int128-integral)
+/// @ref
+/// [https://quuxplusone.github.io/blog/2019/02/28/is-int128-integral](https://quuxplusone.github.io/blog/2019/02/28/is-int128-integral)
 using I128 = __int128;
 typedef unsigned __int128 uint128_t;

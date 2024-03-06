@@ -1,5 +1,5 @@
-#include "e2e_testutils.h"
 #include "../sdk/client.h"
+#include "e2e_testutils.h"
 
 TEST_CASE("ping Iggy server", E2E_TAG) {
     // Start the Docker container; shuts down when this object goes out of scope

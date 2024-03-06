@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
-#include "unit_testutils.h"
 #include "../sdk/model.h"
+#include "unit_testutils.h"
 
 TEST_CASE("simple test for model objects", UT_TAG) {
     iggy::model::system::Stats stats;

@@ -1,6 +1,6 @@
-#include <stdexcept>
-#include <unicode/ucnv.h>
 #include "serialization.h"
+#include <unicode/ucnv.h>
+#include <stdexcept>
 
 std::string iggy::serialization::WireFormat::convertToUTF8(const std::string& source) {
     UErrorCode status = U_ZERO_ERROR;

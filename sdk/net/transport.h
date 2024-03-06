@@ -25,7 +25,7 @@ enum Transport {
      */
     TCP
 };
-    
-};  // namespace net
+
 };  // namespace transport
+};  // namespace net
 };  // namespace iggy

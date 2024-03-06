@@ -19,7 +19,7 @@ iggy::net::address::LogicalAddress::LogicalAddress(const std::string& url, const
     this->protocolProvider = protocolProvider;
 }
 
-const unsigned short iggy::net::address::LogicalAddress::getPort() const {
+const uint16_t iggy::net::address::LogicalAddress::getPort() const {
     if (url.get_port().empty()) {
         return this->getProtocolDefinition().getDefaultPort();
     } else {
