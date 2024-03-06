@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
 #include <catch.hpp>
+#include <string>
 
 const char UT_TAG[] = "[Unit Tests]";

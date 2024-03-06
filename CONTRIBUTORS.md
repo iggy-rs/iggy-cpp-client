@@ -12,7 +12,7 @@ CI runs on ubuntu-20.04 and ubuntu-22.04, and the dev containers have been teste
 
 Our continuous integration uses GitHub Actions, and sometimes it's more convenient to first test it. The VS Code container includes the [act](https://github.com/nektos/act) extension, and you can use it to do a smoke test of the CI actions before you push to GitHub:
 
-```
+```shell
 act -P ubuntu-20.04=catthehacker/ubuntu:full-20.04 -P ubuntu-22.04=catthehacker/ubuntu:full-22.04
 ```
 
@@ -22,6 +22,6 @@ Once it's working well locally, you can push and the CI job will automatically r
 
 ## Resources
 
-- VS Code C++ support: https://code.visualstudio.com/docs/languages/cpp
-- `vcpkg`: https://vcpkg.io
-- `act` GitHub Action runner: https://github.com/nektos/act
+- VS Code C++ support: [https://code.visualstudio.com/docs/languages/cpp](https://code.visualstudio.com/docs/languages/cpp)
+- `vcpkg`: [https://vcpkg.io](https://vcpkg.io)
+- `act` GitHub Action runner: [https://github.com/nektos/act](https://github.com/nektos/act)

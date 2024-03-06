@@ -21,11 +21,6 @@ jobs:
     name: Build SDK
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: read
-      statuses: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
