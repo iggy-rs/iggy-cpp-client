@@ -67,5 +67,5 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
         env:
-          # To report GitHub Actions status checks
+          FILTER_REGEX_EXCLUDE: .devcontainer/install-vcpkg.sh
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
