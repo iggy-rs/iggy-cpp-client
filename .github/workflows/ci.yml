@@ -63,5 +63,6 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
         env:
+          DOCKERFILE_HADOLINT: false
           FILTER_REGEX_EXCLUDE: .devcontainer/install-vcpkg.sh
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
