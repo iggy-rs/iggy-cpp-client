@@ -16,6 +16,8 @@ on:
       - "**.json"
       - ".github/workflows/ci.yml"
 
+permissions: read-all
+
 jobs:
   build:
     name: Build SDK
@@ -47,8 +49,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
-      packages: read
       statuses: write
 
     steps:
