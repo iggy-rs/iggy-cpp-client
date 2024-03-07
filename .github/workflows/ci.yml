@@ -14,6 +14,7 @@ on:
       - "**/CMakeLists.txt"
       - "**.cmake"
       - "**.json"
+      - ".github/linters/*"
       - ".github/workflows/ci.yml"
 
 permissions: read-all
