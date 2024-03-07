@@ -16,6 +16,7 @@ on:
       - "**.json"
       - ".github/linters/*"
       - ".github/workflows/ci.yml"
+      - "Dockerfile"
 
 permissions: read-all
 

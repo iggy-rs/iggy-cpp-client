@@ -5,15 +5,13 @@ USER root
 RUN apt-get update \
     && apt-get install autoconf autoconf-archive \
     clang-format clang-tidy \
-    lcov doxygen graphviz -y --no-install-recommends
+    lcov doxygen graphviz -y --no-install-recommends \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install CMake and vcpkg
 COPY ./install-vcpkg.sh /tmp/
 RUN chmod +x /tmp/install-vcpkg.sh && \
     /tmp/install-vcpkg.sh
-
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # back to dev user
 USER vscode
