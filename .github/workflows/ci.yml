@@ -1,71 +1,74 @@
+---
 name: ci
 
 env:
-  CTEST_NO_TESTS_ACTION: error
-  HOMEBREW_NO_INSTALL_CLEANUP: 1
+    CTEST_NO_TESTS_ACTION: error
+    HOMEBREW_NO_INSTALL_CLEANUP: 1
 
 on:
-  push:
-    paths:
-      - "**.c"
-      - "**.cc"
-      - "**.cpp"
-      - "**.h"
-      - "**/CMakeLists.txt"
-      - "**.cmake"
-      - "**.json"
-      - "**.yaml"
-      - "**.yml"
-      - ".github/linters/*"
-      - ".github/workflows/ci.yml"
-      - "Dockerfile"
+    push:
+        paths:
+            - '**.c'
+            - '**.cc'
+            - '**.cpp'
+            - '**.h'
+            - '**/CMakeLists.txt'
+            - '**.cmake'
+            - '**.json'
+            - '**.yaml'
+            - '**.yml'
+            - .github/linters/*
+            - .github/workflows/ci.yml
+            - Dockerfile
 
 permissions: read-all
 
 jobs:
-  build:
-    name: Build SDK
-    runs-on: ubuntu-latest
+    build:
+        name: Build SDK
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
-      - name: Install extra packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y autoconf autoconf-archive build-essential
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          runVcpkgInstall: false
-      - name: Setup cmake
-        uses: lukka/get-cmake@latest
-      - name: Build
-        uses: lukka/run-cmake@v10
-        with:
-          configurePreset: ci
-          buildPreset: ninja
-      - name: Run Tests
-        run: build/tests/iggy_cpp_test
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4.1.1
+            - name: Install extra packages
+              run: |
+                  sudo apt-get update && \
+                  sudo apt-get install -y autoconf \
+                  autoconf-archive \
+                  build-essential
+            - name: Setup vcpkg
+              uses: lukka/run-vcpkg@v11
+              with:
+                  runVcpkgInstall: false
+            - name: Setup cmake
+              uses: lukka/get-cmake@latest
+            - name: Build
+              uses: lukka/run-cmake@v10
+              with:
+                  configurePreset: ci
+                  buildPreset: ninja
+            - name: Run Tests
+              run: build/tests/iggy_cpp_test
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
 
-    permissions:
-      statuses: write
+        permissions:
+            statuses: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # super-linter needs the full git history to get the
-          # list of files that changed across commits
-          fetch-depth: 0
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  # super-linter needs the full git history to get the
+                  # list of files that changed across commits
+                  fetch-depth: 0
 
-      - name: Super-linter
-        uses: super-linter/super-linter@v6.3.0  # x-release-please-version
-        env:
-          DOCKERFILE_HADOLINT: false
-          FILTER_REGEX_EXCLUDE: .devcontainer/install-vcpkg.sh
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Super-linter
+              uses: super-linter/super-linter@v6.3.0
+              env:
+                  DOCKERFILE_HADOLINT: false
+                  FILTER_REGEX_EXCLUDE: .devcontainer/install-vcpkg.sh
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
