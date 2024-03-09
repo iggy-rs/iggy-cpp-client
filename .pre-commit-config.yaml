@@ -31,3 +31,7 @@ repos:
   hooks:
   - id: markdownlint
     args: [--config, .github/linters/.markdown-lint.yml ]
+- repo: https://github.com/scop/pre-commit-shfmt
+  rev: v3.8.0-1
+  hooks:
+  - id: shfmt
