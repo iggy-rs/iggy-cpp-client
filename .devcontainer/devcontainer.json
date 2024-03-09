@@ -21,7 +21,6 @@
             "extensions": [
                 "GitHub.vscode-pull-request-github",
                 "eamodio.gitlens",
-                "exiasr.hadolint",
                 "demiaochen.clang-format-indent-4",
                 "donjayamanne.githistory",
                 "formulahendry.code-runner",
@@ -36,7 +35,6 @@
                 "ms-vscode.cpptools-extension-pack",
                 "stuart.unique-window-colors",
                 "styled-components.vscode-styled-components",
-                "timonwong.shellcheck",
                 "vscode-icons-team.vscode-icons",
                 "waderyan.gitblame"
             ]
