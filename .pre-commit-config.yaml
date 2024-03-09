@@ -26,8 +26,8 @@ repos:
   hooks:
   - id: hadolint
     args: [--config, .github/linters/.hadolint.yaml]
-- repo: https://github.com/markdownlint/markdownlint
-  rev: v0.13.0
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.39.0
   hooks:
   - id: markdownlint
     args: [--config, .github/linters/.markdown-lint.yml ]
