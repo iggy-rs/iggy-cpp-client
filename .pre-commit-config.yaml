@@ -51,6 +51,12 @@ repos:
           - id: shfmt
     - repo: local
       hooks:
+          - id: build
+            name: Build
+            entry: cmake --build build
+            language: system
+            pass_filenames: false
+            always_run: true
           - id: run-unit-tests
             name: Run Unit Tests
             entry: ./build/tests/iggy_cpp_test
