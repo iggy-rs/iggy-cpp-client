@@ -4,6 +4,11 @@
         "titleBar.activeBackground": "#7A1C34",
         "titleBar.activeForeground": "#FEFBFC"
     },
+    "clang-format.executable": "/usr/bin/clang-format",
+    "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "demiaochen.clang-format-indent-4"
+    },
     "testMate.cpp.test.advancedExecutables": [
         {
             "pattern": "${workspaceFolder}/build/tests/**/*_test",

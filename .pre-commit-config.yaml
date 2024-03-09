@@ -1,8 +1,31 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
-
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.3.0
+  hooks:
+  - id: check-added-large-files
+  - id: check-json
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v18.1.0
+  hooks:
+  - id: clang-format
+- repo: https://github.com/cpplint/cpplint
+  rev: 1.6.1
+  hooks:
+  - id: cpplint
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.16.1
+  hooks:
+  - id: gitleaks
+- repo: https://github.com/hadolint/hadolint
+  rev: v2.12.0
+  hooks:
+  - id: hadolint
+- repo: https://github.com/markdownlint/markdownlint
+  rev: v0.13.0
+  hooks:
+  - id: markdownlint
