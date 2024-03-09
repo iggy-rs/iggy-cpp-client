@@ -19,7 +19,7 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 find_path(ADA_INCLUDE_DIR ada.h REQUIRED)
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
 
-# customize the builds of key networking components; WolfSSL is not 
+# customize the builds of key networking components; WolfSSL is not
 # well supported in vcpkg and we want to have more control here
 include(ExternalProject)
 execute_process(COMMAND nproc OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NPROC)
@@ -69,7 +69,7 @@ target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${ADA_INCLUDE_DIR})
 target_link_libraries(
   iggy PRIVATE
-  
+
   ada::ada
   libuv::uv_a
   unofficial-sodium::sodium

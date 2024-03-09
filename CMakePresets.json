@@ -16,7 +16,9 @@
             "cacheVariables": {
                 "BUILD_TESTS": "ON"
             },
-            "inherits": [ "default" ]
+            "inherits": [
+                "default"
+            ]
         },
         {
             "name": "docs",
@@ -25,21 +27,26 @@
             "cacheVariables": {
                 "BUILD_DOCS": "ON"
             },
-            "inherits": [ "default" ]
+            "inherits": [
+                "default"
+            ]
         },
         {
             "name": "ci",
             "description": "Preset for build and test in CI",
             "hidden": false,
-            "inherits": [ "unit-tests", "docs" ]
+            "inherits": [
+                "unit-tests",
+                "docs"
+            ]
         }
     ],
     "buildPresets": [
         {
-          "name": "ninja",
-          "configurePreset": "ci",
-          "displayName": "Build with Ninja",
-          "description": "Build with Ninja"
+            "name": "ninja",
+            "configurePreset": "ci",
+            "displayName": "Build with Ninja",
+            "description": "Build with Ninja"
         }
     ]
 }

@@ -33,7 +33,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y autoconf autoconf-archive build-essential
       - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11 
+        uses: lukka/run-vcpkg@v11
         with:
           runVcpkgInstall: false
       - name: Setup cmake

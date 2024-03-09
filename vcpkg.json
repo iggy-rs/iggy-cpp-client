@@ -1,11 +1,11 @@
 {
-  "dependencies": [
-    "ada-url",
-    "catch2",
-    "icu",
-    "libsodium",
-    "libuv",
-    "reproc",
-    "spdlog"
-  ]
+    "dependencies": [
+        "ada-url",
+        "catch2",
+        "icu",
+        "libsodium",
+        "libuv",
+        "reproc",
+        "spdlog"
+    ]
 }
