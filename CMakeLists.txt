@@ -3,6 +3,7 @@ project(iggy-cpp-client)
 
 option(BUILD_TESTS "Build and run unit tests" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
+option(ENABLE_CODE_COVERAGE "Enable coverage reporting" OFF)
 
 # avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")

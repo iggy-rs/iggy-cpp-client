@@ -32,5 +32,16 @@ if(BUILD_TESTS)
     Catch2::Catch2
     Catch2::Catch2WithMain
     reproc++
-)
+  )
+
+  if(ENABLE_CODE_COVERAGE)
+    include(../cmake/modules/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+
+    setup_target_for_coverage_lcov(
+      NAME coverage
+      EXECUTABLE iggy_cpp_test
+      EXCLUDE /usr/include/c++/*  ${CMAKE_CURRENT_SOURCE_DIR}/../tests/*
+      ${CMAKE_CURRENT_SOURCE_DIR}/../build/*)
+  endif()
 endif()

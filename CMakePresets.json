@@ -15,7 +15,8 @@
             "description": "Preset for building unit tests",
             "hidden": false,
             "cacheVariables": {
-                "BUILD_TESTS": "ON"
+                "BUILD_TESTS": "ON",
+                "ENABLE_CODE_COVERAGE": "ON"
             },
             "inherits": [
                 "default"

@@ -5,7 +5,8 @@ USER root
 RUN apt-get update \
     && apt-get install autoconf autoconf-archive automake \
     clang-format clang-tidy \
-    lcov doxygen graphviz -y --no-install-recommends \
+    build-essential gcovr lcov xdg-utils \
+    doxygen graphviz -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install CMake and vcpkg
