@@ -1,3 +1,4 @@
+---
 BasedOnStyle: Chromium
 BreakConstructorInitializers: BeforeComma
 ConstructorInitializerAllOnOneLineOrOnePerLine: false

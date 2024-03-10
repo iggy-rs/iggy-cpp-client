@@ -61,7 +61,7 @@ struct Options {
      */
     client::Credentials credentials = client::Credentials("iggy", "iggy");
 
-    void validate() {
+    void validate() const {
         if (hostname.empty()) {
             throw std::invalid_argument("Hostname cannot be empty");
         }
@@ -76,7 +76,7 @@ struct Options {
  */
 class Client {
 public:
-    Client(Options& options);
+    explicit Client(const Options& options);
 
     /**
      * @brief Send a synchronous ping to the server to check if it is alive.

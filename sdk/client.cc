@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-iggy::client::Client::Client(Options& options) {
+iggy::client::Client::Client(const Options& options) {
     // to make more natural interface for setting options we use a struct, so need to validate it.
     options.validate();
 }

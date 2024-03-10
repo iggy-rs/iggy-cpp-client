@@ -5,7 +5,7 @@ option(BUILD_TESTS "Build and run unit tests" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
 
 # avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24
-if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
 endif()
 
@@ -19,11 +19,11 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 find_path(ADA_INCLUDE_DIR ada.h REQUIRED)
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
 
-# customize the builds of key networking components; WolfSSL is not 
+# customize the builds of key networking components; WolfSSL is not
 # well supported in vcpkg and we want to have more control here
 include(ExternalProject)
 execute_process(COMMAND nproc OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NPROC)
-ExternalProject_Add(wolfssl
+externalproject_add(wolfssl
     GIT_REPOSITORY https://github.com/wolfSSL/wolfssl
     GIT_TAG v5.6.6-stable
     PREFIX ${CMAKE_BINARY_DIR}/wolfssl
@@ -33,7 +33,7 @@ ExternalProject_Add(wolfssl
     INSTALL_COMMAND make install
     UPDATE_COMMAND ""
 )
-ExternalProject_Add(nghttp3
+externalproject_add(nghttp3
     GIT_REPOSITORY https://github.com/ngtcp2/nghttp3.git
     GIT_TAG v1.2.0
     PREFIX ${CMAKE_BINARY_DIR}/nghttp3
@@ -43,7 +43,7 @@ ExternalProject_Add(nghttp3
     INSTALL_COMMAND make install
     UPDATE_COMMAND ""
 )
-ExternalProject_Add(ngtcp2
+externalproject_add(ngtcp2
     GIT_REPOSITORY https://github.com/ngtcp2/ngtcp2.git
     GIT_TAG v1.3.0
     PREFIX ${CMAKE_BINARY_DIR}/ngtcp2
@@ -67,11 +67,18 @@ add_library(
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${ADA_INCLUDE_DIR})
+target_link_libraries(
+  iggy PRIVATE
 
-if (BUILD_TESTS)
+  ada::ada
+  libuv::uv_a
+  unofficial-sodium::sodium
+)
+
+if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
-if (BUILD_DOCS)
+if(BUILD_DOCS)
   add_subdirectory(docs)
 endif()

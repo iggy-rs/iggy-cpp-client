@@ -49,7 +49,7 @@ enum CommandCode {
 
 /**
  * @class BinaryWireFormat
- * @brief Simple binary serialization and deserialization for Iggy's protocol.   
+ * @brief Simple binary serialization and deserialization for Iggy's protocol.
  */
 class BinaryWireFormat : iggy::serialization::WireFormat {
 public:

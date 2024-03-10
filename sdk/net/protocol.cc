@@ -1,5 +1,5 @@
-#include "address.h"
 #include "protocol.h"
+#include "address.h"
 
 iggy::net::address::LogicalAddress iggy::net::protocol::ProtocolProvider::createAddress(const std::string& url) const {
     return iggy::net::address::LogicalAddress(url, this);

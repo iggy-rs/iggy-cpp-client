@@ -1,37 +1,44 @@
 {
-	"name": "Iggy C++ Client",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers/features/rust:1": {},
-		"ghcr.io/devcontainers-contrib/features/act:1": {},
-		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {}
-	},
-	"containerEnv": {
-		"VCPKG_FORCE_SYSTEM_BINARIES": "1"
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"GitHub.vscode-pull-request-github",
-				"VisualStudioExptTeam.vscodeintellicode",
-				"eamodio.gitlens",
-				"github.copilot",
-				"github.vscode-github-actions",
-				"mads-hartmann.bash-ide-vscode",
-				"matepek.vscode-catch2-test-adapter",
-				"ms-azuretools.vscode-docker",
-				"ms-vscode.cpptools-extension-pack",
-				"stuart.unique-window-colors",
-				"styled-components.vscode-styled-components",
-				"vscode-icons-team.vscode-icons"
-				
-			]		
-		}
-	}
+    "name": "Iggy C++ Client",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/python:1": {},
+        "ghcr.io/devcontainers-contrib/features/act:1": {},
+        "ghcr.io/devcontainers-contrib/features/markdownlint-cli2:1": {},
+        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+        "ghcr.io/dhoeric/features/hadolint:1": {}
+    },
+    "containerEnv": {
+        "VCPKG_FORCE_SYSTEM_BINARIES": "1"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.vscode-pull-request-github",
+                "eamodio.gitlens",
+                "demiaochen.clang-format-indent-4",
+                "donjayamanne.githistory",
+                "formulahendry.code-runner",
+                "foxundermoon.shell-format",
+                "github.copilot",
+                "github.remotehub",
+                "github.vscode-github-actions",
+                "ionutvmi.path-autocomplete",
+                "mads-hartmann.bash-ide-vscode",
+                "matepek.vscode-catch2-test-adapter",
+                "ms-azuretools.vscode-docker",
+                "ms-vscode.cpptools-extension-pack",
+                "stuart.unique-window-colors",
+                "styled-components.vscode-styled-components",
+                "vscode-icons-team.vscode-icons",
+                "waderyan.gitblame"
+            ]
+        }
+    },
+    "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-install.sh"
 }
