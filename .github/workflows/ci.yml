@@ -36,7 +36,8 @@ jobs:
                   sudo apt-get update && \
                   sudo apt-get install -y autoconf \
                   autoconf-archive \
-                  build-essential
+                  build-essential \
+                  gcovr lcov xdg-utils
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
