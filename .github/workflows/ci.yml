@@ -51,6 +51,10 @@ jobs:
                   buildPreset: ninja
             - name: Run Tests
               run: build/tests/iggy_cpp_test
+            - name: Run Coverage
+              run: |
+                  cd build
+                  ninja coverage
 
     lint:
         name: Lint
