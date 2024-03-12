@@ -50,7 +50,7 @@ jobs:
                   configurePreset: ci
                   buildPreset: ninja
             - name: Run Tests
-              run: build/tests/iggy_cpp_test
+              run: build/tests/Debug/iggy_cpp_test
             - name: Run Coverage
               run: |
                   cd build
