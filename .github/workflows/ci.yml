@@ -28,6 +28,8 @@ jobs:
         name: Build SDK
         runs-on: ubuntu-latest
 
+        permissions: write-all
+
         steps:
             - name: Checkout
               uses: actions/checkout@v4.1.1
@@ -36,7 +38,8 @@ jobs:
                   sudo apt-get update && \
                   sudo apt-get install -y autoconf \
                   autoconf-archive \
-                  build-essential
+                  build-essential \
+                  gcovr lcov xdg-utils
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
@@ -49,7 +52,17 @@ jobs:
                   configurePreset: ci
                   buildPreset: ninja
             - name: Run Tests
-              run: build/tests/iggy_cpp_test
+              run: build/tests/Debug/iggy_cpp_test
+            - name: Run Coverage
+              run: |
+                  cd build
+                  ninja coveralls
+            - name: Upload report to Coveralls
+              uses: coverallsapp/github-action@v2
+              with:
+                  file: build/coveralls.json
+                  measure: true
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
     lint:
         name: Lint

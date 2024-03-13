@@ -59,13 +59,13 @@ repos:
             always_run: true
           - id: run-unit-tests
             name: Run Unit Tests
-            entry: ./build/tests/iggy_cpp_test
+            entry: ./build/tests/Debug/iggy_cpp_test
             language: system
             pass_filenames: false
             always_run: true
           - id: e2e-tests
             name: Run E2E Tests
-            entry: ./build/tests/iggy_e2e_test
+            entry: ./build/tests/Debug/iggy_e2e_test
             language: system
             pass_filenames: false
             always_run: true

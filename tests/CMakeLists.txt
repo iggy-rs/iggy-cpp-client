@@ -32,5 +32,22 @@ if(BUILD_TESTS)
     Catch2::Catch2
     Catch2::Catch2WithMain
     reproc++
-)
+  )
+
+  if(ENABLE_CODE_COVERAGE)
+    include(../cmake/modules/CodeCoverage.cmake)
+    append_coverage_compiler_flags()
+
+    setup_target_for_coverage_gcovr_coveralls(
+      NAME coveralls
+      EXECUTABLE iggy_cpp_test
+      EXCLUDE "build/vcpkg_installed/*" "tests/*"
+      DEPENDENCIES iggy)
+
+    setup_target_for_coverage_gcovr_html(
+      NAME coverage-html
+      EXECUTABLE iggy_cpp_test
+      EXCLUDE "build/vcpkg_installed/*" "tests/*"
+      DEPENDENCIES iggy)
+  endif()
 endif()

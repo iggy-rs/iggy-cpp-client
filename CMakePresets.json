@@ -4,7 +4,7 @@
         {
             "name": "default",
             "binaryDir": "${sourceDir}/build",
-            "generator": "Ninja",
+            "generator": "Ninja Multi-Config",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -15,7 +15,8 @@
             "description": "Preset for building unit tests",
             "hidden": false,
             "cacheVariables": {
-                "BUILD_TESTS": "ON"
+                "BUILD_TESTS": "ON",
+                "ENABLE_CODE_COVERAGE": "ON"
             },
             "inherits": [
                 "default"

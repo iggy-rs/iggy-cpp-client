@@ -3,6 +3,7 @@ project(iggy-cpp-client)
 
 option(BUILD_TESTS "Build and run unit tests" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
+option(ENABLE_CODE_COVERAGE "Enable coverage reporting" OFF)
 
 # avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
@@ -74,6 +75,13 @@ target_link_libraries(
   libuv::uv_a
   unofficial-sodium::sodium
 )
+
+# even though this is related to unit tests, to get a full report we need to ensure that
+# all library files are compiled with --coverage so gcno is generated properly
+if(ENABLE_CODE_COVERAGE)
+  include(cmake/modules/CodeCoverage.cmake)
+  append_coverage_compiler_flags()
+endif()
 
 if(BUILD_TESTS)
   add_subdirectory(tests)

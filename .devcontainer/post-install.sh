@@ -8,4 +8,4 @@ if ! git config --global --get safe.directory >/dev/null; then
 fi
 
 # set up pre-commit
-pre-commit install
+pre-commit install --install-hooks
