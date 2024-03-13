@@ -6,8 +6,9 @@ if(BUILD_TESTS)
   add_executable(
     iggy_cpp_test
 
-    model_test.cc
+    client_test.cc
     iggy_protocol_provider_test.cc
+    model_test.cc
   )
   target_link_libraries(
     iggy_cpp_test
@@ -15,6 +16,7 @@ if(BUILD_TESTS)
     iggy
     Catch2::Catch2
     Catch2::Catch2WithMain
+    reproc++
   )
 
   add_executable(
@@ -45,7 +47,7 @@ if(BUILD_TESTS)
       DEPENDENCIES iggy)
 
     setup_target_for_coverage_gcovr_html(
-      NAME coverage-html
+      NAME coverage
       EXECUTABLE iggy_cpp_test
       EXCLUDE "build/vcpkg_installed/*" "tests/*"
       DEPENDENCIES iggy)
