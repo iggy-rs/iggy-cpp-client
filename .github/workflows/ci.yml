@@ -56,13 +56,13 @@ jobs:
             - name: Run Coverage
               run: |
                   cd build
-                  ninja coverage
-            - name: Report code coverage
-              uses: andybelltree/lcov-reporter-action@v1.7.0
+                  ninja coveralls
+            - name: Upload report to Coveralls
+              uses: coverallsapp/github-action@v2
               with:
-                  lcov-file: build/coverage.info
+                  file: build/coveralls.json
+                  measure: true
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-                  delete-old-comments: true
 
     lint:
         name: Lint

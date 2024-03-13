@@ -38,11 +38,16 @@ if(BUILD_TESTS)
     include(../cmake/modules/CodeCoverage.cmake)
     append_coverage_compiler_flags()
 
-    setup_target_for_coverage_lcov(
-      NAME coverage
+    setup_target_for_coverage_gcovr_coveralls(
+      NAME coveralls
       EXECUTABLE iggy_cpp_test
-      DEPENDENCIES iggy
-      EXCLUDE /usr/include/c++/*  ${CMAKE_CURRENT_SOURCE_DIR}/../tests/*
-      ${CMAKE_CURRENT_SOURCE_DIR}/../build/*)
+      EXCLUDE "build/vcpkg_installed/*" "tests/*"
+      DEPENDENCIES iggy)
+
+    setup_target_for_coverage_gcovr_html(
+      NAME coverage-html
+      EXECUTABLE iggy_cpp_test
+      EXCLUDE "build/vcpkg_installed/*" "tests/*"
+      DEPENDENCIES iggy)
   endif()
 endif()
