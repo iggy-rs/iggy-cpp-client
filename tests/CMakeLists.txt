@@ -41,6 +41,7 @@ if(BUILD_TESTS)
     setup_target_for_coverage_lcov(
       NAME coverage
       EXECUTABLE iggy_cpp_test
+      DEPENDENCIES iggy
       EXCLUDE /usr/include/c++/*  ${CMAKE_CURRENT_SOURCE_DIR}/../tests/*
       ${CMAKE_CURRENT_SOURCE_DIR}/../build/*)
   endif()
