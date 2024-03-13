@@ -2,7 +2,7 @@
 #include "../sdk/net/iggy.h"
 #include "unit_testutils.h"
 
-TEST_CASE("check supported Iggy protocols", UT_TAG) {
+TEST_CASE("Iggy protocols", UT_TAG) {
     iggy::net::IggyProtocolProvider provider;
 
     SECTION("enumerate supported protocols") {
