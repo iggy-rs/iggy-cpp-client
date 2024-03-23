@@ -55,6 +55,23 @@ externalproject_add(ngtcp2
     UPDATE_COMMAND ""
     DEPENDS nghttp3 wolfssl
 )
+externalproject_add(curl
+    GIT_REPOSITORY https://github.com/curl/curl
+    GIT_TAG curl-8_6_0
+    PREFIX ${CMAKE_BINARY_DIR}/curl
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/wolfssl/lib/pkgconfig --prefix=<INSTALL_DIR> --with-wolfssl --without-libpsl --disable-shared
+    BUILD_COMMAND make -j ${NPROC}
+    INSTALL_COMMAND make install
+    UPDATE_COMMAND ""
+    DEPENDS wolfssl
+)
+
+set(WOLFSSL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/wolfssl/include)
+set(NGHTTP3_INCLUDE_DIR ${CMAKE_BINARY_DIR}/nghttp3/include)
+set(NGTCP2_INCLUDE_DIR ${CMAKE_BINARY_DIR}/ngtcp2/include)
+set(CURL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/curl/include)
+set(CURL_LIB_DIR ${CMAKE_BINARY_DIR}/curl/lib)
 
 add_library(
   iggy
@@ -63,17 +80,26 @@ add_library(
   sdk/model.cc
   sdk/serialization.cc
   sdk/net/address.cc
-  sdk/net/protocol.cc
+  sdk/net/crypto.cc
   sdk/net/iggy.cc
+  sdk/net/protocol.cc
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
-target_include_directories(iggy PRIVATE ${SODIUM_INCLUDE_DIR} ${ADA_INCLUDE_DIR})
+target_include_directories(iggy PRIVATE
+  ${SODIUM_INCLUDE_DIR}
+  ${ADA_INCLUDE_DIR}
+  ${WOLFSSL_INCLUDE_DIR}
+  ${NGHTTP3_INCLUDE_DIR}
+  ${NGTCP2_INCLUDE_DIR}
+  ${CURL_INCLUDE_DIR}
+)
 target_link_libraries(
   iggy PRIVATE
 
   ada::ada
   libuv::uv_a
   unofficial-sodium::sodium
+  ${CURL_LIB_DIR}/libcurl.a
 )
 
 # even though this is related to unit tests, to get a full report we need to ensure that
