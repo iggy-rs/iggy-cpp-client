@@ -64,6 +64,7 @@ externalproject_add(curl
     BUILD_COMMAND make -j ${NPROC}
     INSTALL_COMMAND make install
     UPDATE_COMMAND ""
+    BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/curl/lib/libcurl.a
     DEPENDS wolfssl
 )
 
@@ -93,6 +94,7 @@ target_include_directories(iggy PRIVATE
   ${NGTCP2_INCLUDE_DIR}
   ${CURL_INCLUDE_DIR}
 )
+add_dependencies(iggy curl)
 target_link_libraries(
   iggy PRIVATE
 
