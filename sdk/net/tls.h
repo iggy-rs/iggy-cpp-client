@@ -15,6 +15,7 @@ namespace tls {
  */
 class TLSContext {
 private:
+    const iggy::crypto::CertificateAuthority& certAuth;
     const iggy::crypto::CertificateStore& certStore;
     const iggy::crypto::KeyStore& keyStore;
     std::optional<std::vector<std::string>> ciphers;
@@ -23,7 +24,9 @@ private:
     iggy::crypto::CertificateAuthority certManager;
 
 public:
-    TLSContext(const iggy::crypto::CertificateStore& certStore, const iggy::crypto::KeyStore& keyStore);
+    TLSContext(const iggy::crypto::CertificateAuthority& certAuth,
+               const iggy::crypto::CertificateStore& certStore,
+               const iggy::crypto::KeyStore& keyStore);
     TLSContext(const TLSContext& other);
     TLSContext(TLSContext&& other);
     ~TLSContext();

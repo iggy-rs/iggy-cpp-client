@@ -1,8 +1,11 @@
 #include "tls.h"
 #include "fmt/format.h"
 
-iggy::tls::TLSContext::TLSContext(const iggy::crypto::CertificateStore& certStore, const iggy::crypto::KeyStore& keyStore)
-    : certStore(certStore)
+iggy::tls::TLSContext::TLSContext(const iggy::crypto::CertificateAuthority& certAuth,
+                                  const iggy::crypto::CertificateStore& certStore,
+                                  const iggy::crypto::KeyStore& keyStore)
+    : certAuth(certAuth)
+    , certStore(certStore)
     , keyStore(keyStore) {
     this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
     if (!this->ctx) {
@@ -13,14 +16,16 @@ iggy::tls::TLSContext::TLSContext(const iggy::crypto::CertificateStore& certStor
 }
 
 iggy::tls::TLSContext::TLSContext(const TLSContext& other)
-    : certStore(other.certStore)
-    , keyStore(other.keyStore) {
+    : certAuth(certAuth)
+    , certStore(certStore)
+    , keyStore(keyStore) {
     this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
 }
 
 iggy::tls::TLSContext::TLSContext(TLSContext&& other)
-    : certStore(other.certStore)
-    , keyStore(other.keyStore) {
+    : certAuth(certAuth)
+    , certStore(certStore)
+    , keyStore(keyStore) {
     this->ctx = other.ctx;
     other.ctx = nullptr;
 }

@@ -139,6 +139,8 @@ public:
         : overrideCaCertificatePath(overrideCaCertificatePath)
         , revocationMethod(revocationMethod) {}
 
+    CertificateAuthority(const CertificateAuthority& other) = default;
+    CertificateAuthority(CertificateAuthority&& other) noexcept = default;
     ~CertificateAuthority() = default;
 
     std::optional<std::string> getOverrideCaCertificatePath() { return this->overrideCaCertificatePath; }
