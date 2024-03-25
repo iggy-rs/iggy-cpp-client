@@ -5,6 +5,7 @@
         "titleBar.activeForeground": "#FEFBFC"
     },
     "clang-format.executable": "/usr/bin/clang-format",
+    "clang-format.style": "file",
     "editor.formatOnSave": true,
     "[cpp]": {
         "editor.defaultFormatter": "demiaochen.clang-format-indent-4"
