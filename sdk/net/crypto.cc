@@ -1,51 +1,29 @@
 #include "crypto.h"
+#include <fstream>
 #include "fmt/format.h"
 
-iggy::crypto::SSLContext::SSLContext() {
-    this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
-    if (!this->ctx) {
-        std::string errMsg =
-            fmt::format("Failed to allocate WolfSSL TLS context: {}", wolfSSL_ERR_error_string(wolfSSL_ERR_get_error(), nullptr));
-        throw std::runtime_error(errMsg);
+iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::filesystem::path certDir) {
+    if (!std::filesystem::exists(certDir) && std::filesystem::is_directory(certDir)) {
+        throw std::invalid_argument(fmt::format("certificate directory does not exist: {}", certDir.string()));
     }
-}
-
-iggy::crypto::SSLContext::SSLContext(const SSLContext& other) {
-    this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
-}
-
-iggy::crypto::SSLContext::SSLContext(SSLContext&& other) {
-    this->ctx = other.ctx;
-    other.ctx = nullptr;
-}
-
-iggy::crypto::SSLContext::~SSLContext() {
-    if (this->ctx) {
-        wolfSSL_CTX_free(this->ctx);
+    if (!std::filesystem::is_directory(certDir)) {
+        throw std::invalid_argument(fmt::format("certificate directory is not a valid directory: {}", certDir.string()));
     }
+    this->certDir = certDir;
 }
 
-iggy::crypto::SSLContext& iggy::crypto::SSLContext::operator=(const iggy::crypto::SSLContext& other) {
-    if (this != &other) {
-        if (this->ctx) {
-            wolfSSL_CTX_free(this->ctx);
-        }
-        this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
+std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(std::string certPath) const {
+    std::filesystem::path certFile = this->certDir / certPath;
+    if (!std::filesystem::exists(certFile)) {
+        throw std::invalid_argument(fmt::format("certificate file does not exist: {}", certFile.string()));
     }
-    return *this;
-}
-
-iggy::crypto::SSLContext& iggy::crypto::SSLContext::operator=(SSLContext&& other) {
-    if (this != &other) {
-        if (this->ctx) {
-            wolfSSL_CTX_free(this->ctx);
-        }
-        this->ctx = other.ctx;
-        other.ctx = nullptr;
+    std::ifstream certStream(certFile, std::ios::binary);
+    if (!certStream.is_open()) {
+        throw std::runtime_error(fmt::format("Failed to open certificate file: {}", certFile.string()));
     }
-    return *this;
-}
-
-void* iggy::crypto::SSLContext::getNativeHandle() const {
-    return nullptr;
+    std::vector<uint8_t> certData((std::istreambuf_iterator<char>(certStream)), std::istreambuf_iterator<char>());
+    if (certData.empty()) {
+        throw std::runtime_error(fmt::format("Invalid certificate file (empty): {}", certFile.string()));
+    }
+    return certData;
 }

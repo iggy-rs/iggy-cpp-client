@@ -26,7 +26,7 @@ include(ExternalProject)
 execute_process(COMMAND nproc OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE NPROC)
 externalproject_add(wolfssl
     GIT_REPOSITORY https://github.com/wolfSSL/wolfssl
-    GIT_TAG v5.6.6-stable
+    GIT_TAG v5.7.0-stable
     PREFIX ${CMAKE_BINARY_DIR}/wolfssl
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-all --enable-harden --enable-keylog-export --disable-ech
@@ -74,16 +74,10 @@ set(NGTCP2_INCLUDE_DIR ${CMAKE_BINARY_DIR}/ngtcp2/include)
 set(CURL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/curl/include)
 set(CURL_LIB_DIR ${CMAKE_BINARY_DIR}/curl/lib)
 
+file(GLOB_RECURSE IGGY_SOURCES "sdk/*.cc")
 add_library(
   iggy
-
-  sdk/client.cc
-  sdk/model.cc
-  sdk/serialization.cc
-  sdk/net/address.cc
-  sdk/net/crypto.cc
-  sdk/net/iggy.cc
-  sdk/net/protocol.cc
+  ${IGGY_SOURCES}
 )
 target_compile_features(iggy PRIVATE cxx_std_17)
 target_include_directories(iggy PRIVATE
