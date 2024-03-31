@@ -37,8 +37,8 @@ std::string getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion);
  */
 class SSLOptions {
 private:
+    PeerType peerType;
     std::optional<std::string> peerCertPath = std::nullopt;
-    PeerType peerType = PeerType::CLIENT;
     ProtocolVersion minimumSupportedProtocolVersion = ProtocolVersion::TLSV1_3;
     std::vector<std::string> ciphers = getDefaultCipherList(ProtocolVersion::TLSV1_3);
 
@@ -46,13 +46,46 @@ public:
     /**
      * Creates a default set of options for a TLS 1.3-compatible client.
      */
-    SSLOptions() = default;
+    explicit SSLOptions(PeerType peerType = PeerType::CLIENT)
+        : peerType(peerType) {}
 
     /**
      * @brief Gets the default cipher list for use in SSL/TLS contexts.
      * @return A vector of cipher strings, all uppercase.
      */
     static const std::vector<std::string> getDefaultCipherList(ProtocolVersion protocolVersion);
+
+    /**
+     * @brief Gets the type of peer endpoint represented by this end of the socket.
+     */
+    PeerType getPeerType() const { return this->peerType; }
+
+    /**
+     * @brief Sets the type of peer endpoint represented by the local end of the socket.
+     */
+    void setPeerType(PeerType peerType) { this->peerType = peerType; }
+
+    /**
+     * @brief Sets the type of peer endpoint represented by the local end of the socket.
+     */
+    std::optional<std::string> getPeerCertificatePath() const { return this->peerCertPath; }
+
+    /**
+     * @brief Sets the path to the peer's certificate, if any, to use for verifying the peer's identity.
+     */
+    void setPeerCertificatePath(const std::string& peerCertPath) { this->peerCertPath = peerCertPath; }
+
+    /**
+     * @brief Gets the minimum supported protocol version for the SSL/TLS context.
+     */
+    ProtocolVersion getMinimumSupportedProtocolVersion() const { return this->minimumSupportedProtocolVersion; }
+
+    /**
+     * @brief Sets the minimum supported protocol version for the SSL/TLS context.
+     */
+    void setMinimumSupportedProtocolVersion(ProtocolVersion minimumSupportedProtocolVersion) {
+        this->minimumSupportedProtocolVersion = minimumSupportedProtocolVersion;
+    }
 
     /**
      * @brief Gets the list of requested supported ciphers; will be validated by the context during init.
@@ -63,6 +96,14 @@ public:
      * @brief Sets the list of requested supported ciphers; will be validated by the context during init.
      */
     void setCiphers(const std::vector<std::string>& ciphers) { this->ciphers = ciphers; }
+
+    /**
+     * @brief Sanity checks the combination of options configured by the user.
+     * @param strict if true, will apply additional validations that may be more restrictive.
+     *
+     * Applies basic validations to the SSL options, e.g. if PeerType::SERVER is set, then a peer certificate path must be provided.
+     */
+    void validate(bool strict = true) const;
 };
 
 /**
