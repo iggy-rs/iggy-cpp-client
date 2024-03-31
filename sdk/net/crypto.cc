@@ -1,19 +1,22 @@
 #include "crypto.h"
 #include <fstream>
 #include "fmt/format.h"
+#include "spdlog/spdlog.h"
 
-iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::filesystem::path certDir) {
-    if (!std::filesystem::exists(certDir) && std::filesystem::is_directory(certDir)) {
-        throw std::invalid_argument(fmt::format("certificate directory does not exist: {}", certDir.string()));
-    }
-    if (!std::filesystem::is_directory(certDir)) {
-        throw std::invalid_argument(fmt::format("certificate directory is not a valid directory: {}", certDir.string()));
+iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<std::filesystem::path> certDir) {
+    auto certDirAbs = std::filesystem::absolute(certDir.value_or(std::filesystem::current_path())).make_preferred();
+    spdlog::debug("Loading certificates from {}", certDirAbs.string());
+    if (!std::filesystem::exists(certDirAbs)) {
+        throw std::invalid_argument(fmt::format("certificate directory does not exist: {}", certDirAbs.string()));
+    } else if (!std::filesystem::is_directory(certDirAbs)) {
+        throw std::invalid_argument(fmt::format("certificate directory is not a valid directory: {}", certDirAbs.string()));
     }
     this->certDir = certDir;
 }
 
-std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(std::string certPath) const {
-    std::filesystem::path certFile = this->certDir / certPath;
+const std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(const std::string certPath) const {
+    std::filesystem::path certFile = (this->certDir.value() / certPath).make_preferred();
+    spdlog::debug("Loading certificate from {}", certFile.string());
     if (!std::filesystem::exists(certFile)) {
         throw std::invalid_argument(fmt::format("certificate file does not exist: {}", certFile.string()));
     }
@@ -26,4 +29,33 @@ std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(std::st
         throw std::runtime_error(fmt::format("Invalid certificate file (empty): {}", certFile.string()));
     }
     return certData;
+}
+
+iggy::crypto::LocalKeyStore::LocalKeyStore(const std::optional<std::filesystem::path> keyDir) {
+    auto keyDirAbs = std::filesystem::absolute(keyDir.value_or(std::filesystem::current_path())).make_preferred();
+    spdlog::debug("Loading private keys from {}", keyDirAbs.string());
+    if (!std::filesystem::exists(keyDirAbs)) {
+        throw std::invalid_argument(fmt::format("key directory does not exist: {}", keyDirAbs.string()));
+    }
+    if (!std::filesystem::is_directory(keyDirAbs)) {
+        throw std::invalid_argument(fmt::format("key directory is not a valid directory: {}", keyDirAbs.string()));
+    }
+    this->privateKeyDir = keyDirAbs;
+}
+
+const std::vector<uint8_t> iggy::crypto::LocalKeyStore::getPrivateKey(const std::string keyPath) const {
+    std::filesystem::path keyFile = (this->privateKeyDir.value() / keyPath).make_preferred();
+    spdlog::debug("Loading private key from {}", keyFile.string());
+    if (!std::filesystem::exists(keyFile)) {
+        throw std::invalid_argument(fmt::format("private key file does not exist: {}", keyFile.string()));
+    }
+    std::ifstream keyStream(keyFile, std::ios::binary);
+    if (!keyStream.is_open()) {
+        throw std::runtime_error(fmt::format("Failed to open private key file: {}", keyFile.string()));
+    }
+    std::vector<uint8_t> keyData((std::istreambuf_iterator<char>(keyStream)), std::istreambuf_iterator<char>());
+    if (keyData.empty()) {
+        throw std::runtime_error(fmt::format("Invalid private key file (empty): {}", keyFile.string()));
+    }
+    return keyData;
 }

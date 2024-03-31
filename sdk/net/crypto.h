@@ -21,36 +21,18 @@ enum CertificateFormat { PEM = 1, ASN1 = 2 };
  * or a secret vault.
  */
 class CertificateStore {
-private:
-    CertificateFormat certificateFormat;
-
 public:
-    explicit CertificateStore(CertificateFormat format = CertificateFormat::PEM)
-        : certificateFormat(format) {}
-
-    CertificateStore(const CertificateStore& other)
-        : certificateFormat(other.certificateFormat) {}
-
-    CertificateStore(CertificateStore&& other) noexcept
-        : certificateFormat(other.certificateFormat) {}
+    CertificateStore() = default;
+    virtual ~CertificateStore() = default;
 
     /**
      * @brief Retrieves a certificate from the store.
      * @param certPath A slash-delimited abstract path to the certificate file;
      * this may be translated according to the backend storage to a
      * filesystem-specific path or some other convention.
-     * @return A vector of bytes representing the certificate in PEM or ASN.1
-     * based on the format.
+     * @return A vector of bytes representing the certificate in PEM or ASN.1.
      */
-    virtual std::vector<uint8_t> getCertificate(std::string certPath) const = 0;
-
-    /**
-     * @brief Retrieves the certificate verification chain from root CA
-     * certificate to leaf.
-     * @return A vector of bytes representing the certificate chain in PEM or
-     * ASN.1 based on the format.
-     */
-    virtual std::vector<uint8_t> getCertificateVerificationChain() const = 0;
+    virtual const std::vector<uint8_t> getCertificate(const std::string certPath) const = 0;
 };
 
 /**
@@ -58,16 +40,17 @@ public:
  */
 class LocalCertificateStore : public CertificateStore {
 private:
-    std::filesystem::path certDir;
+    std::optional<std::filesystem::path> certDir;
 
 public:
-    explicit LocalCertificateStore(const std::filesystem::path certDir);
+    explicit LocalCertificateStore(const std::optional<std::filesystem::path> certDir = std::nullopt);
+    ~LocalCertificateStore() = default;
 
     /**
      * Retrieves the certificate from the filesystem, translating the abstract
      * path to a filesystem-appropriate absolute path.
      */
-    std::vector<uint8_t> getCertificate(std::string certPath) const override;
+    const std::vector<uint8_t> getCertificate(const std::string certPath) const override;
 };
 
 /**
@@ -76,7 +59,17 @@ public:
  */
 class KeyStore {
 public:
-    virtual std::vector<uint8_t> getPrivateKey(std::string keyPath) const = 0;
+    KeyStore() = default;
+    virtual ~KeyStore() = default;
+
+    /**
+     * @brief Retrieves the private key data from the store.
+     * @param keyPath A slash-delimited abstract path to the key file;
+     * this may be translated according to the backend storage to a
+     * filesystem-specific path or some other convention.
+     * @return A vector of bytes representing the key in PEM or ASN.1.
+     */
+    virtual const std::vector<uint8_t> getPrivateKey(const std::string keyPath) const = 0;
 };
 
 /**
@@ -85,7 +78,17 @@ public:
  */
 class LocalKeyStore : public KeyStore {
 private:
-    std::optional<std::filesystem::path> privateKeyPath;
+    std::optional<std::filesystem::path> privateKeyDir;
+
+public:
+    explicit LocalKeyStore(const std::optional<std::filesystem::path> privateKeyDir = std::nullopt);
+    ~LocalKeyStore() = default;
+
+    /**
+     * Retrieves the private key materials from the filesystem, translating the abstract
+     * path to a filesystem-appropriate absolute path.
+     */
+    const std::vector<uint8_t> getPrivateKey(const std::string keyPath) const override;
 };
 
 /**
@@ -98,7 +101,8 @@ public:
 };
 
 /**
- * @brief Certificate revocation list (CRL)-based revocation method.
+ * @brief Certificate revocation list (CRL)-based revocation method. If there are no CRL paths or URLs
+ * specified, the CRL is assumed to be embedded in the CA certificate.
  */
 class CRL : public RevocationMethod {
 private:
@@ -109,10 +113,21 @@ public:
     explicit CRL(std::optional<std::filesystem::path> crlPath = std::nullopt, std::optional<ada::url> crlUrl = std::nullopt)
         : crlPath(crlPath)
         , crlUrl(crlUrl) {}
+
+    /**
+     * @brief If specified (default: not), the filesystem path to the CRL file.
+     */
+    const std::optional<std::filesystem::path> getCrlPath() const { return this->crlPath; }
+
+    /**
+     * @brief If specified (default: not), an HTTP URL from which to load the CRL.
+     */
+    const std::optional<ada::url> getCrlUrl() const { return this->crlUrl; }
 };
 
 /**
- * @brief Online Certificate Status Protocol (OCSP)-based revocation method.
+ * @brief Online Certificate Status Protocol (OCSP)-based revocation method. If there is no override
+ * OCSP URL specified, the OCSP URL is assumed to be embedded in the CA certificate.
  */
 class OCSP : public RevocationMethod {
 private:
@@ -121,21 +136,26 @@ private:
 public:
     explicit OCSP(std::optional<ada::url> ocspOverrideUrl = std::nullopt)
         : ocspOverrideUrl(ocspOverrideUrl) {}
+
+    /**
+     * @brief If specified (default: not), an HTTP URL used to check the status of certificates.
+     */
+    const std::optional<ada::url> getOcspOverrideUrl() const { return this->ocspOverrideUrl; }
 };
 
 /**
- * @brief Authority for verifying certificates -- either through checking
- * against a centralized CA, or via a trusted peer relationship.
+ * @brief Authority for verifying certificates -- either through checking against a centralized CA, or via a trusted peer relationship. If
+ * all defaults are taken, the system CA paths will be used, with revocation checking enabled via OCSP.
  */
 class CertificateAuthority {
 private:
-    std::optional<std::string> overrideCaCertificatePath;
+    const std::optional<std::string> overrideCaCertificatePath;
     std::vector<std::string> trustedPeerCertificatePaths;
-    RevocationMethod& revocationMethod;
+    const RevocationMethod& revocationMethod;
 
 public:
     explicit CertificateAuthority(const std::optional<std::string> overrideCaCertificatePath = std::nullopt,
-                                  const RevocationMethod& rand = OCSP())
+                                  const RevocationMethod& revocationMethod = OCSP())
         : overrideCaCertificatePath(overrideCaCertificatePath)
         , revocationMethod(revocationMethod) {}
 
@@ -143,11 +163,20 @@ public:
     CertificateAuthority(CertificateAuthority&& other) noexcept = default;
     ~CertificateAuthority() = default;
 
-    std::optional<std::string> getOverrideCaCertificatePath() { return this->overrideCaCertificatePath; }
+    /**
+     * @brief If specified (default: not), the filesystem path to the CA certificate path file.
+     */
+    const std::optional<std::string> getOverrideCaCertificatePath() const { return this->overrideCaCertificatePath; }
 
-    std::vector<std::string> getTrustedPeerCertificatePaths() { return this->trustedPeerCertificatePaths; }
+    /**
+     * @brief Gets all specified trusted peer certificate paths, if any.
+     */
+    const std::vector<std::string> getTrustedPeerCertificatePaths() const { return this->trustedPeerCertificatePaths; }
 
-    void addTrustedPeerCertificate(std::string certPath) { this->trustedPeerCertificatePaths.push_back(certPath); }
+    /**
+     * @brief Adds a trusted peer certificate path; optional -- if none, only CA-verified certificates will be trusted.
+     */
+    void addTrustedPeerCertificate(const std::string certPath) { this->trustedPeerCertificatePaths.push_back(certPath); }
 };
 
 };  // namespace crypto
