@@ -47,6 +47,14 @@ public:
     ~LocalCertificateStore() = default;
 
     /**
+     * @brief Gets the default instance, which loads from the current working directory.
+     */
+    static LocalCertificateStore& getDefault() {
+        static LocalCertificateStore instance;
+        return instance;
+    }
+
+    /**
      * Retrieves the certificate from the filesystem, translating the abstract
      * path to a filesystem-appropriate absolute path.
      */
@@ -83,6 +91,14 @@ private:
 public:
     explicit LocalKeyStore(const std::optional<std::filesystem::path> privateKeyDir = std::nullopt);
     ~LocalKeyStore() = default;
+
+    /**
+     * @brief Gets the default instance, which loads from the current working directory.
+     */
+    static LocalKeyStore& getDefault() {
+        static LocalKeyStore instance;
+        return instance;
+    }
 
     /**
      * Retrieves the private key materials from the filesystem, translating the abstract
@@ -131,10 +147,10 @@ public:
  */
 class OCSP : public RevocationMethod {
 private:
-    std::optional<ada::url> ocspOverrideUrl;
+    const std::optional<ada::url> ocspOverrideUrl;
 
 public:
-    explicit OCSP(std::optional<ada::url> ocspOverrideUrl = std::nullopt)
+    explicit OCSP(const std::optional<ada::url> ocspOverrideUrl = std::nullopt)
         : ocspOverrideUrl(ocspOverrideUrl) {}
 
     /**
@@ -149,19 +165,23 @@ public:
  */
 class CertificateAuthority {
 private:
-    const std::optional<std::string> overrideCaCertificatePath;
-    std::vector<std::string> trustedPeerCertificatePaths;
-    const RevocationMethod& revocationMethod;
+    std::optional<std::string> overrideCaCertificatePath;
+    std::vector<std::string> trustedPeerCertificatePaths = std::vector<std::string>();
+    RevocationMethod* revocationMethod;
 
 public:
-    explicit CertificateAuthority(const std::optional<std::string> overrideCaCertificatePath = std::nullopt,
-                                  const RevocationMethod& revocationMethod = OCSP())
+    explicit CertificateAuthority(std::optional<std::string> overrideCaCertificatePath = std::nullopt,
+                                  RevocationMethod* revocationMethod = new OCSP())
         : overrideCaCertificatePath(overrideCaCertificatePath)
         , revocationMethod(revocationMethod) {}
 
-    CertificateAuthority(const CertificateAuthority& other) = default;
-    CertificateAuthority(CertificateAuthority&& other) noexcept = default;
-    ~CertificateAuthority() = default;
+    /**
+     * @brief Gets the default instance, which uses the system CA store and OCSP.
+     */
+    static CertificateAuthority& getDefault() {
+        static CertificateAuthority instance;
+        return instance;
+    }
 
     /**
      * @brief If specified (default: not), the filesystem path to the CA certificate path file.
