@@ -22,7 +22,12 @@ enum PeerType { CLIENT, SERVER };
  * We do not support the older, less-secure variations since the expectation is the library will be used in a controlled client-server
  * environment where the developer can ensure the server endpoint is adequately hardened.
  */
-enum ProtocolVersion { SSLV3 = 0, TLSV1_2 = 1, TLSV1_3 = 2 };
+enum ProtocolVersion { TLSV1_2 = 0, TLSV1_3 = 1 };
+
+/**
+ * @brief Helper function to get protocol version name given the enum.
+ */
+std::string getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion);
 
 /**
  * @brief All options related to SSL/TLS are in -- what ciphers to use, client vs. server, etc..
@@ -34,8 +39,8 @@ class SSLOptions {
 private:
     std::optional<std::string> peerCertPath = std::nullopt;
     PeerType peerType = PeerType::CLIENT;
-    ProtocolVersion minimumSupportedProtocolVersion = TLSV1_3;
-    std::vector<std::string> ciphers = getDefaultCipherList();
+    ProtocolVersion minimumSupportedProtocolVersion = ProtocolVersion::TLSV1_3;
+    std::vector<std::string> ciphers = getDefaultCipherList(ProtocolVersion::TLSV1_3);
 
 public:
     /**
@@ -47,7 +52,7 @@ public:
      * @brief Gets the default cipher list for use in SSL/TLS contexts.
      * @return A vector of cipher strings, all uppercase.
      */
-    static const std::vector<std::string> getDefaultCipherList();
+    static const std::vector<std::string> getDefaultCipherList(ProtocolVersion protocolVersion);
 
     /**
      * @brief Gets the list of requested supported ciphers; will be validated by the context during init.

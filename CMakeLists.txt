@@ -29,8 +29,9 @@ externalproject_add(wolfssl
     GIT_TAG v5.7.0-stable
     PREFIX ${CMAKE_BINARY_DIR}/wolfssl
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-all --enable-harden --enable-keylog-export --disable-ech
+    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-all --enable-harden --enable-keylog-export --enable-static --disable-ech
     BUILD_COMMAND make -j ${NPROC}
+    BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/wolfssl/lib/libwolfssl.a
     INSTALL_COMMAND make install
     UPDATE_COMMAND ""
 )
@@ -69,6 +70,7 @@ externalproject_add(curl
 )
 
 set(WOLFSSL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/wolfssl/include)
+set(WOLFSSL_LIB_DIR ${CMAKE_BINARY_DIR}/wolfssl/lib)
 set(NGHTTP3_INCLUDE_DIR ${CMAKE_BINARY_DIR}/nghttp3/include)
 set(NGTCP2_INCLUDE_DIR ${CMAKE_BINARY_DIR}/ngtcp2/include)
 set(CURL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/curl/include)
@@ -88,14 +90,16 @@ target_include_directories(iggy PRIVATE
   ${NGTCP2_INCLUDE_DIR}
   ${CURL_INCLUDE_DIR}
 )
-add_dependencies(iggy curl)
+add_dependencies(iggy curl wolfssl)
 target_link_libraries(
   iggy PRIVATE
 
   ada::ada
+  fmt::fmt
   libuv::uv_a
   unofficial-sodium::sodium
   ${CURL_LIB_DIR}/libcurl.a
+  ${WOLFSSL_LIB_DIR}/libwolfssl.a
 )
 
 # even though this is related to unit tests, to get a full report we need to ensure that

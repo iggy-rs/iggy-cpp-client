@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include "../sdk/model.h"
 #include "unit_testutils.h"
 
