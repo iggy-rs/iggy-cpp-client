@@ -11,7 +11,7 @@ iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<s
     } else if (!std::filesystem::is_directory(certDirAbs)) {
         throw std::invalid_argument(fmt::format("certificate directory is not a valid directory: {}", certDirAbs.string()));
     }
-    this->certDir = certDir;
+    this->certDir = certDirAbs;
 }
 
 const std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(const std::string certPath) const {

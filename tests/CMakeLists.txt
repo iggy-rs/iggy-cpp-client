@@ -7,9 +7,11 @@ if(BUILD_TESTS)
     iggy_cpp_test
 
     client_test.cc
+    crypto_test.cc
     iggy_protocol_provider_test.cc
     model_test.cc
     ssl_test.cc
+    unit_testutils.cc
   )
   target_compile_features(iggy_cpp_test PRIVATE cxx_std_17)
   target_include_directories(iggy_cpp_test PRIVATE

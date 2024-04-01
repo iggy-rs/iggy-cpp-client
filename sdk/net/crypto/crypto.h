@@ -148,15 +148,22 @@ public:
 class OCSP : public RevocationMethod {
 private:
     const std::optional<ada::url> ocspOverrideUrl;
+    const bool staplingEnabled;
 
 public:
-    explicit OCSP(const std::optional<ada::url> ocspOverrideUrl = std::nullopt)
-        : ocspOverrideUrl(ocspOverrideUrl) {}
+    explicit OCSP(const std::optional<ada::url> ocspOverrideUrl = std::nullopt, const bool staplingEnabled = true)
+        : ocspOverrideUrl(ocspOverrideUrl)
+        , staplingEnabled(staplingEnabled) {}
 
     /**
      * @brief If specified (default: not), an HTTP URL used to check the status of certificates.
      */
     const std::optional<ada::url> getOcspOverrideUrl() const { return this->ocspOverrideUrl; }
+
+    /**
+     * @brief If enabled, servers will cache OCSP verification checks to improve performance.
+     */
+    const bool isStaplingEnabled() const { return this->staplingEnabled; }
 };
 
 /**
