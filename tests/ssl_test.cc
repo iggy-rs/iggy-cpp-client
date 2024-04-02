@@ -72,45 +72,36 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
 
     iggy::ssl::PKIEnvironment pkiEnv(ca, certStore, keyStore);
 
-    SECTION("TLS 1.2") {
-        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_2);
-        auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
+    SECTION("TLS version support") {
+        auto [requestedVersion, minProtoVersion, maxProtoVersion] =
+            GENERATE(std::make_tuple(iggy::ssl::ProtocolVersion::TLSV1_2, TLS1_2_VERSION, TLS1_3_VERSION),
+                     std::make_tuple(iggy::ssl::ProtocolVersion::TLSV1_3, TLS1_3_VERSION, TLS1_3_VERSION));
 
-        REQUIRE(sslCtx.getNativeHandle() != nullptr);
+        SECTION(iggy::ssl::getProtocolVersionName(requestedVersion)) {
+            options.setMinimumSupportedProtocolVersion(requestedVersion);
+            auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
 
-        WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
-        REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == TLS1_2_VERSION);
-        REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == TLS1_3_VERSION);
+            REQUIRE(sslCtx.getNativeHandle() != nullptr);
 
-        // test copy and move constructors
-        auto sslCtxNew = sslCtx;
-        REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
+            WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
+            REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == minProtoVersion);
+            REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == maxProtoVersion);
 
-        auto sslCtxMoved = std::move(sslCtxNew);
-        REQUIRE(sslCtxNew.getNativeHandle() == nullptr);
-        REQUIRE(sslCtxMoved.getNativeHandle() != nullptr);
+            // test copy and move constructors
+            auto sslCtxNew = sslCtx;
+            REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
 
-        // test copy and move operators
-        sslCtxNew = sslCtxMoved;
-        REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
+            auto sslCtxMoved = std::move(sslCtxNew);
+            REQUIRE(sslCtxNew.getNativeHandle() == nullptr);
+            REQUIRE(sslCtxMoved.getNativeHandle() != nullptr);
 
-        iggy::ssl::SSLContext sslCtxNew2;
-        sslCtxNew2 = std::move(sslCtx);
-    }
+            // test copy and move operators
+            sslCtxNew = sslCtxMoved;
+            REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
 
-    SECTION("TLS 1.3") {
-        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_3);
-        auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
-        REQUIRE(sslCtx.getNativeHandle() != nullptr);
-
-        WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
-        REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == TLS1_3_VERSION);
-        REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == TLS1_3_VERSION);
-
-        auto sslCtxNew = sslCtx;
-        auto sslCtxMoved = std::move(sslCtxNew);
-        REQUIRE(sslCtxNew.getNativeHandle() == nullptr);
-        REQUIRE(sslCtxMoved.getNativeHandle() != nullptr);
+            iggy::ssl::SSLContext sslCtxNew2;
+            sslCtxNew2 = std::move(sslCtx);
+        }
     }
 }
 
