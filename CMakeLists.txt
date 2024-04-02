@@ -19,6 +19,7 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 # these do not correctly support CMake
 find_path(ADA_INCLUDE_DIR ada.h REQUIRED)
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
+find_path(UTF8H_INCLUDE_DIRS "utf8h/utf8.h")
 
 # customize the builds of key networking components; WolfSSL is not
 # well supported in vcpkg and we want to have more control here
@@ -89,6 +90,7 @@ target_include_directories(iggy PRIVATE
   ${NGHTTP3_INCLUDE_DIR}
   ${NGTCP2_INCLUDE_DIR}
   ${CURL_INCLUDE_DIR}
+  ${UTF8H_INCLUDE_DIRS}
 )
 add_dependencies(iggy curl wolfssl)
 target_link_libraries(

@@ -10,6 +10,7 @@ if(BUILD_TESTS)
     crypto_test.cc
     iggy_protocol_provider_test.cc
     model_test.cc
+    serialization_test.cc
     ssl_test.cc
     unit_testutils.cc
   )

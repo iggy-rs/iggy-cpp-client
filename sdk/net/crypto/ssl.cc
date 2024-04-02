@@ -71,8 +71,17 @@ iggy::ssl::SSLContext::SSLContext(const SSLOptions& options, const PKIEnvironmen
     // before we make any other wolfSSL calls, make sure library is initialized once and only once
     std::call_once(sslInitDone, []() { wolfSSL_Init(); });
 
-    // for now we only support a TLS 1.3 client context; if we generalize this code we can expand
-    this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
+    auto protocolVersion = options.getMinimumSupportedProtocolVersion();
+    if (protocolVersion == iggy::ssl::ProtocolVersion::TLSV1_2) {
+        this->ctx = wolfSSL_CTX_new(wolfTLSv1_2_client_method());
+        wolfSSL_CTX_set_min_proto_version(this->ctx, TLS1_2_VERSION);
+    } else if (protocolVersion == iggy::ssl::ProtocolVersion::TLSV1_3) {
+        this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
+        wolfSSL_CTX_set_min_proto_version(this->ctx, TLS1_3_VERSION);
+    } else {
+        auto protocolVersionName = iggy::ssl::getProtocolVersionName(protocolVersion);
+        throw std::runtime_error(fmt::format("Unsupported protocol version: {}", protocolVersionName));
+    }
     if (!this->ctx) {
         char* errMsg = wolfSSL_ERR_error_string(wolfSSL_ERR_get_error(), nullptr);
         throw std::runtime_error(fmt::format("Failed to allocate WolfSSL TLS context: {}", errMsg));

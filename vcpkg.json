@@ -2,11 +2,11 @@
     "dependencies": [
         "ada-url",
         "catch2",
-        "icu",
         "fmt",
         "libsodium",
         "libuv",
         "reproc",
-        "spdlog"
+        "spdlog",
+        "utf8h"
     ]
 }

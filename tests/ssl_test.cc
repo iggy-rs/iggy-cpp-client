@@ -58,3 +58,69 @@ TEST_CASE("SSL configuration", UT_TAG) {
         REQUIRE_NOTHROW(options.validate(true));
     }
 }
+
+TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_TAG) {
+    auto certPath = getCertificatePath().filename();
+    auto keyPath = getKeyPath().filename();
+
+    auto ca = iggy::crypto::CertificateAuthority();
+    auto certStore = iggy::crypto::LocalCertificateStore(std::filesystem::temp_directory_path());
+    auto keyStore = iggy::crypto::LocalKeyStore(std::filesystem::temp_directory_path());
+
+    auto options = iggy::ssl::SSLOptions();
+    options.setPeerCertificatePath(certPath);
+
+    iggy::ssl::PKIEnvironment pkiEnv(ca, certStore, keyStore);
+
+    SECTION("TLS 1.2") {
+        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_2);
+        auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
+
+        REQUIRE(sslCtx.getNativeHandle() != nullptr);
+
+        WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
+        REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == TLS1_2_VERSION);
+        REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == TLS1_3_VERSION);
+
+        // test copy and move constructors
+        auto sslCtxNew = sslCtx;
+        REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
+
+        auto sslCtxMoved = std::move(sslCtxNew);
+        REQUIRE(sslCtxNew.getNativeHandle() == nullptr);
+        REQUIRE(sslCtxMoved.getNativeHandle() != nullptr);
+
+        // test copy and move operators
+        sslCtxNew = sslCtxMoved;
+        REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
+
+        iggy::ssl::SSLContext sslCtxNew2;
+        sslCtxNew2 = std::move(sslCtx);
+    }
+
+    SECTION("TLS 1.3") {
+        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_3);
+        auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
+        REQUIRE(sslCtx.getNativeHandle() != nullptr);
+
+        WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
+        REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == TLS1_3_VERSION);
+        REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == TLS1_3_VERSION);
+
+        auto sslCtxNew = sslCtx;
+        auto sslCtxMoved = std::move(sslCtxNew);
+        REQUIRE(sslCtxNew.getNativeHandle() == nullptr);
+        REQUIRE(sslCtxMoved.getNativeHandle() != nullptr);
+    }
+}
+
+TEST_CASE("error message conversion", UT_TAG) {
+    SECTION("TLS 1.2") {
+        auto displayName = iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion::TLSV1_2);
+        REQUIRE(displayName == "TLSV1_2");
+    }
+    SECTION("TLS 1.3") {
+        auto displayName = iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion::TLSV1_3);
+        REQUIRE(displayName == "TLSV1_3");
+    }
+}
