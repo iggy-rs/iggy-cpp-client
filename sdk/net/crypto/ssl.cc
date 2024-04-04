@@ -2,7 +2,20 @@
 #include <numeric>
 #include "fmt/format.h"
 
-const std::vector<std::string> iggy::ssl::SSLOptions::getDefaultCipherList(iggy::ssl::ProtocolVersion protocolVersion) {
+std::string iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion) {
+    switch (protocolVersion) {
+        case iggy::ssl::ProtocolVersion::TLSV1_3:
+            return "TLSV1_3";
+        case iggy::ssl::ProtocolVersion::TLSV1_2:
+            return "TLSV1_2";
+        default:
+            int protocolVersionInt = static_cast<int>(protocolVersion);
+            throw std::runtime_error(fmt::format("Unsupported protocol version code: {}", protocolVersionInt));
+    }
+}
+
+template <>
+const std::vector<std::string> iggy::ssl::SSLOptions<WOLFSSL_CTX*>::getDefaultCipherList(iggy::ssl::ProtocolVersion protocolVersion) {
     auto ciphers = std::vector<std::string>();
 
     // References:
@@ -65,7 +78,20 @@ const std::vector<std::string> iggy::ssl::SSLOptions::getDefaultCipherList(iggy:
     return ciphers;
 }
 
-iggy::ssl::SSLContext::SSLContext(const SSLOptions& options, const PKIEnvironment& pkiEnv)
+template <>
+void iggy::ssl::SSLOptions<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {
+    // TODO
+}
+
+template <>
+void iggy::ssl::SSLContext<WOLFSSL_CTX*>::raiseSSLError(const std::string& message) const {
+    char* errMsg = wolfSSL_ERR_error_string(wolfSSL_ERR_get_error(), nullptr);
+    throw std::runtime_error(fmt::format("{}: {}", message, errMsg));
+}
+
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>::SSLContext(const SSLOptions<WOLFSSL_CTX*>& options,
+                                                const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv)
     : options(options)
     , pkiEnv(pkiEnv) {
     // before we make any other wolfSSL calls, make sure library is initialized once and only once
@@ -74,17 +100,19 @@ iggy::ssl::SSLContext::SSLContext(const SSLOptions& options, const PKIEnvironmen
     auto protocolVersion = options.getMinimumSupportedProtocolVersion();
     if (protocolVersion == iggy::ssl::ProtocolVersion::TLSV1_2) {
         this->ctx = wolfSSL_CTX_new(wolfTLSv1_2_client_method());
+        if (!this->ctx) {
+            raiseSSLError("Failed to allocate WolfSSL context");
+        }
         wolfSSL_CTX_set_min_proto_version(this->ctx, TLS1_2_VERSION);
     } else if (protocolVersion == iggy::ssl::ProtocolVersion::TLSV1_3) {
         this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
+        if (!this->ctx) {
+            raiseSSLError("Failed to allocate WolfSSL context");
+        }
         wolfSSL_CTX_set_min_proto_version(this->ctx, TLS1_3_VERSION);
     } else {
         auto protocolVersionName = iggy::ssl::getProtocolVersionName(protocolVersion);
         throw std::runtime_error(fmt::format("Unsupported protocol version: {}", protocolVersionName));
-    }
-    if (!this->ctx) {
-        char* errMsg = wolfSSL_ERR_error_string(wolfSSL_ERR_get_error(), nullptr);
-        throw std::runtime_error(fmt::format("Failed to allocate WolfSSL TLS context: {}", errMsg));
     }
     this->cm = wolfSSL_CTX_GetCertManager(ctx);
 
@@ -104,7 +132,8 @@ iggy::ssl::SSLContext::SSLContext(const SSLOptions& options, const PKIEnvironmen
     }
 }
 
-void iggy::ssl::SSLOptions::validate(bool strict) const {
+template <>
+void iggy::ssl::SSLOptions<WOLFSSL_CTX*>::validate(bool strict) const {
     if (strict) {
         if (this->minimumSupportedProtocolVersion != iggy::ssl::ProtocolVersion::TLSV1_3) {
             throw std::runtime_error("Only TLS 1.3 is supported in strict mode");
@@ -115,14 +144,16 @@ void iggy::ssl::SSLOptions::validate(bool strict) const {
     }
 }
 
-iggy::ssl::SSLContext::SSLContext(const SSLContext& other)
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>::SSLContext(const SSLContext<WOLFSSL_CTX*>& other)
     : options(other.options)
     , pkiEnv(other.pkiEnv) {
     this->ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
     this->cm = wolfSSL_CTX_GetCertManager(ctx);
 }
 
-iggy::ssl::SSLContext::SSLContext(SSLContext&& other)
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>::SSLContext(SSLContext<WOLFSSL_CTX*>&& other)
     : options(other.options)
     , pkiEnv(other.pkiEnv) {
     this->ctx = other.ctx;
@@ -131,13 +162,15 @@ iggy::ssl::SSLContext::SSLContext(SSLContext&& other)
     other.cm = nullptr;
 }
 
-iggy::ssl::SSLContext::~SSLContext() {
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>::~SSLContext() {
     if (this->ctx) {
         wolfSSL_CTX_free(this->ctx);
     }
 }
 
-iggy::ssl::SSLContext& iggy::ssl::SSLContext::operator=(const iggy::ssl::SSLContext& other) {
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>& iggy::ssl::SSLContext<WOLFSSL_CTX*>::operator=(const iggy::ssl::SSLContext<WOLFSSL_CTX*>& other) {
     if (this != &other) {
         if (this->ctx) {
             wolfSSL_CTX_free(this->ctx);
@@ -147,7 +180,8 @@ iggy::ssl::SSLContext& iggy::ssl::SSLContext::operator=(const iggy::ssl::SSLCont
     return *this;
 }
 
-iggy::ssl::SSLContext& iggy::ssl::SSLContext::operator=(SSLContext&& other) {
+template <>
+iggy::ssl::SSLContext<WOLFSSL_CTX*>& iggy::ssl::SSLContext<WOLFSSL_CTX*>::operator=(SSLContext<WOLFSSL_CTX*>&& other) {
     if (this != &other) {
         if (this->ctx) {
             wolfSSL_CTX_free(this->ctx);
@@ -158,16 +192,5 @@ iggy::ssl::SSLContext& iggy::ssl::SSLContext::operator=(SSLContext&& other) {
     return *this;
 }
 
-std::string iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion) {
-    switch (protocolVersion) {
-        case iggy::ssl::ProtocolVersion::TLSV1_3:
-            return "TLSV1_3";
-        case iggy::ssl::ProtocolVersion::TLSV1_2:
-            return "TLSV1_2";
-        default:
-            int protocolVersionInt = static_cast<int>(protocolVersion);
-            throw std::runtime_error(fmt::format("Unsupported protocol version code: {}", protocolVersionInt));
-    }
-}
-
-std::once_flag iggy::ssl::SSLContext::sslInitDone = std::once_flag();
+template <>
+std::once_flag iggy::ssl::SSLContext<WOLFSSL_CTX*>::sslInitDone = std::once_flag();

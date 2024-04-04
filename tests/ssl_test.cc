@@ -2,7 +2,7 @@
 #include "unit_testutils.h"
 
 TEST_CASE("SSL configuration", UT_TAG) {
-    iggy::ssl::SSLOptions options;
+    iggy::ssl::SSLOptions<WOLFSSL_CTX*> options;
 
     SECTION("expected basic default settings") {
         // default options should always be strictly valid
@@ -63,14 +63,14 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
     auto certPath = getCertificatePath().filename();
     auto keyPath = getKeyPath().filename();
 
-    auto ca = iggy::crypto::CertificateAuthority();
+    auto ca = iggy::crypto::CertificateAuthority<WOLFSSL_CTX*>();
     auto certStore = iggy::crypto::LocalCertificateStore(std::filesystem::temp_directory_path());
     auto keyStore = iggy::crypto::LocalKeyStore(std::filesystem::temp_directory_path());
 
-    auto options = iggy::ssl::SSLOptions();
+    auto options = iggy::ssl::SSLOptions<WOLFSSL_CTX*>();
     options.setPeerCertificatePath(certPath);
 
-    iggy::ssl::PKIEnvironment pkiEnv(ca, certStore, keyStore);
+    iggy::crypto::PKIEnvironment<WOLFSSL_CTX*> pkiEnv(ca, certStore, keyStore);
 
     SECTION("TLS version support") {
         auto [requestedVersion, minProtoVersion, maxProtoVersion] =
@@ -79,7 +79,7 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
 
         SECTION(iggy::ssl::getProtocolVersionName(requestedVersion)) {
             options.setMinimumSupportedProtocolVersion(requestedVersion);
-            auto sslCtx = iggy::ssl::SSLContext(options, pkiEnv);
+            auto sslCtx = iggy::ssl::SSLContext<WOLFSSL_CTX*>(options, pkiEnv);
 
             REQUIRE(sslCtx.getNativeHandle() != nullptr);
 
@@ -99,7 +99,7 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
             sslCtxNew = sslCtxMoved;
             REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
 
-            iggy::ssl::SSLContext sslCtxNew2;
+            iggy::ssl::SSLContext<WOLFSSL_CTX*> sslCtxNew2;
             sslCtxNew2 = std::move(sslCtx);
         }
     }

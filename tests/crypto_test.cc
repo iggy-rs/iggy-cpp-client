@@ -19,14 +19,14 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "private key loading", U
 
 TEST_CASE("revocation methods", UT_TAG) {
     SECTION("default CRL configuration") {
-        iggy::crypto::CRL crl;
+        iggy::crypto::CRL<WOLFSSL_CTX*> crl;
 
         REQUIRE(!crl.getCrlPath().has_value());
         REQUIRE(!crl.getCrlUrl().has_value());
     }
 
     SECTION("default OCSP configuration") {
-        iggy::crypto::OCSP ocsp;
+        iggy::crypto::OCSP<WOLFSSL_CTX*> ocsp;
 
         REQUIRE(!ocsp.getOcspOverrideUrl().has_value());
         REQUIRE(ocsp.isStaplingEnabled());

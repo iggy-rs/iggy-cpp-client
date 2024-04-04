@@ -2,6 +2,7 @@
 #include <fstream>
 #include "fmt/format.h"
 #include "spdlog/spdlog.h"
+#include "ssl_engine.h"
 
 iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<std::filesystem::path> certDir) {
     auto certDirAbs = std::filesystem::absolute(certDir.value_or(std::filesystem::current_path())).make_preferred();
@@ -59,3 +60,13 @@ const std::vector<uint8_t> iggy::crypto::LocalKeyStore::getPrivateKey(const std:
     }
     return keyData;
 }
+
+template <>
+void iggy::crypto::CRL<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
+
+template <>
+void iggy::crypto::OCSP<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
+
+template <>
+void iggy::crypto::CertificateAuthority<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle,
+                                                                 const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}

@@ -107,10 +107,28 @@ public:
     const std::vector<uint8_t> getPrivateKey(const std::string keyPath) const override;
 };
 
+// forward declaration
+template <typename HandleType>
+class PKIEnvironment;
+
+/**
+ * Base type for objects that can be configured with library-specific calls. You will need
+ * a specialization for each library supported, e.g. wolfSSL, OpenSSL/BoringSSL, mbedTLS, etc.,
+ * which makes that library C API calls for handling the particular object's settings.
+ */
+template <typename HandleType>
+class Configurable {
+    /**
+     * Crypto library-specific implementation to configure the revocation method, usually with C API.
+     */
+    virtual void configure(HandleType handle, const PKIEnvironment<HandleType>& pkiEnv) = 0;
+};
+
 /**
  * @brief A mechanism for revoking certificates: through CRL or OCSP.
  */
-class RevocationMethod {
+template <typename HandleType>
+class RevocationMethod : Configurable<HandleType> {
 public:
     RevocationMethod() = default;
     virtual ~RevocationMethod() = default;
@@ -120,7 +138,8 @@ public:
  * @brief Certificate revocation list (CRL)-based revocation method. If there are no CRL paths or URLs
  * specified, the CRL is assumed to be embedded in the CA certificate.
  */
-class CRL : public RevocationMethod {
+template <typename HandleType>
+class CRL : public RevocationMethod<HandleType> {
 private:
     std::optional<std::filesystem::path> crlPath;
     std::optional<ada::url> crlUrl;
@@ -139,13 +158,19 @@ public:
      * @brief If specified (default: not), an HTTP URL from which to load the CRL.
      */
     const std::optional<ada::url> getCrlUrl() const { return this->crlUrl; }
+
+    /**
+     * Installs all CRL settings supported in the library into the given handle.
+     */
+    void configure(HandleType handle, const PKIEnvironment<HandleType>& pkiEnv) override;
 };
 
 /**
  * @brief Online Certificate Status Protocol (OCSP)-based revocation method. If there is no override
  * OCSP URL specified, the OCSP URL is assumed to be embedded in the CA certificate.
  */
-class OCSP : public RevocationMethod {
+template <typename HandleType>
+class OCSP : public RevocationMethod<HandleType> {
 private:
     const std::optional<ada::url> ocspOverrideUrl;
     const bool staplingEnabled;
@@ -164,21 +189,27 @@ public:
      * @brief If enabled, servers will cache OCSP verification checks to improve performance.
      */
     const bool isStaplingEnabled() const { return this->staplingEnabled; }
+
+    /**
+     * Installs all OCSP settings supported in the library into the given handle.
+     */
+    void configure(HandleType handle, const PKIEnvironment<HandleType>& pkiEnv) override;
 };
 
 /**
  * @brief Authority for verifying certificates -- either through checking against a centralized CA, or via a trusted peer relationship. If
  * all defaults are taken, the system CA paths will be used, with revocation checking enabled via OCSP.
  */
-class CertificateAuthority {
+template <typename HandleType>
+class CertificateAuthority : public Configurable<HandleType> {
 private:
     std::optional<std::string> overrideCaCertificatePath;
     std::vector<std::string> trustedPeerCertificatePaths = std::vector<std::string>();
-    RevocationMethod* revocationMethod;
+    RevocationMethod<HandleType>* revocationMethod;
 
 public:
     explicit CertificateAuthority(std::optional<std::string> overrideCaCertificatePath = std::nullopt,
-                                  RevocationMethod* revocationMethod = new OCSP())
+                                  RevocationMethod<HandleType>* revocationMethod = new OCSP<HandleType>())
         : overrideCaCertificatePath(overrideCaCertificatePath)
         , revocationMethod(revocationMethod) {}
 
@@ -204,6 +235,77 @@ public:
      * @brief Adds a trusted peer certificate path; optional -- if none, only CA-verified certificates will be trusted.
      */
     void addTrustedPeerCertificate(const std::string certPath) { this->trustedPeerCertificatePaths.push_back(certPath); }
+
+    /**
+     * @brief Gets the revocation method to use for verifying certificates: CRL or OCSP.
+     */
+    RevocationMethod<HandleType>* getRevocationMethod() const { return this->revocationMethod; }
+
+    /**
+     * Installs all CA settings supported in the library into the given handle.
+     */
+    void configure(HandleType handle, const PKIEnvironment<HandleType>& pkiEnv) override;
+};
+
+/**
+ * @brief All options related to the environment library is in -- where to load CA, certificates and keys.
+ *
+ * Mutable configuration object containing our hooks to load CA certificates, peer & trusted certificates, and keys. It offers reasonable
+ * defaults if you are loading from PEM files on the filesystem and are OK using the operating system default CA store with OCSP.
+ */
+template <typename HandleType>
+class PKIEnvironment : Configurable<HandleType> {
+private:
+    CertificateAuthority<HandleType>& certAuth;
+    CertificateStore& certStore;
+    KeyStore& keyStore;
+
+public:
+    PKIEnvironment(CertificateAuthority<HandleType>& certAuth = CertificateAuthority<HandleType>::getDefault(),
+                   CertificateStore& certStore = LocalCertificateStore::getDefault(),
+                   KeyStore& keyStore = LocalKeyStore::getDefault())
+        : certAuth(certAuth)
+        , certStore(certStore)
+        , keyStore(keyStore) {}
+
+    /**
+     * @brief Gets the certificate authority to use for verifying peer certificates; defaults to local system CA store.
+     */
+    const CertificateAuthority<HandleType>& getCertificateAuthority() const { return this->certAuth; }
+
+    /**
+     * @brief Sets an alternative certificate authority to use for verifying peer certificates, e.g. if you use a custom CA service,
+     * API-based secret store like Vault or 1Password, or a custom database.
+     */
+    void setCertificateAuthority(const CertificateAuthority<HandleType>& certAuth) { this->certAuth = certAuth; }
+
+    /**
+     * @brief Gets the certificate store to use for loading this peer's own certificate and any trusted peer certificates; defaults to a
+     * local filesystem store.
+     */
+    const CertificateStore& getCertificateStore() const { return this->certStore; }
+
+    /**
+     * @brief Sets an alternative certificate store to use for loading this peer's own certificate and any trusted peer certificates, e.g.
+     * if you use a database.
+     */
+    void setCertificateStore(const CertificateStore& certStore) { this->certStore = certStore; }
+
+    /**
+     * @brief Gets the certificate store to use for loading private key materials; defaults to a local filesystem store.
+     */
+    const KeyStore& getKeyStore() const { return this->keyStore; }
+
+    /**
+     * @brief Sets an alternative key store to use for loading private key materials, e.g. if you use an API-based secret store like Vault
+     * or 1Password, cloud HSM-based vault, or a custom database.
+     */
+    void setKeyStore(const KeyStore& keyStore) { this->keyStore = keyStore; }
+
+    /**
+     * @brief Installs all PKI settings supported in the library into the given handle, walking the tree of objects.
+     */
+    void configure(HandleType handle, const PKIEnvironment<HandleType>& pkiEnv) override { this->certAuth.configure(handle, pkiEnv); }
 };
 
 };  // namespace crypto

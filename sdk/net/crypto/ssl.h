@@ -1,12 +1,10 @@
 #pragma once
 
-#include <wolfssl/options.h>
-#include <wolfssl/ssl.h>
-#include <wolfssl/wolfcrypt/settings.h>
 #include <mutex>
 #include <optional>
 #include <string>
 #include "crypto.h"
+#include "ssl_engine.h"
 
 namespace iggy {
 namespace ssl {
@@ -35,7 +33,8 @@ std::string getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion);
  * Mutable configuration object containing all options related to SSL/TLS. It offers reasonable defaults for a strict client. If you need to
  * talk to an SSL/TLS server that has not been hardened you may need to modify this.
  */
-class SSLOptions {
+template <typename HandleType>
+class SSLOptions : public iggy::crypto::Configurable<HandleType> {
 private:
     PeerType peerType;
     std::optional<std::string> peerCertPath = std::nullopt;
@@ -104,61 +103,11 @@ public:
      * Applies basic validations to the SSL options, e.g. if PeerType::SERVER is set, then a peer certificate path must be provided.
      */
     void validate(bool strict = true) const;
-};
-
-/**
- * @brief All options related to the environment library is in -- where to load CA, certificates and keys.
- *
- * Mutable configuration object containing our hooks to load CA certificates, peer & trusted certificates, and keys. It offers reasonable
- * defaults if you are loading from PEM files on the filesystem and are OK using the operating system default CA store with OCSP.
- */
-class PKIEnvironment {
-private:
-    iggy::crypto::CertificateAuthority& certAuth;
-    iggy::crypto::CertificateStore& certStore;
-    iggy::crypto::KeyStore& keyStore;
-
-public:
-    PKIEnvironment(iggy::crypto::CertificateAuthority& certAuth = iggy::crypto::CertificateAuthority::getDefault(),
-                   iggy::crypto::CertificateStore& certStore = iggy::crypto::LocalCertificateStore::getDefault(),
-                   iggy::crypto::KeyStore& keyStore = iggy::crypto::LocalKeyStore::getDefault())
-        : certAuth(certAuth)
-        , certStore(certStore)
-        , keyStore(keyStore) {}
 
     /**
-     * @brief Gets the certificate authority to use for verifying peer certificates; defaults to local system CA store.
+     * @brief Configures the SSL/TLS context handle with these options.
      */
-    const iggy::crypto::CertificateAuthority& getCertificateAuthority() const { return this->certAuth; }
-
-    /**
-     * @brief Sets an alternative certificate authority to use for verifying peer certificates, e.g. if you use a custom CA service,
-     * API-based secret store like Vault or 1Password, or a custom database.
-     */
-    void setCertificateAuthority(const iggy::crypto::CertificateAuthority& certAuth) { this->certAuth = certAuth; }
-
-    /**
-     * @brief Gets the certificate store to use for loading this peer's own certificate and any trusted peer certificates; defaults to a
-     * local filesystem store.
-     */
-    const iggy::crypto::CertificateStore& getCertificateStore() const { return this->certStore; }
-
-    /**
-     * @brief Sets an alternative certificate store to use for loading this peer's own certificate and any trusted peer certificates, e.g.
-     * if you use a database.
-     */
-    void setCertificateStore(const iggy::crypto::CertificateStore& certStore) { this->certStore = certStore; }
-
-    /**
-     * @brief Gets the certificate store to use for loading private key materials; defaults to a local filesystem store.
-     */
-    const iggy::crypto::KeyStore& getKeyStore() const { return this->keyStore; }
-
-    /**
-     * @brief Sets an alternative key store to use for loading private key materials, e.g. if you use an API-based secret store like Vault
-     * or 1Password, cloud HSM-based vault, or a custom database.
-     */
-    void setKeyStore(const iggy::crypto::KeyStore& keyStore) { this->keyStore = keyStore; }
+    void configure(HandleType handle, const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv) override;
 };
 
 /**
@@ -168,18 +117,22 @@ public:
  * all the defaults of how to initialize and clean up the SSL context. It does not expose every possible option, and the intention is to
  * support OpenSSL and BoringSSL in the future.
  */
+template <typename HandleType>
 class SSLContext {
 private:
     static std::once_flag sslInitDone;
 
-    const SSLOptions& options;
-    const PKIEnvironment& pkiEnv;
+    const SSLOptions<HandleType>& options;
+    const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv;
 
     WOLFSSL_CTX* ctx;
     WOLFSSL_CERT_MANAGER* cm;
 
+    void raiseSSLError(const std::string& message) const;
+
 public:
-    explicit SSLContext(const SSLOptions& options = SSLOptions(), const PKIEnvironment& pkiEnv = PKIEnvironment());
+    explicit SSLContext(const SSLOptions<HandleType>& options = SSLOptions<HandleType>(),
+                        const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv = iggy::crypto::PKIEnvironment<HandleType>());
     SSLContext(const SSLContext& other);
     SSLContext(SSLContext&& other);
     ~SSLContext();
