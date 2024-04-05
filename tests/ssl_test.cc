@@ -81,11 +81,24 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
             options.setMinimumSupportedProtocolVersion(requestedVersion);
             auto sslCtx = iggy::ssl::SSLContext<WOLFSSL_CTX*>(options, pkiEnv);
 
-            REQUIRE(sslCtx.getNativeHandle() != nullptr);
+            WOLFSSL_CTX* handle = sslCtx.getNativeHandle();
+            REQUIRE(handle != nullptr);
 
-            WOLFSSL_CTX* handle = static_cast<WOLFSSL_CTX*>(sslCtx.getNativeHandle());
+            WOLFSSL* ssl = wolfSSL_new(handle);
+            REQUIRE(ssl != nullptr);
+
+            WOLFSSL_CERT_MANAGER* cm = wolfSSL_CTX_GetCertManager(handle);
+            REQUIRE(cm != nullptr);
+
+            // sanity check configuration
             REQUIRE(wolfSSL_CTX_get_min_proto_version(handle) == minProtoVersion);
             REQUIRE(wolfSSL_CTX_get_max_proto_version(handle) == maxProtoVersion);
+
+            // check cipher list
+
+            // check certificate configuration
+
+            // check CA configuration
 
             // test copy and move constructors
             auto sslCtxNew = sslCtx;

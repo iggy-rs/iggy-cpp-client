@@ -144,7 +144,7 @@ public:
      * @brief Gets access to the underlying C SSL context handle. Subsequent internal C library calls should make a static cast to ensure
      * that the expected handle type is used.
      */
-    void* getNativeHandle() const { return this->ctx; }
+    HandleType getNativeHandle() const { return this->ctx; }
 };
 };  // namespace ssl
 };  // namespace iggy
