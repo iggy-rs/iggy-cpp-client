@@ -30,7 +30,7 @@ externalproject_add(wolfssl
     GIT_TAG v5.7.0-stable
     PREFIX ${CMAKE_BINARY_DIR}/wolfssl
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-tls13 --enable-tls12 --enable-tlsx --enable-quic --enable-harden --enable-keylog-export --enable-static --enable-sys-ca-certs --disable-ech --disable-psk --disable-opensslall --disable-dtls --disable-anonymous --disable-nullcipher --disable-oldtls --disable-sslv3 --disable-webserver --disable-examples --disable-crypttests
+    CONFIGURE_COMMAND autoreconf -i COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --enable-tls13 --enable-tls12 --enable-tlsx --enable-quic --enable-harden --enable-keylog-export --enable-static --enable-sys-ca-certs --disable-ech --disable-psk --disable-opensslall --disable-dtls --disable-anonymous --disable-nullcipher --disable-oldtls --disable-sslv3 --disable-webserver --disable-crypttests
     BUILD_COMMAND make -j ${NPROC}
     BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/wolfssl/lib/libwolfssl.a
     INSTALL_COMMAND make install
