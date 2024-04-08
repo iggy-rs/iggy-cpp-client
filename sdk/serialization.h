@@ -6,10 +6,10 @@
 
 namespace iggy {
 namespace serialization {
-class WireFormat {
-private:
-    std::string convertToUTF8(const std::string& source);
 
+std::string convertToUTF8(const std::string& source, bool strict = true);
+
+class WireFormat {
 public:
     virtual ~WireFormat() = 0;
 

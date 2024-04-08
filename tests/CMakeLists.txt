@@ -7,8 +7,21 @@ if(BUILD_TESTS)
     iggy_cpp_test
 
     client_test.cc
+    crypto_test.cc
     iggy_protocol_provider_test.cc
     model_test.cc
+    serialization_test.cc
+    ssl_test.cc
+    unit_testutils.cc
+  )
+  target_compile_features(iggy_cpp_test PRIVATE cxx_std_17)
+  target_include_directories(iggy_cpp_test PRIVATE
+    ${SODIUM_INCLUDE_DIR}
+    ${ADA_INCLUDE_DIR}
+    ${WOLFSSL_INCLUDE_DIR}
+    ${NGHTTP3_INCLUDE_DIR}
+    ${NGTCP2_INCLUDE_DIR}
+    ${CURL_INCLUDE_DIR}
   )
   target_link_libraries(
     iggy_cpp_test

@@ -20,9 +20,9 @@
         "vscode": {
             "extensions": [
                 "GitHub.vscode-pull-request-github",
-                "eamodio.gitlens",
                 "demiaochen.clang-format-indent-4",
                 "donjayamanne.githistory",
+                "eamodio.gitlens",
                 "formulahendry.code-runner",
                 "foxundermoon.shell-format",
                 "github.copilot",
