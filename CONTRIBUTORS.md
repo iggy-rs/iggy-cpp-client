@@ -22,6 +22,18 @@ pre-commit run --all-files
 
 ![Pre-commit run](docs/images/pre-commit_run.png)
 
+## HOWTO: Upgrade vcpkg dependencies
+
+We freeze the dependency versions with a fixed baseline in `vcpkg-configuration.json`. To upgrade to the latest versions and view them, run:
+
+```shell
+vcpkg x-update-baseline
+vcpkg install
+vcpkg list
+```
+
+then commit the upgrade.
+
 ## HOWTO: Test GitHub Actions locally
 
 Our continuous integration uses GitHub Actions, and sometimes it's more convenient to first test it. The VS Code container includes the [act](https://github.com/nektos/act) extension, and you can use it to do a smoke test of the CI actions before you push to GitHub. Run `act` and, if running for the first time, choose "Medium" for the container:

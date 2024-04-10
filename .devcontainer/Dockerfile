@@ -6,13 +6,17 @@ RUN apt-get update \
     && apt-get install autoconf autoconf-archive automake \
     clang-format clang-tidy \
     build-essential gcovr lcov xdg-utils \
-    nginx doxygen graphviz -y --no-install-recommends \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    doxygen graphviz -y --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install CMake, ninja and vcpkg
 COPY ./install-vcpkg.sh /tmp/
 RUN chmod +x /tmp/install-vcpkg.sh && \
-    /tmp/install-vcpkg.sh
+    /tmp/install-vcpkg.sh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /tmp/install-vcpkg.sh
 
 # back to dev user
 USER vscode
