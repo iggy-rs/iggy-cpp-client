@@ -1,0 +1,29 @@
+---
+name: devcontainer-ci
+
+on:
+    push:
+        paths:
+            - images/iggy-cpp-build/.devcontainer/*
+
+permissions: read-all
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  registry: docker.io
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+            - name: Pre-build image and run make ci-build in dev container
+              uses: devcontainers/ci@v0.3
+              with:
+                  imageName: docker.io/iggy/iggy-cpp-build
+                  cacheFrom: docker.io/iggy/iggy-cpp-build
+                  push: always
