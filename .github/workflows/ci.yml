@@ -83,5 +83,4 @@ jobs:
               uses: super-linter/super-linter@v6.3.0
               env:
                   DOCKERFILE_HADOLINT: false
-                  FILTER_REGEX_EXCLUDE: .devcontainer/install-vcpkg.sh
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

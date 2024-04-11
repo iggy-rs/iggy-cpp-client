@@ -1,18 +1,4 @@
 FROM mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04
 
-# install basic tools
-USER root
-RUN apt-get update \
-    && apt-get install autoconf autoconf-archive automake \
-    clang-format clang-tidy \
-    build-essential gcovr lcov xdg-utils \
-    nginx doxygen graphviz -y --no-install-recommends \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install CMake, ninja and vcpkg
-COPY ./install-vcpkg.sh /tmp/
-RUN chmod +x /tmp/install-vcpkg.sh && \
-    /tmp/install-vcpkg.sh
-
-# back to dev user
-USER vscode
+# workaround for msclock build issue on arm
+ENV VCPKG_FORCE_SYSTEM_BINARIES=1
