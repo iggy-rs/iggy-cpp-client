@@ -32,4 +32,5 @@ jobs:
               with:
                   imageName: docker.io/iggyrs/iggy-cpp-build
                   platform: linux/amd64,linux/arm/v7,linux/arm64
+                  noCache: true
                   push: always
