@@ -4,6 +4,7 @@ name: devcontainer-ci
 on:
     push:
         paths:
+            - .github/workflows/devcontainer-ci.yml
             - images/iggy-cpp-build/.devcontainer/*
 
 permissions: read-all
