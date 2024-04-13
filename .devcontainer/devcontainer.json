@@ -1,6 +1,6 @@
 {
     "name": "Iggy C++ Client",
-    "image": "docker.io/iggy/iggy-cpp-build:latest",
+    "image": "docker.io/iggyrs/iggy-cpp-build:latest",
     "customizations": {
         "vscode": {
             "extensions": [

@@ -30,6 +30,7 @@ jobs:
             - name: Pre-build image and run make ci-build in dev container
               uses: devcontainers/ci@v0.3
               with:
-                  imageName: docker.io/iggy/iggy-cpp-build
+                  imageName: docker.io/iggyrs/iggy-cpp-build
+                  cacheFrom: docker.io/iggyrs/iggy-cpp-build
                   platform: linux/amd64,linux/arm/v7,linux/arm64
                   push: always
