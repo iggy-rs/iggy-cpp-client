@@ -36,10 +36,14 @@ jobs:
             - name: Install extra packages
               run: |
                   sudo apt-get update && \
-                  sudo apt-get install -y autoconf \
-                  autoconf-archive \
-                  build-essential \
-                  gcovr lcov xdg-utils
+                  sudo apt-get install -y \
+                    autoconf \
+                    autoconf-archive \
+                    build-essential \
+                    doxygen \
+                    gcovr \
+                    lcov \
+                    xdg-utils
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
