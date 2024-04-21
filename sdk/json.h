@@ -2,7 +2,7 @@
 
 #include "serialization.h"
 
-namespace iggy {
+namespace icp {
 namespace serialization {
 
 /**
@@ -15,11 +15,11 @@ namespace json {
  * @class JsonWireFormat
  * @brief Binary serialization and deserialization for Iggy's protocol.
  */
-class JsonWireFormat : iggy::serialization::WireFormat {
+class JsonWireFormat : icp::serialization::WireFormat {
 public:
     JsonWireFormat() = default;
 }
 
 }  // namespace json
 }  // namespace serialization
-}  // namespace iggy
+}  // namespace icp

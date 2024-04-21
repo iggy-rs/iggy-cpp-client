@@ -8,7 +8,7 @@
 #include <vector>
 #include "ada.h"
 
-namespace iggy {
+namespace icp {
 namespace crypto {
 
 /**
@@ -309,4 +309,4 @@ public:
 };
 
 };  // namespace crypto
-};  // namespace iggy
+};  // namespace icp

@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
-iggy::client::Client::Client(const Options& options) {
+icp::client::Client::Client(const Options& options) {
     // to make more natural interface for setting options we use a struct, so need to validate it.
     options.validate();
 }
 
-void iggy::client::Client::ping() {
+void icp::client::Client::ping() {
     // temporary! using the Rust CLI from Docker to execute the ping to demonstrate test fixture
     reproc::process ping_process;
     reproc::options options;
@@ -18,7 +18,7 @@ void iggy::client::Client::ping() {
     ping_process.wait(reproc::milliseconds(5000));
 }
 
-iggy::model::system::Stats iggy::client::Client::getStats() {
+icp::model::system::Stats icp::client::Client::getStats() {
     // temporary! need to send GetStats command to server then use WireFormat to read the response
-    return iggy::model::system::Stats();
+    return icp::model::system::Stats();
 }

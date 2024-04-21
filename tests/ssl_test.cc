@@ -1,21 +1,21 @@
-#include "../sdk/net/crypto/ssl.h"
+#include "../sdk/net/ssl/ssl.h"
 #include "unit_testutils.h"
 
 TEST_CASE("SSL configuration", UT_TAG) {
-    iggy::ssl::SSLOptions<WOLFSSL_CTX*> options;
+    icp::ssl::SSLOptions<WOLFSSL_CTX*> options;
 
     SECTION("expected basic default settings") {
         // default options should always be strictly valid
         REQUIRE_NOTHROW(options.validate(true));
 
-        REQUIRE(options.getPeerType() == iggy::ssl::PeerType::CLIENT);
+        REQUIRE(options.getPeerType() == icp::ssl::PeerType::CLIENT);
         REQUIRE(options.getPeerCertificatePath().has_value() == false);
-        REQUIRE(options.getMinimumSupportedProtocolVersion() == iggy::ssl::ProtocolVersion::TLSV1_3);
+        REQUIRE(options.getMinimumSupportedProtocolVersion() == icp::ssl::ProtocolVersion::TLSV1_3);
     }
 
     SECTION("default cipher list configured") {
-        auto cipherListTLSV1_2 = options.getDefaultCipherList(iggy::ssl::ProtocolVersion::TLSV1_2);
-        auto cipherListTLSV1_3 = options.getDefaultCipherList(iggy::ssl::ProtocolVersion::TLSV1_3);
+        auto cipherListTLSV1_2 = options.getDefaultCipherList(icp::ssl::ProtocolVersion::TLSV1_2);
+        auto cipherListTLSV1_3 = options.getDefaultCipherList(icp::ssl::ProtocolVersion::TLSV1_3);
 
         REQUIRE(cipherListTLSV1_2.size() == 6);
         REQUIRE(cipherListTLSV1_3.size() == 3);
@@ -38,7 +38,7 @@ TEST_CASE("SSL configuration", UT_TAG) {
     }
 
     SECTION("configure server options") {
-        options.setPeerType(iggy::ssl::PeerType::SERVER);
+        options.setPeerType(icp::ssl::PeerType::SERVER);
 
         // missing certificate path
         REQUIRE_THROWS(options.validate());
@@ -47,39 +47,39 @@ TEST_CASE("SSL configuration", UT_TAG) {
         options.setPeerCertificatePath("test.pem");
 
         // first try strict validation, fail
-        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_2);
+        options.setMinimumSupportedProtocolVersion(icp::ssl::ProtocolVersion::TLSV1_2);
         REQUIRE_THROWS(options.validate(true));
 
         // loosen the validation
         REQUIRE_NOTHROW(options.validate(false));
 
         // finally harden the settings and tighten up validation
-        options.setMinimumSupportedProtocolVersion(iggy::ssl::ProtocolVersion::TLSV1_3);
+        options.setMinimumSupportedProtocolVersion(icp::ssl::ProtocolVersion::TLSV1_3);
         REQUIRE_NOTHROW(options.validate(true));
     }
 }
 
-TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_TAG) {
+TEST_CASE_METHOD(icp::testutil::SelfSignedCertificate, "SSL context init", UT_TAG) {
     auto certPath = getCertificatePath().filename();
     auto keyPath = getKeyPath().filename();
 
-    auto ca = iggy::crypto::CertificateAuthority<WOLFSSL_CTX*>();
-    auto certStore = iggy::crypto::LocalCertificateStore(std::filesystem::temp_directory_path());
-    auto keyStore = iggy::crypto::LocalKeyStore(std::filesystem::temp_directory_path());
+    auto ca = icp::crypto::CertificateAuthority<WOLFSSL_CTX*>();
+    auto certStore = icp::crypto::LocalCertificateStore(std::filesystem::temp_directory_path());
+    auto keyStore = icp::crypto::LocalKeyStore(std::filesystem::temp_directory_path());
 
-    auto options = iggy::ssl::SSLOptions<WOLFSSL_CTX*>();
+    auto options = icp::ssl::SSLOptions<WOLFSSL_CTX*>();
     options.setPeerCertificatePath(certPath);
 
-    iggy::crypto::PKIEnvironment<WOLFSSL_CTX*> pkiEnv(ca, certStore, keyStore);
+    icp::crypto::PKIEnvironment<WOLFSSL_CTX*> pkiEnv(ca, certStore, keyStore);
 
     SECTION("TLS version support") {
         auto [requestedVersion, minProtoVersion, maxProtoVersion] =
-            GENERATE(std::make_tuple(iggy::ssl::ProtocolVersion::TLSV1_2, TLS1_2_VERSION, TLS1_3_VERSION),
-                     std::make_tuple(iggy::ssl::ProtocolVersion::TLSV1_3, TLS1_3_VERSION, TLS1_3_VERSION));
+            GENERATE(std::make_tuple(icp::ssl::ProtocolVersion::TLSV1_2, TLS1_2_VERSION, TLS1_3_VERSION),
+                     std::make_tuple(icp::ssl::ProtocolVersion::TLSV1_3, TLS1_3_VERSION, TLS1_3_VERSION));
 
-        SECTION(iggy::ssl::getProtocolVersionName(requestedVersion)) {
+        SECTION(icp::ssl::getProtocolVersionName(requestedVersion)) {
             options.setMinimumSupportedProtocolVersion(requestedVersion);
-            auto sslCtx = iggy::ssl::SSLContext<WOLFSSL_CTX*>(options, pkiEnv);
+            auto sslCtx = icp::ssl::SSLContext<WOLFSSL_CTX*>(options, pkiEnv);
 
             WOLFSSL_CTX* handle = sslCtx.getNativeHandle();
             REQUIRE(handle != nullptr);
@@ -112,7 +112,7 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
             sslCtxNew = sslCtxMoved;
             REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
 
-            iggy::ssl::SSLContext<WOLFSSL_CTX*> sslCtxNew2;
+            icp::ssl::SSLContext<WOLFSSL_CTX*> sslCtxNew2;
             sslCtxNew2 = std::move(sslCtx);
         }
     }
@@ -120,11 +120,11 @@ TEST_CASE_METHOD(iggy::testutil::SelfSignedCertificate, "SSL context init", UT_T
 
 TEST_CASE("error message conversion", UT_TAG) {
     SECTION("TLS 1.2") {
-        auto displayName = iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion::TLSV1_2);
+        auto displayName = icp::ssl::getProtocolVersionName(icp::ssl::ProtocolVersion::TLSV1_2);
         REQUIRE(displayName == "TLSV1_2");
     }
     SECTION("TLS 1.3") {
-        auto displayName = iggy::ssl::getProtocolVersionName(iggy::ssl::ProtocolVersion::TLSV1_3);
+        auto displayName = icp::ssl::getProtocolVersionName(icp::ssl::ProtocolVersion::TLSV1_3);
         REQUIRE(displayName == "TLSV1_3");
     }
 }

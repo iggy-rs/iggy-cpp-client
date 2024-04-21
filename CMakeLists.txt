@@ -68,6 +68,7 @@ target_include_directories(iggy PRIVATE
   ${ADA_INCLUDE_DIR}
   ${WOLFSSL_INCLUDE_DIR}
   ${UTF8H_INCLUDE_DIRS}
+  ${LWS_INCLUDE_DIR}
 )
 add_dependencies(iggy lws)
 target_link_libraries(

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-iggy::testutil::SelfSignedCertificate::SelfSignedCertificate() {
+icp::testutil::SelfSignedCertificate::SelfSignedCertificate() {
     std::vector<std::string> arguments = {"openssl",  "req",
                                           "-x509",    "-newkey",
                                           "rsa:2048", "-nodes",
@@ -31,11 +31,11 @@ iggy::testutil::SelfSignedCertificate::SelfSignedCertificate() {
     std::cout << output << std::flush;
 }
 
-iggy::testutil::SelfSignedCertificate::~SelfSignedCertificate() {
+icp::testutil::SelfSignedCertificate::~SelfSignedCertificate() {
     std::filesystem::remove(this->certificatePath);
     std::filesystem::remove(this->keyPath);
 }
 
-std::filesystem::path iggy::testutil::SelfSignedCertificate::generateRandomTempPath(std::string baseName) {
+std::filesystem::path icp::testutil::SelfSignedCertificate::generateRandomTempPath(std::string baseName) {
     return std::filesystem::temp_directory_path() / (std::to_string(std::rand()) + baseName);
 }

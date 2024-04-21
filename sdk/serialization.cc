@@ -3,7 +3,7 @@
 #include <utf8h/utf8.h>
 #include <stdexcept>
 
-std::string iggy::serialization::convertToUTF8(const std::string& source, bool strict) {
+std::string icp::serialization::convertToUTF8(const std::string& source, bool strict) {
     if (utf8valid(source.c_str()) == 0) {
         return source;
     } else {

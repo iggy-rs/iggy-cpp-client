@@ -1,11 +1,11 @@
 #include "protocol.h"
 #include "address.h"
 
-iggy::net::address::LogicalAddress iggy::net::protocol::ProtocolProvider::createAddress(const std::string& url) const {
-    return iggy::net::address::LogicalAddress(url, this);
+icp::net::address::LogicalAddress icp::net::protocol::ProtocolProvider::createAddress(const std::string& url) const {
+    return icp::net::address::LogicalAddress(url, this);
 }
 
-const std::string iggy::net::protocol::normalizeProtocolName(const std::string& protocol) {
+const std::string icp::net::protocol::normalizeProtocolName(const std::string& protocol) {
     // convert to lowercase
     std::string lowerStr = protocol;
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);

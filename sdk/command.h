@@ -4,12 +4,12 @@
 #include "model.h"
 #include "types.h"
 
-namespace iggy {
+namespace icp {
 
 /**
  * @brief All supported commands in the Iggy protocol.
  *
- * Serialization-agnostic Command classes that you can send via an @ref iggy::client::Client.
+ * Serialization-agnostic Command classes that you can send via an @ref icp::client::Client.
  */
 namespace command {
 
@@ -24,39 +24,39 @@ public:
 namespace stream {
 class GetStream : Command {
 private:
-    iggy::model::shared::Identifier streamId;
+    icp::model::shared::Identifier streamId;
 
 public:
-    explicit GetStream(iggy::model::shared::Identifier streamId)
+    explicit GetStream(icp::model::shared::Identifier streamId)
         : streamId(streamId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
 };
 
 class GetStreams : Command {};
 class CreateStream : Command {
 private:
-    iggy::model::shared::Identifier streamId;
+    icp::model::shared::Identifier streamId;
     std::string name;
 
 public:
-    CreateStream(iggy::model::shared::Identifier streamId, std::string name)
+    CreateStream(icp::model::shared::Identifier streamId, std::string name)
         : streamId(streamId)
         , name(name) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
     std::string getName() const { return name; }
 };
 
 class DeleteStream : Command {
 private:
-    iggy::model::shared::Identifier streamId;
+    icp::model::shared::Identifier streamId;
 
 public:
-    explicit DeleteStream(iggy::model::shared::Identifier streamId)
+    explicit DeleteStream(icp::model::shared::Identifier streamId)
         : streamId(streamId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
 };
 }  // namespace stream
 
@@ -66,39 +66,39 @@ public:
 namespace topic {
 class GetTopic : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
 
 public:
-    GetTopic(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId)
+    GetTopic(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId)
         : streamId(streamId)
         , topicId(topicId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
 };
 
 class GetTopics : Command {
 private:
-    iggy::model::shared::Identifier streamId;
+    icp::model::shared::Identifier streamId;
 
 public:
-    explicit GetTopics(iggy::model::shared::Identifier streamId)
+    explicit GetTopics(icp::model::shared::Identifier streamId)
         : streamId(streamId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
 };
 
 class CreateTopic : Command {
 private:
-    iggy::model::shared::Identifier streamId;
+    icp::model::shared::Identifier streamId;
     uint32_t topicId;
     uint32_t partitionsCount;
     std::optional<uint32_t> messageExpiry;
     std::string name;
 
 public:
-    CreateTopic(iggy::model::shared::Identifier streamId,
+    CreateTopic(icp::model::shared::Identifier streamId,
                 uint32_t topicId,
                 uint32_t partitionsCount,
                 std::optional<uint32_t> messageExpiry,
@@ -109,7 +109,7 @@ public:
         , messageExpiry(messageExpiry)
         , name(name) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
     uint32_t getTopicId() const { return topicId; }
     uint32_t getPartitionsCount() const { return partitionsCount; }
     std::optional<uint32_t> getMessageExpiry() const { return messageExpiry; }
@@ -123,35 +123,35 @@ public:
 namespace partition {
 class CreatePartitions : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t partitionsCount;
 
 public:
-    CreatePartitions(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t partitionsCount)
+    CreatePartitions(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t partitionsCount)
         : streamId(streamId)
         , topicId(topicId)
         , partitionsCount(partitionsCount) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getPartitionsCount() const { return partitionsCount; }
 };
 
 class DeletePartitions : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t partitionsCount;
 
 public:
-    DeletePartitions(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t partitionsCount)
+    DeletePartitions(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t partitionsCount)
         : streamId(streamId)
         , topicId(topicId)
         , partitionsCount(partitionsCount) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getPartitionsCount() const { return partitionsCount; }
 };
 }  // namespace partition
@@ -176,18 +176,18 @@ public:
 
 class PollMessages : Command {
 private:
-    iggy::model::shared::Consumer consumer;
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Consumer consumer;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t partitionId;
     PollingStrategy strategy;
     uint32_t count;
     bool autoCommit;
 
 public:
-    PollMessages(iggy::model::shared::Consumer consumer,
-                 iggy::model::shared::Identifier streamId,
-                 iggy::model::shared::Identifier topicId,
+    PollMessages(icp::model::shared::Consumer consumer,
+                 icp::model::shared::Identifier streamId,
+                 icp::model::shared::Identifier topicId,
                  uint32_t partitionId,
                  PollingStrategy strategy,
                  uint32_t count,
@@ -200,9 +200,9 @@ public:
         , count(count)
         , autoCommit(autoCommit) {}
 
-    iggy::model::shared::Consumer getConsumer() const { return consumer; }
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Consumer getConsumer() const { return consumer; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getPartitionId() const { return partitionId; }
     PollingStrategy getStrategy() const { return strategy; }
     uint32_t getCount() const { return count; }
@@ -244,24 +244,24 @@ namespace consumeroffset {
  */
 class GetConsumerOffset : Command {
 private:
-    iggy::model::shared::Consumer consumer;
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Consumer consumer;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t partitionId;
 
 public:
-    GetConsumerOffset(iggy::model::shared::Consumer consumer,
-                      iggy::model::shared::Identifier streamId,
-                      iggy::model::shared::Identifier topicId,
+    GetConsumerOffset(icp::model::shared::Consumer consumer,
+                      icp::model::shared::Identifier streamId,
+                      icp::model::shared::Identifier topicId,
                       uint32_t partitionId)
         : consumer(consumer)
         , streamId(streamId)
         , topicId(topicId)
         , partitionId(partitionId) {}
 
-    iggy::model::shared::Consumer getConsumer() const { return consumer; }
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Consumer getConsumer() const { return consumer; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getPartitionId() const { return partitionId; }
 };
 
@@ -270,16 +270,16 @@ public:
  */
 class StoreConsumerOffset : Command {
 private:
-    iggy::model::shared::Consumer consumer;
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Consumer consumer;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t partitionId;
     uint64_t offset;
 
 public:
-    StoreConsumerOffset(iggy::model::shared::Consumer consumer,
-                        iggy::model::shared::Identifier streamId,
-                        iggy::model::shared::Identifier topicId,
+    StoreConsumerOffset(icp::model::shared::Consumer consumer,
+                        icp::model::shared::Identifier streamId,
+                        icp::model::shared::Identifier topicId,
                         uint32_t partitionId,
                         uint64_t offset)
         : consumer(consumer)
@@ -288,9 +288,9 @@ public:
         , partitionId(partitionId)
         , offset(offset) {}
 
-    iggy::model::shared::Consumer getConsumer() const { return consumer; }
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Consumer getConsumer() const { return consumer; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getPartitionId() const { return partitionId; }
     uint64_t getOffset() const { return offset; }
 };
@@ -307,18 +307,18 @@ namespace consumergroup {
  */
 class GetConsumerGroup : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t consumerGroupId;
 
 public:
-    GetConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t consumerGroupId)
+    GetConsumerGroup(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t consumerGroupId)
         : streamId(streamId)
         , topicId(topicId)
         , consumerGroupId(consumerGroupId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getConsumerGroupId() const { return consumerGroupId; }
 };
 
@@ -327,83 +327,83 @@ public:
  */
 class GetConsumerGroups : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
 
 public:
-    GetConsumerGroups(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId)
+    GetConsumerGroups(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId)
         : streamId(streamId)
         , topicId(topicId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
 };
 
 class CreateConsumerGroup : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t consumerGroupId;
 
 public:
-    CreateConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t consumerGroupId)
+    CreateConsumerGroup(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t consumerGroupId)
         : streamId(streamId)
         , topicId(topicId)
         , consumerGroupId(consumerGroupId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getConsumerGroupId() const { return consumerGroupId; }
 };
 
 class DeleteConsumerGroup : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t consumerGroupId;
 
 public:
-    DeleteConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t consumerGroupId)
+    DeleteConsumerGroup(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t consumerGroupId)
         : streamId(streamId)
         , topicId(topicId)
         , consumerGroupId(consumerGroupId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getConsumerGroupId() const { return consumerGroupId; }
 };
 
 class JoinConsumerGroup : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t consumerGroupId;
 
 public:
-    JoinConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t consumerGroupId)
+    JoinConsumerGroup(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t consumerGroupId)
         : streamId(streamId)
         , topicId(topicId)
         , consumerGroupId(consumerGroupId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getConsumerGroupId() const { return consumerGroupId; }
 };
 
 class LeaveConsumerGroup : Command {
 private:
-    iggy::model::shared::Identifier streamId;
-    iggy::model::shared::Identifier topicId;
+    icp::model::shared::Identifier streamId;
+    icp::model::shared::Identifier topicId;
     uint32_t consumerGroupId;
 
 public:
-    LeaveConsumerGroup(iggy::model::shared::Identifier streamId, iggy::model::shared::Identifier topicId, uint32_t consumerGroupId)
+    LeaveConsumerGroup(icp::model::shared::Identifier streamId, icp::model::shared::Identifier topicId, uint32_t consumerGroupId)
         : streamId(streamId)
         , topicId(topicId)
         , consumerGroupId(consumerGroupId) {}
 
-    iggy::model::shared::Identifier getStreamId() const { return streamId; }
-    iggy::model::shared::Identifier getTopicId() const { return topicId; }
+    icp::model::shared::Identifier getStreamId() const { return streamId; }
+    icp::model::shared::Identifier getTopicId() const { return topicId; }
     uint32_t getConsumerGroupId() const { return consumerGroupId; }
 };
 
@@ -448,4 +448,4 @@ class GetClients : Command {};
 class GetStats : Command {};
 }  // namespace system
 }  // namespace command
-}  // namespace iggy
+}  // namespace icp

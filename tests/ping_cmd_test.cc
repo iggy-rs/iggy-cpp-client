@@ -6,8 +6,8 @@ TEST_CASE("ping Iggy server", E2E_TAG) {
     IggyRunner runner;
 
     // Create a client object with all defaults
-    iggy::client::Options options;
-    iggy::client::Client client(options);
+    icp::client::Options options;
+    icp::client::Client client(options);
 
     // Perform the ping operation
     client.ping();

@@ -6,7 +6,7 @@
 #include <vector>
 #include "types.h"
 
-namespace iggy {
+namespace icp {
 
 /**
  * @brief Value objects used in the Iggy protocol.
@@ -584,4 +584,4 @@ public:
 
 }  // namespace system
 }  // namespace model
-}  // namespace iggy
+}  // namespace icp

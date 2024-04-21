@@ -7,7 +7,7 @@
 #include "net/iggy.h"
 #include "net/transport.h"
 
-namespace iggy {
+namespace icp {
 namespace client {
 
 /**
@@ -46,12 +46,12 @@ struct Options {
     /**
      * @brief The port the Iggy server is listening on; default depends on transport. Defaults to the DEFAULT_TCP_PORT.
      */
-    unsigned short port = iggy::net::DEFAULT_TCP_PORT;
+    unsigned short port = icp::net::DEFAULT_TCP_PORT;
 
     /**
      * @brief The network transport to use when connecting to the server. Defaults to TCP.
      */
-    iggy::net::transport::Transport transport = iggy::net::transport::Transport::TCP;
+    icp::net::transport::Transport transport = icp::net::transport::Transport::TCP;
 
     /**
      * @brief The user credentials to use when connecting to the server.
@@ -86,7 +86,7 @@ public:
     /**
      * @brief Get the Iggy server's performance statistics.
      */
-    iggy::model::system::Stats getStats();
+    icp::model::system::Stats getStats();
 };
 };  // namespace client
-};  // namespace iggy
+};  // namespace icp

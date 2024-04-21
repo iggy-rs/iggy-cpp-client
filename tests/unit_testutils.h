@@ -6,7 +6,7 @@
 
 const char UT_TAG[] = "[Unit Tests]";
 
-namespace iggy {
+namespace icp {
 namespace testutil {
 /**
  * @brief A helper class for generating self-signed certificates for testing purposes using OpenSSL CLI.
@@ -25,4 +25,4 @@ public:
     std::filesystem::path getKeyPath() { return this->keyPath; }
 };
 }  // namespace testutil
-}  // namespace iggy
+}  // namespace icp

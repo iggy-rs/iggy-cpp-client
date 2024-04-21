@@ -4,7 +4,7 @@
 #include "spdlog/spdlog.h"
 #include "ssl_engine.h"
 
-iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<std::filesystem::path> certDir) {
+icp::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<std::filesystem::path> certDir) {
     auto certDirAbs = std::filesystem::absolute(certDir.value_or(std::filesystem::current_path())).make_preferred();
     spdlog::debug("Loading certificates from {}", certDirAbs.string());
     if (!std::filesystem::exists(certDirAbs)) {
@@ -15,7 +15,7 @@ iggy::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<s
     this->certDir = certDirAbs;
 }
 
-const std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(const std::string certPath) const {
+const std::vector<uint8_t> icp::crypto::LocalCertificateStore::getCertificate(const std::string certPath) const {
     std::filesystem::path certFile = (this->certDir.value() / certPath).make_preferred();
     spdlog::debug("Loading certificate from {}", certFile.string());
     if (!std::filesystem::exists(certFile)) {
@@ -32,7 +32,7 @@ const std::vector<uint8_t> iggy::crypto::LocalCertificateStore::getCertificate(c
     return certData;
 }
 
-iggy::crypto::LocalKeyStore::LocalKeyStore(const std::optional<std::filesystem::path> keyDir) {
+icp::crypto::LocalKeyStore::LocalKeyStore(const std::optional<std::filesystem::path> keyDir) {
     auto keyDirAbs = std::filesystem::absolute(keyDir.value_or(std::filesystem::current_path())).make_preferred();
     spdlog::debug("Loading private keys from {}", keyDirAbs.string());
     if (!std::filesystem::exists(keyDirAbs)) {
@@ -44,7 +44,7 @@ iggy::crypto::LocalKeyStore::LocalKeyStore(const std::optional<std::filesystem::
     this->privateKeyDir = keyDirAbs;
 }
 
-const std::vector<uint8_t> iggy::crypto::LocalKeyStore::getPrivateKey(const std::string keyPath) const {
+const std::vector<uint8_t> icp::crypto::LocalKeyStore::getPrivateKey(const std::string keyPath) const {
     std::filesystem::path keyFile = (this->privateKeyDir.value() / keyPath).make_preferred();
     spdlog::debug("Loading private key from {}", keyFile.string());
     if (!std::filesystem::exists(keyFile)) {
@@ -62,11 +62,11 @@ const std::vector<uint8_t> iggy::crypto::LocalKeyStore::getPrivateKey(const std:
 }
 
 template <>
-void iggy::crypto::CRL<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
+void icp::crypto::CRL<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const icp::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
 
 template <>
-void iggy::crypto::OCSP<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
+void icp::crypto::OCSP<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle, const icp::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
 
 template <>
-void iggy::crypto::CertificateAuthority<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle,
-                                                                 const iggy::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
+void icp::crypto::CertificateAuthority<WOLFSSL_CTX*>::configure(WOLFSSL_CTX* handle,
+                                                                const icp::crypto::PKIEnvironment<WOLFSSL_CTX*>& pkiEnv) {}
