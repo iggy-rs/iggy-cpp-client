@@ -88,3 +88,9 @@ jobs:
               env:
                   DOCKERFILE_HADOLINT: false
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Lizard Runner
+              uses: Uno-Takashi/Lizard-Runner@v3
+              with:
+                  path: ./sdk
+                  CCN: 15

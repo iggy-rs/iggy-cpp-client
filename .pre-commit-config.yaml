@@ -51,6 +51,12 @@ repos:
           - id: shfmt
     - repo: local
       hooks:
+          - id: lizard
+            name: Check code cyclomatic complexity
+            entry: lizard -C 15 -i 0 -w -l c,cc,cpp,h,hpp
+            language: system
+            pass_filenames: true
+            always_run: false
           - id: build
             name: Build
             entry: cmake --build build
