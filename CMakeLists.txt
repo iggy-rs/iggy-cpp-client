@@ -13,6 +13,7 @@ endif()
 # set up library dependencies
 find_package(ada CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)
 
@@ -77,6 +78,7 @@ target_link_libraries(
   ada::ada
   fmt::fmt
   libuv::uv_a
+  nlohmann_json::nlohmann_json
   unofficial-sodium::sodium
   ${WOLFSSL_LIB_DIR}/libwolfssl.a
   ${LWS_LIB_DIR}/libwebsockets.a

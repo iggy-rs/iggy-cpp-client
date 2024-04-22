@@ -1,6 +1,7 @@
 
 if(BUILD_TESTS)
   find_package(Catch2 CONFIG REQUIRED)
+  find_package(inja CONFIG REQUIRED)
   find_package(reproc++ CONFIG REQUIRED)
 
   add_executable(
@@ -29,6 +30,7 @@ if(BUILD_TESTS)
     iggy
     Catch2::Catch2
     Catch2::Catch2WithMain
+    pantor::inja
     reproc++
   )
 

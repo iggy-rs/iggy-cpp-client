@@ -10,6 +10,11 @@
     "[cpp]": {
         "editor.defaultFormatter": "demiaochen.clang-format-indent-4"
     },
+    "c-cpp-flylint.flexelint.enable": false,
+    "c-cpp-flylint.clang.enable": false,
+    "c-cpp-flylint.cppcheck.enable": false,
+    "c-cpp-flylint.flawfinder.enable": false,
+    "c-cpp-flylint.lizard.enable": false,
     "testMate.cpp.test.advancedExecutables": [
         {
             "pattern": "${workspaceFolder}/build/tests/**/*_test",

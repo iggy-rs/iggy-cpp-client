@@ -14,6 +14,7 @@
                 "github.remotehub",
                 "github.vscode-github-actions",
                 "ionutvmi.path-autocomplete",
+                "jbenden.c-cpp-flylint",
                 "mads-hartmann.bash-ide-vscode",
                 "matepek.vscode-catch2-test-adapter",
                 "ms-azuretools.vscode-docker",
