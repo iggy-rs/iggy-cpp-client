@@ -13,10 +13,10 @@ namespace testutil {
  */
 class SelfSignedCertificate {
 private:
-    std::filesystem::path certificatePath = generateRandomTempPath("cert.pem");
-    std::filesystem::path keyPath = generateRandomTempPath("key.pem");
+    const std::filesystem::path certificatePath;
+    const std::filesystem::path keyPath;
 
-    static std::filesystem::path generateRandomTempPath(std::string baseName);
+    static std::filesystem::path generateRandomTempPath(const std::string& baseName);
 
 public:
     SelfSignedCertificate();

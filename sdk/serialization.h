@@ -14,10 +14,10 @@ public:
     virtual ~WireFormat() = 0;
 
     template <typename T, typename std::enable_if<std::is_base_of<icp::model::Model, T>::value>::type* = nullptr>
-    T read(std::istream& in);
+    T readModel(std::istream& in);
 
     template <typename T, typename std::enable_if<std::is_base_of<icp::command::Command, T>::value>::type* = nullptr>
-    void write(std::ostream& out, const T& value);
+    void writeModel(std::ostream& out, const T& value);
 };
 }  // namespace serialization
 }  // namespace icp

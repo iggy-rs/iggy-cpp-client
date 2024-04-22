@@ -35,18 +35,18 @@ enum IdKind { NUMERIC = 1, STRING = 2 };
  */
 class Identifier : Model {
 private:
-    IdKind kind;
-    uint8_t length;
-    std::vector<unsigned char> value;
+    const IdKind kind;
+    const uint8_t length;
+    const std::vector<unsigned char>& value;
 
 public:
-    Identifier(IdKind kind, uint8_t length, std::vector<unsigned char> value)
+    Identifier(IdKind kind, uint8_t length, const std::vector<unsigned char>& value)
         : kind(kind)
         , length(length)
         , value(value) {}
     IdKind getKind() { return kind; }
     uint8_t getLength() { return length; }
-    std::vector<unsigned char> getValue() { return value; }
+    const std::vector<unsigned char>& getValue() { return value; }
 };
 
 /**
@@ -59,8 +59,8 @@ enum ConsumerKind { CONSUMER = 1, CONSUMER_GROUP = 2 };
  */
 class Consumer : Model {
 private:
-    ConsumerKind kind;
-    uint32_t id;
+    const ConsumerKind kind;
+    const uint32_t id;
 
 public:
     Consumer(ConsumerKind kind, uint32_t id)
@@ -78,11 +78,11 @@ namespace partition {
  */
 class Partition : Model {
 private:
-    uint32_t id;
-    uint64_t createdAt;
-    uint32_t segmentsCount;
-    uint64_t currentOffset;
-    uint64_t sizeBytes;
+    const uint32_t id;
+    const uint64_t createdAt;
+    const uint32_t segmentsCount;
+    const uint64_t currentOffset;
+    const uint64_t sizeBytes;
     uint64_t messagesCount;
 
 public:
@@ -112,20 +112,20 @@ namespace topic {
  */
 class Topic : Model {
 private:
-    uint32_t id;
-    uint64_t createdAt;
-    std::string name;
-    uint64_t sizeBytes;
-    std::optional<uint32_t> messageExpiry;
-    std::optional<uint64_t> maxTopicSize;
-    uint8_t replicationFactor;
-    uint64_t messagesCount;
-    uint32_t partitionsCount;
+    const uint32_t id;
+    const uint64_t createdAt;
+    const std::string& name;
+    const uint64_t sizeBytes;
+    const std::optional<uint32_t> messageExpiry;
+    const std::optional<uint64_t> maxTopicSize;
+    const uint8_t replicationFactor;
+    const uint64_t messagesCount;
+    const uint32_t partitionsCount;
 
 public:
     Topic(uint32_t id,
           uint64_t createdAt,
-          std::string name,
+          const std::string& name,
           uint64_t sizeBytes,
           std::optional<uint32_t> messageExpiry,
           std::optional<uint64_t> maxTopicSize,
@@ -143,7 +143,7 @@ public:
         , partitionsCount(partitionsCount) {}
     uint32_t getId() { return id; }
     uint64_t getCreatedAt() { return createdAt; }
-    std::string getName() { return name; }
+    const std::string& getName() { return name; }
     uint64_t getSizeBytes() { return sizeBytes; }
     std::optional<uint32_t> getMessageExpiry() { return messageExpiry; }
     std::optional<uint64_t> getMaxTopicSize() { return maxTopicSize; }
@@ -161,12 +161,45 @@ private:
     uint64_t createdAt;
     std::string name;
     uint64_t sizeBytes;
-    std::optional<uint32_t> messageExpiry;
-    std::optional<uint64_t> maxTopicSize;
+    const std::optional<uint32_t> messageExpiry;
+    const std::optional<uint64_t> maxTopicSize;
     uint8_t replicationFactor;
     uint64_t messagesCount;
     uint32_t partitionsCount;
-    std::vector<partition::Partition> partitions;
+    const std::vector<partition::Partition>& partitions;
+
+public:
+    TopicDetails(uint32_t id,
+                 uint64_t createdAt,
+                 const std::string& name,
+                 uint64_t sizeBytes,
+                 std::optional<uint32_t> messageExpiry,
+                 std::optional<uint64_t> maxTopicSize,
+                 uint8_t replicationFactor,
+                 uint64_t messagesCount,
+                 uint32_t partitionsCount,
+                 const std::vector<partition::Partition>& partitions)
+        : id(id)
+        , createdAt(createdAt)
+        , name(name)
+        , sizeBytes(sizeBytes)
+        , messageExpiry(messageExpiry)
+        , maxTopicSize(maxTopicSize)
+        , replicationFactor(replicationFactor)
+        , messagesCount(messagesCount)
+        , partitionsCount(partitionsCount)
+        , partitions(partitions) {}
+
+    uint32_t getId() { return id; }
+    uint64_t getCreatedAt() { return createdAt; }
+    const std::string& getName() { return name; }
+    uint64_t getSizeBytes() { return sizeBytes; }
+    std::optional<uint32_t> getMessageExpiry() { return messageExpiry; }
+    std::optional<uint64_t> getMaxTopicSize() { return maxTopicSize; }
+    uint8_t getReplicationFactor() { return replicationFactor; }
+    uint64_t getMessagesCount() { return messagesCount; }
+    uint32_t getPartitionsCount() { return partitionsCount; }
+    const std::vector<partition::Partition>& getPartitions() { return partitions; }
 };
 };  // namespace topic
 
@@ -180,22 +213,22 @@ namespace stream {
  */
 class StreamDetails : Model {
 private:
-    uint32_t id;
-    uint64_t createdAt;
-    std::string name;
-    uint64_t sizeBytes;
-    uint64_t messagesCount;
-    uint32_t topicsCount;
-    std::vector<topic::Topic> topics;
+    const uint32_t id;
+    const uint64_t createdAt;
+    const std::string& name;
+    const uint64_t sizeBytes;
+    const uint64_t messagesCount;
+    const uint32_t topicsCount;
+    const std::vector<topic::Topic>& topics;
 
 public:
     StreamDetails(uint32_t id,
                   uint64_t createdAt,
-                  std::string name,
+                  const std::string& name,
                   uint64_t sizeBytes,
                   uint64_t messagesCount,
                   uint32_t topicsCount,
-                  std::vector<topic::Topic> topics)
+                  const std::vector<topic::Topic>& topics)
         : id(id)
         , createdAt(createdAt)
         , name(name)
@@ -205,11 +238,11 @@ public:
         , topics(topics) {}
     uint32_t getId() { return id; }
     uint64_t getCreatedAt() { return createdAt; }
-    std::string getName() { return name; }
+    const std::string getName() & { return name; }
     uint64_t getSizeBytes() { return sizeBytes; }
     uint64_t getMessagesCount() { return messagesCount; }
     uint32_t getTopicsCount() { return topicsCount; }
-    std::vector<topic::Topic> getTopics() { return topics; }
+    const std::vector<topic::Topic>& getTopics() { return topics; }
 };
 };  // namespace stream
 
@@ -251,16 +284,16 @@ enum HeaderKind {
  */
 class HeaderValue : Model {
 private:
-    HeaderKind kind;
-    std::vector<unsigned char> value;
+    const HeaderKind kind;
+    const std::vector<unsigned char>& value;
 
 public:
-    HeaderValue(HeaderKind kind, std::vector<unsigned char> value)
+    HeaderValue(HeaderKind kind, const std::vector<unsigned char>& value)
         : kind(kind)
         , value(value) {}
 
     HeaderKind getKind() const { return kind; }
-    std::vector<unsigned char> getValue() const { return value; }
+    const std::vector<unsigned char>& getValue() const { return value; }
 };
 
 /**
@@ -269,25 +302,25 @@ public:
 class Message : Model {
 private:
     // core message state
-    uint128_t id;
-    std::unordered_map<HeaderKey, HeaderValue> headers;
-    uint32_t length;
-    std::vector<unsigned char> payload;
+    const uint128_t id;
+    const std::unordered_map<HeaderKey, HeaderValue>& headers;
+    const uint32_t length;
+    const std::vector<unsigned char>& payload;
 
     // message state set on the server-side
-    std::optional<uint64_t> offset;
-    std::optional<MessageState> state;
-    std::optional<uint64_t> timestamp;
-    std::optional<uint32_t> checksum;
+    const std::optional<uint64_t> offset;
+    const std::optional<MessageState> state;
+    const std::optional<uint64_t> timestamp;
+    const std::optional<uint32_t> checksum;
 
 public:
     /**
      * @brief Fully-qualified message constructor; @ref isComplete will be true.
      */
     Message(uint128_t id,
-            std::unordered_map<HeaderKey, HeaderValue> headers,
+            const std::unordered_map<HeaderKey, HeaderValue>& headers,
             uint32_t length,
-            std::vector<unsigned char> payload,
+            const std::vector<unsigned char>& payload,
             std::optional<uint64_t> offset,
             std::optional<MessageState> state,
             std::optional<uint64_t> timestamp,
@@ -304,7 +337,10 @@ public:
     /**
      * @brief Simpler constructor for a message to be delivered to the server; @ref isComplete will be false.
      */
-    Message(uint128_t id, std::unordered_map<HeaderKey, HeaderValue> headers, uint32_t length, std::vector<unsigned char> payload)
+    Message(uint128_t id,
+            const std::unordered_map<HeaderKey, HeaderValue>& headers,
+            uint32_t length,
+            const std::vector<unsigned char>& payload)
         : Message(id,
                   headers,
                   length,
@@ -315,9 +351,9 @@ public:
                   std::optional<uint32_t>()) {}
 
     uint128_t getId() const { return id; }
-    std::unordered_map<HeaderKey, HeaderValue> getHeaders() const { return headers; }
+    const std::unordered_map<HeaderKey, HeaderValue>& getHeaders() const { return headers; }
     uint32_t getLength() const { return length; }
-    std::vector<unsigned char> getPayload() const { return payload; }
+    const std::vector<unsigned char>& getPayload() const { return payload; }
     std::optional<uint64_t> getOffset() const { return offset; }
     std::optional<MessageState> getState() const { return state; }
     std::optional<uint64_t> getTimestamp() const { return timestamp; }
@@ -334,19 +370,19 @@ public:
  */
 class PolledMessages : Model {
 private:
-    uint32_t partition_id;
-    uint64_t current_offset;
-    std::vector<Message> messages;
+    const uint32_t partition_id;
+    const uint64_t current_offset;
+    const std::vector<Message>& messages;
 
 public:
-    PolledMessages(uint32_t partition_id, uint64_t current_offset, std::vector<Message> messages)
+    PolledMessages(uint32_t partition_id, uint64_t current_offset, const std::vector<Message>& messages)
         : partition_id(partition_id)
         , current_offset(current_offset)
         , messages(messages) {}
 
     uint32_t getPartitionId() const { return partition_id; }
     uint64_t getCurrentOffset() const { return current_offset; }
-    std::vector<Message> getMessages() const { return messages; }
+    const std::vector<Message>& getMessages() const { return messages; }
 };
 
 }  // namespace message
@@ -361,9 +397,9 @@ namespace consumeroffset {
  */
 class ConsumerOffsetInfo : Model {
 private:
-    uint32_t partitionId;
-    uint64_t currentOffset;
-    uint64_t storedOffset;
+    const uint32_t partitionId;
+    const uint64_t currentOffset;
+    const uint64_t storedOffset;
 
 public:
     ConsumerOffsetInfo(uint32_t partitionId, uint64_t currentOffset, uint64_t storedOffset)
@@ -383,60 +419,60 @@ namespace consumergroup {
 
 class ConsumerGroupMember : Model {
 private:
-    uint32_t id;
-    uint32_t partitionsCount;
-    std::vector<uint32_t> partitions;
+    const uint32_t id;
+    const uint32_t partitionsCount;
+    const std::vector<uint32_t>& partitions;
 
 public:
-    ConsumerGroupMember(uint32_t id, uint32_t partitionsCount, std::vector<uint32_t> partitions)
+    ConsumerGroupMember(uint32_t id, uint32_t partitionsCount, const std::vector<uint32_t>& partitions)
         : id(id)
         , partitionsCount(partitionsCount)
         , partitions(partitions) {}
     uint32_t getId() { return id; }
     uint32_t getPartitionsCount() { return partitionsCount; }
-    std::vector<uint32_t> getPartitions() { return partitions; }
+    const std::vector<uint32_t>& getPartitions() { return partitions; }
 };
 
 class ConsumerGroupDetails : Model {
 private:
     uint32_t id;
-    std::string name;
+    const std::string& name;
     uint32_t paritionsCount;
     uint32_t membersCount;
-    std::vector<ConsumerGroupMember> members;
+    const std::vector<ConsumerGroupMember>& members;
 
 public:
     ConsumerGroupDetails(uint32_t id,
-                         std::string name,
+                         const std::string& name,
                          uint32_t paritionsCount,
                          uint32_t membersCount,
-                         std::vector<ConsumerGroupMember> members)
+                         const std::vector<ConsumerGroupMember>& members)
         : id(id)
         , name(name)
         , paritionsCount(paritionsCount)
         , membersCount(membersCount)
         , members(members) {}
-    uint32_t getId() { return id; }
-    std::string getName() { return name; }
-    uint32_t getParitionsCount() { return paritionsCount; }
-    uint32_t getMembersCount() { return membersCount; }
-    std::vector<ConsumerGroupMember> getMembers() { return members; }
+    uint32_t getId() const { return id; }
+    const std::string& getName() const { return name; }
+    uint32_t getParitionsCount() const { return paritionsCount; }
+    uint32_t getMembersCount() const { return membersCount; }
+    const std::vector<ConsumerGroupMember>& getMembers() const { return members; }
 };
 };  // namespace consumergroup
 
 /**
  * @brief Models related to global system state.
  */
-namespace system {
+namespace sys {
 
 /**
  * @brief Summary of the consumer groups that a client has joined.
  */
 class ConsumerGroupInfo : Model {
 private:
-    uint32_t streamId;
-    uint32_t topicId;
-    uint32_t consumerGroupId;
+    const uint32_t streamId;
+    const uint32_t topicId;
+    const uint32_t consumerGroupId;
 
 public:
     ConsumerGroupInfo(uint32_t streamId, uint32_t topicId, uint32_t consumerGroupId)
@@ -453,32 +489,32 @@ public:
  */
 class ClientInfoDetails : Model {
 private:
-    uint32_t clientId;
-    std::optional<uint32_t> userId;
-    std::string address;
-    std::string transport;
-    uint32_t consumerGroupsCount;
-    std::vector<ConsumerGroupInfo> consumerGroups;
+    const uint32_t clientId;
+    const std::optional<uint32_t> userId;
+    const std::string& address;
+    const std::string& transport;
+    const uint32_t consumerGroupsCount;
+    const std::vector<ConsumerGroupInfo>& consumerGroups;
 
 public:
     ClientInfoDetails(uint32_t clientId,
                       std::optional<uint32_t> userId,
-                      std::string address,
-                      std::string transport,
+                      const std::string& address,
+                      const std::string& transport,
                       uint32_t consumerGroupsCount,
-                      std::vector<ConsumerGroupInfo> consumerGroups)
+                      const std::vector<ConsumerGroupInfo>& consumerGroups)
         : clientId(clientId)
         , userId(userId)
         , address(address)
         , transport(transport)
         , consumerGroupsCount(consumerGroupsCount)
         , consumerGroups(consumerGroups) {}
-    uint32_t getClientId() { return clientId; }
-    std::optional<uint32_t> getUserId() { return userId; }
-    std::string getAddress() { return address; }
-    std::string getTransport() { return transport; }
-    uint32_t getConsumerGroupsCount() { return consumerGroupsCount; }
-    std::vector<ConsumerGroupInfo> getConsumerGroups() { return consumerGroups; }
+    uint32_t getClientId() const { return clientId; }
+    std::optional<uint32_t> getUserId() const { return userId; }
+    const std::string& getAddress() const { return address; }
+    const std::string& getTransport() const { return transport; }
+    uint32_t getConsumerGroupsCount() const { return consumerGroupsCount; }
+    const std::vector<ConsumerGroupInfo>& getConsumerGroups() const { return consumerGroups; }
 };
 
 /**
@@ -492,31 +528,71 @@ public:
  */
 class Stats : Model {
 private:
-    pid_t process_id;
-    percent_t cpu_usage;
-    byte_cnt_t memory_usage;
-    byte_cnt_t total_memory;
-    byte_cnt_t available_memory;
-    time_val_t run_time;
-    time_val_t start_time;
-    byte_cnt_t read_bytes;
-    byte_cnt_t written_bytes;
-    byte_cnt_t messages_size_bytes;
-    obj_cnt_t streams_count;
-    obj_cnt_t topics_count;
-    obj_cnt_t partitions_count;
-    obj_cnt_t segments_count;
-    msg_cnt_t messages_count;
-    obj_cnt_t clients_count;
-    obj_cnt_t consumer_groups_count;
-    std::string hostname;
-    std::string os_name;
-    std::string os_version;
-    std::string kernel_version;
+    const pid_t process_id;
+    const percent_t cpu_usage;
+    const byte_cnt_t memory_usage;
+    const byte_cnt_t total_memory;
+    const byte_cnt_t available_memory;
+    const time_val_t run_time;
+    const time_val_t start_time;
+    const byte_cnt_t read_bytes;
+    const byte_cnt_t written_bytes;
+    const byte_cnt_t messages_size_bytes;
+    const obj_cnt_t streams_count;
+    const obj_cnt_t topics_count;
+    const obj_cnt_t partitions_count;
+    const obj_cnt_t segments_count;
+    const msg_cnt_t messages_count;
+    const obj_cnt_t clients_count;
+    const obj_cnt_t consumer_groups_count;
+    const std::string& hostname;
+    const std::string& os_name;
+    const std::string& os_version;
+    const std::string& kernel_version;
 
 public:
-    // TODO: when we add the full constructor ensure convertToUTF8() called on all strings
-    Stats() = default;
+    Stats(pid_t process_id,
+          percent_t cpu_usage,
+          byte_cnt_t memory_usage,
+          byte_cnt_t total_memory,
+          byte_cnt_t available_memory,
+          time_val_t run_time,
+          time_val_t start_time,
+          byte_cnt_t read_bytes,
+          byte_cnt_t written_bytes,
+          byte_cnt_t messages_size_bytes,
+          obj_cnt_t streams_count,
+          obj_cnt_t topics_count,
+          obj_cnt_t partitions_count,
+          obj_cnt_t segments_count,
+          msg_cnt_t messages_count,
+          obj_cnt_t clients_count,
+          obj_cnt_t consumer_groups_count,
+          const std::string& hostname,
+          const std::string& os_name,
+          const std::string& os_version,
+          const std::string& kernel_version)
+        : process_id(process_id)
+        , cpu_usage(cpu_usage)
+        , memory_usage(memory_usage)
+        , total_memory(total_memory)
+        , available_memory(available_memory)
+        , run_time(run_time)
+        , start_time(start_time)
+        , read_bytes(read_bytes)
+        , written_bytes(written_bytes)
+        , messages_size_bytes(messages_size_bytes)
+        , streams_count(streams_count)
+        , topics_count(topics_count)
+        , partitions_count(partitions_count)
+        , segments_count(segments_count)
+        , messages_count(messages_count)
+        , clients_count(clients_count)
+        , consumer_groups_count(consumer_groups_count)
+        , hostname(hostname)
+        , os_name(os_name)
+        , os_version(os_version)
+        , kernel_version(kernel_version) {}
 
     /// @brief Get the server process ID (PID)
     pid_t getProcessId() const { return process_id; }
@@ -570,18 +646,18 @@ public:
     obj_cnt_t getConsumerGroupsCount() const { return consumer_groups_count; }
 
     /// @brief Get the name of the host that the server process is running on.
-    std::string getHostname() const { return hostname; }
+    const std::string& getHostname() const { return hostname; }
 
     /// @brief Get the name of the operating system that the server process is running on.
-    std::string getOsName() const { return os_name; }
+    const std::string& getOsName() const { return os_name; }
 
     /// @brief Get the version of the operating system that the server process is running on.
-    std::string getOsVersion() const { return os_version; }
+    const std::string& getOsVersion() const { return os_version; }
 
     /// @brief Get the version of the OS kernel that the server process is running on.
-    std::string getKernelVersion() const { return kernel_version; }
+    const std::string& getKernelVersion() const { return kernel_version; }
 };
 
-}  // namespace system
+}  // namespace sys
 }  // namespace model
 }  // namespace icp

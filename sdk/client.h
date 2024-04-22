@@ -86,7 +86,7 @@ public:
     /**
      * @brief Get the Iggy server's performance statistics.
      */
-    icp::model::system::Stats getStats();
+    icp::model::sys::Stats getStats();
 };
 };  // namespace client
 };  // namespace icp

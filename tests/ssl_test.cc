@@ -102,6 +102,8 @@ TEST_CASE_METHOD(icp::testutil::SelfSignedCertificate, "SSL context init", UT_TA
 
             // test copy and move constructors
             auto sslCtxNew = sslCtx;
+
+            // cppcheck-suppress knownConditionTrueFalse
             REQUIRE(sslCtx.getNativeHandle() != sslCtxNew.getNativeHandle());
 
             auto sslCtxMoved = std::move(sslCtxNew);

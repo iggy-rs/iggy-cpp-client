@@ -15,7 +15,7 @@ icp::crypto::LocalCertificateStore::LocalCertificateStore(const std::optional<st
     this->certDir = certDirAbs;
 }
 
-const std::vector<uint8_t> icp::crypto::LocalCertificateStore::getCertificate(const std::string certPath) const {
+const std::vector<uint8_t> icp::crypto::LocalCertificateStore::getCertificate(const std::string& certPath) const {
     std::filesystem::path certFile = (this->certDir.value() / certPath).make_preferred();
     spdlog::debug("Loading certificate from {}", certFile.string());
     if (!std::filesystem::exists(certFile)) {
@@ -44,7 +44,7 @@ icp::crypto::LocalKeyStore::LocalKeyStore(const std::optional<std::filesystem::p
     this->privateKeyDir = keyDirAbs;
 }
 
-const std::vector<uint8_t> icp::crypto::LocalKeyStore::getPrivateKey(const std::string keyPath) const {
+const std::vector<uint8_t> icp::crypto::LocalKeyStore::getPrivateKey(const std::string& keyPath) const {
     std::filesystem::path keyFile = (this->privateKeyDir.value() / keyPath).make_preferred();
     spdlog::debug("Loading private key from {}", keyFile.string());
     if (!std::filesystem::exists(keyFile)) {

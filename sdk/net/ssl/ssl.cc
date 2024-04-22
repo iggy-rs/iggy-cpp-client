@@ -123,7 +123,7 @@ icp::ssl::SSLContext<WOLFSSL_CTX*>::SSLContext(const SSLOptions<WOLFSSL_CTX*>& o
     auto supportedCiphers = options.getCiphers();
     if (!supportedCiphers.empty()) {
         joinedCiphers = std::accumulate(std::next(supportedCiphers.begin()), supportedCiphers.end(), supportedCiphers[0],
-                                        [delimiter](std::string a, std::string b) { return a + delimiter + b; });
+                                        [delimiter](const std::string& a, const std::string& b) { return a + delimiter + b; });
     }
     int ret = wolfSSL_CTX_set_cipher_list(this->ctx, joinedCiphers.c_str());
     if (ret != SSL_SUCCESS) {

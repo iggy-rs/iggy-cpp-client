@@ -18,7 +18,7 @@ void icp::client::Client::ping() {
     ping_process.wait(reproc::milliseconds(5000));
 }
 
-icp::model::system::Stats icp::client::Client::getStats() {
+icp::model::sys::Stats icp::client::Client::getStats() {
     // temporary! need to send GetStats command to server then use WireFormat to read the response
-    return icp::model::system::Stats();
+    return icp::model::sys::Stats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", "", "", "");
 }

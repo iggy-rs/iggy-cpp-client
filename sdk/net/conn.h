@@ -17,6 +17,9 @@ private:
     lws_context* context;
 
     friend class icp::net::Connection;
+
+public:
+    Context() = default;
 };
 
 class Logger {
