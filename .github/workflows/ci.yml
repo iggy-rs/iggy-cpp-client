@@ -94,3 +94,17 @@ jobs:
               with:
                   path: ./sdk
                   CCN: 15
+
+            - name: cppcheck
+              uses: deep5050/cppcheck-action@main
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN}}
+                  enable: style,warning,performance
+                  inline_suppression: true
+                  force_language: c++
+                  std: c++17
+
+            - name: flawfinder
+              uses: david-a-wheeler/flawfinder@2.0.19
+              with:
+                  arguments: --quiet -S -D --error-level=1 sdk tests
