@@ -63,7 +63,7 @@ add_library(
   iggy
   ${IGGY_SOURCES}
 )
-target_compile_features(iggy PRIVATE cxx_std_17)
+target_compile_features(iggy PRIVATE cxx_std_20)
 target_include_directories(iggy PRIVATE
   ${SODIUM_INCLUDE_DIR}
   ${ADA_INCLUDE_DIR}
