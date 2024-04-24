@@ -102,7 +102,7 @@ jobs:
                   enable: style,warning,performance
                   inline_suppression: true
                   force_language: c++
-                  std: c++17
+                  std: c++20
 
             - name: flawfinder
               uses: david-a-wheeler/flawfinder@2.0.19

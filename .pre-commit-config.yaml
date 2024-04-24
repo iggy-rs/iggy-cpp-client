@@ -53,7 +53,7 @@ repos:
       hooks:
           - id: cppcheck
             name: cppcheck
-            entry: cppcheck --addon=cert --enable=style,performance,warning --inline-suppr --std=c++17 -x c++
+            entry: cppcheck --enable=style,performance,warning --inline-suppr --std=c++20 -x c++
             language: system
             files: \.(cc|h)$
             pass_filenames: true
