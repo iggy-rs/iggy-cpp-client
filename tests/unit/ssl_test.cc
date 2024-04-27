@@ -1,4 +1,4 @@
-#include "../sdk/net/ssl/ssl.h"
+#include "../../sdk/net/ssl/ssl.h"
 #include "unit_testutils.h"
 
 TEST_CASE("SSL configuration", UT_TAG) {

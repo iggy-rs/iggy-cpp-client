@@ -1,4 +1,4 @@
-#include "../sdk/client.h"
+#include "../../sdk/client.h"
 #include "e2e_testutils.h"
 
 TEST_CASE("ping Iggy server", E2E_TAG) {

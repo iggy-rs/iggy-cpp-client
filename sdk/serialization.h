@@ -7,8 +7,14 @@
 namespace icp {
 namespace serialization {
 
+/***
+ * @brief Helper function to ensure C++ strings are UTF-8 clean.
+ */
 std::string convertToUTF8(const std::string& source, bool strict = true);
 
+/***
+ * @brief Base class for
+ */
 class WireFormat {
 public:
     virtual ~WireFormat() = 0;

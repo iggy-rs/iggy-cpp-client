@@ -4,26 +4,13 @@ if(BUILD_TESTS)
   find_package(inja CONFIG REQUIRED)
   find_package(reproc++ CONFIG REQUIRED)
 
+  file(GLOB_RECURSE UT_SOURCES "unit/*.cc")
   add_executable(
     iggy_cpp_test
 
-    client_test.cc
-    crypto_test.cc
-    iggy_protocol_provider_test.cc
-    model_test.cc
-    serialization_test.cc
-    ssl_test.cc
-    unit_testutils.cc
+    ${UT_SOURCES}
   )
-  target_compile_features(iggy_cpp_test PRIVATE cxx_std_17)
-  target_include_directories(iggy_cpp_test PRIVATE
-    ${SODIUM_INCLUDE_DIR}
-    ${ADA_INCLUDE_DIR}
-    ${WOLFSSL_INCLUDE_DIR}
-    ${NGHTTP3_INCLUDE_DIR}
-    ${NGTCP2_INCLUDE_DIR}
-    ${CURL_INCLUDE_DIR}
-  )
+  target_include_directories(iggy_cpp_test PRIVATE ${IGGY_INCLUDE_DIRS})
   target_link_libraries(
     iggy_cpp_test
 
@@ -34,12 +21,13 @@ if(BUILD_TESTS)
     reproc++
   )
 
+  file(GLOB_RECURSE E2E_SOURCES "e2e/*.cc")
   add_executable(
     iggy_e2e_test
 
-    e2e_testutils.cc
-    ping_cmd_test.cc
+    ${E2E_SOURCES}
   )
+  target_include_directories(iggy_e2e_test PRIVATE ${IGGY_INCLUDE_DIRS})
   target_link_libraries(
     iggy_e2e_test
 

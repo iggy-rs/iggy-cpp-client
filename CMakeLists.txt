@@ -10,6 +10,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
 endif()
 
+# global settings
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # set up library dependencies
 find_package(ada CONFIG REQUIRED)
 find_package(libuv CONFIG REQUIRED)
@@ -19,6 +24,7 @@ find_package(unofficial-sodium CONFIG REQUIRED)
 
 # these do not correctly support CMake
 find_path(ADA_INCLUDE_DIR ada.h REQUIRED)
+find_path(JSON_INCLUDE_DIR nlohmann/json.hpp REQUIRED)
 find_path(SODIUM_INCLUDE_DIR sodium.h REQUIRED)
 find_path(UTF8H_INCLUDE_DIRS "utf8h/utf8.h" REQUIRED)
 
@@ -57,20 +63,21 @@ set(WOLFSSL_LIB_DIR ${CMAKE_BINARY_DIR}/wolfssl/lib)
 set(LWS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/lws/include)
 set(LWS_LIB_DIR ${CMAKE_BINARY_DIR}/lws/lib)
 
+set(IGGY_INCLUDE_DIRS
+  ${ADA_INCLUDE_DIR}
+  ${JSON_INCLUDE_DIR}
+  ${LWS_INCLUDE_DIR}
+  ${SODIUM_INCLUDE_DIR}
+  ${UTF8H_INCLUDE_DIRS}
+  ${WOLFSSL_INCLUDE_DIR}
+)
 
 file(GLOB_RECURSE IGGY_SOURCES "sdk/*.cc")
 add_library(
   iggy
   ${IGGY_SOURCES}
 )
-target_compile_features(iggy PRIVATE cxx_std_20)
-target_include_directories(iggy PRIVATE
-  ${SODIUM_INCLUDE_DIR}
-  ${ADA_INCLUDE_DIR}
-  ${WOLFSSL_INCLUDE_DIR}
-  ${UTF8H_INCLUDE_DIRS}
-  ${LWS_INCLUDE_DIR}
-)
+target_include_directories(iggy PRIVATE ${IGGY_INCLUDE_DIRS})
 add_dependencies(iggy lws)
 target_link_libraries(
   iggy PRIVATE

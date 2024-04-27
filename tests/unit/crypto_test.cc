@@ -1,4 +1,4 @@
-#include "../sdk/net/ssl/crypto.h"
+#include "../../sdk/net/ssl/crypto.h"
 #include "unit_testutils.h"
 
 TEST_CASE_METHOD(icp::testutil::SelfSignedCertificate, "certificate loading", UT_TAG) {

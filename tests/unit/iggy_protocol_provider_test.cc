@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "../sdk/net/iggy.h"
+#include "../../sdk/net/iggy.h"
 #include "unit_testutils.h"
 
 TEST_CASE("Iggy protocols", UT_TAG) {
