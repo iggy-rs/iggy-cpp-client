@@ -1,10 +1,10 @@
 #include "address.h"
 
-const iggy::net::protocol::ProtocolDefinition& iggy::net::address::LogicalAddress::getProtocolDefinition() const {
+const icp::net::protocol::ProtocolDefinition& icp::net::address::LogicalAddress::getProtocolDefinition() const {
     return this->protocolProvider->getProtocolDefinition(this->getProtocol());
 }
 
-iggy::net::address::LogicalAddress::LogicalAddress(const std::string& url, const iggy::net::protocol::ProtocolProvider* protocolProvider) {
+icp::net::address::LogicalAddress::LogicalAddress(const std::string& url, const icp::net::protocol::ProtocolProvider* protocolProvider) {
     auto parse_result = ada::parse<ada::url>(url);
     if (!parse_result) {
         throw std::invalid_argument("Invalid URL: " + url);
@@ -19,7 +19,7 @@ iggy::net::address::LogicalAddress::LogicalAddress(const std::string& url, const
     this->protocolProvider = protocolProvider;
 }
 
-const uint16_t iggy::net::address::LogicalAddress::getPort() const {
+const uint16_t icp::net::address::LogicalAddress::getPort() const {
     if (url.get_port().empty()) {
         return this->getProtocolDefinition().getDefaultPort();
     } else {

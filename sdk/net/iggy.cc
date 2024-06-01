@@ -1,17 +1,17 @@
 #include "iggy.h"
 
-iggy::net::IggyProtocolProvider::IggyProtocolProvider() {
+icp::net::IggyProtocolProvider::IggyProtocolProvider() {
     for (const auto& protocol : this->supportedProtocols) {
         this->supportedProtocolLookup[protocol.getName()] = protocol;
     }
 }
 
-const std::vector<iggy::net::protocol::ProtocolDefinition>& iggy::net::IggyProtocolProvider::getSupportedProtocols() const {
+const std::vector<icp::net::protocol::ProtocolDefinition>& icp::net::IggyProtocolProvider::getSupportedProtocols() const {
     return this->supportedProtocols;
 }
 
-const iggy::net::protocol::ProtocolDefinition& iggy::net::IggyProtocolProvider::getProtocolDefinition(const std::string& protocol) const {
-    auto normalizedName = iggy::net::protocol::normalizeProtocolName(protocol);
+const icp::net::protocol::ProtocolDefinition& icp::net::IggyProtocolProvider::getProtocolDefinition(const std::string& protocol) const {
+    auto normalizedName = icp::net::protocol::normalizeProtocolName(protocol);
     auto it = this->supportedProtocolLookup.find(normalizedName);
     if (it != this->supportedProtocolLookup.end()) {
         return it->second;
@@ -20,6 +20,6 @@ const iggy::net::protocol::ProtocolDefinition& iggy::net::IggyProtocolProvider::
     }
 }
 
-const bool iggy::net::IggyProtocolProvider::isSupported(const std::string& protocol) const {
-    return this->supportedProtocolLookup.count(iggy::net::protocol::normalizeProtocolName(protocol)) > 0;
+const bool icp::net::IggyProtocolProvider::isSupported(const std::string& protocol) const {
+    return this->supportedProtocolLookup.count(icp::net::protocol::normalizeProtocolName(protocol)) > 0;
 }

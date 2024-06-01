@@ -51,6 +51,26 @@ repos:
           - id: shfmt
     - repo: local
       hooks:
+          - id: cppcheck
+            name: cppcheck
+            entry: cppcheck --enable=style,performance,warning --inline-suppr --std=c++20 -x c++
+            language: system
+            files: \.(cc|h)$
+            pass_filenames: true
+            always_run: false
+          - id: flawfinder
+            name: flawfinder
+            entry: flawfinder --quiet -S -D --error-level=1
+            language: system
+            files: \.(cc|h)$
+            pass_filenames: true
+            always_run: false
+          - id: lizard
+            name: Check code cyclomatic complexity
+            entry: lizard -C 15 -i 0 -w -l c,cc,cpp,h,hpp
+            language: system
+            pass_filenames: true
+            always_run: false
           - id: build
             name: Build
             entry: cmake --build build
