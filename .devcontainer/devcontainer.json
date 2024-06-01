@@ -4,7 +4,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "GitHub.vscode-pull-request-github",
                 "demiaochen.clang-format-indent-4",
                 "donjayamanne.githistory",
                 "eamodio.gitlens",
@@ -13,6 +12,7 @@
                 "github.copilot",
                 "github.remotehub",
                 "github.vscode-github-actions",
+                "github.vscode-pull-request-github",
                 "ionutvmi.path-autocomplete",
                 "jbenden.c-cpp-flylint",
                 "mads-hartmann.bash-ide-vscode",
