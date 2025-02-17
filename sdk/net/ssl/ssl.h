@@ -6,7 +6,7 @@
 #include "crypto.h"
 #include "ssl_engine.h"
 
-namespace iggy {
+namespace icp {
 namespace ssl {
 
 /**
@@ -25,7 +25,7 @@ enum ProtocolVersion { TLSV1_2 = 0, TLSV1_3 = 1 };
 /**
  * @brief Helper function to get protocol version name given the enum.
  */
-std::string getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion);
+std::string getProtocolVersionName(icp::ssl::ProtocolVersion protocolVersion);
 
 /**
  * @brief All options related to SSL/TLS are in -- what ciphers to use, client vs. server, etc..
@@ -34,7 +34,7 @@ std::string getProtocolVersionName(iggy::ssl::ProtocolVersion protocolVersion);
  * talk to an SSL/TLS server that has not been hardened you may need to modify this.
  */
 template <typename HandleType>
-class SSLOptions : public iggy::crypto::Configurable<HandleType> {
+class SSLOptions : public icp::crypto::Configurable<HandleType> {
 private:
     PeerType peerType;
     std::optional<std::string> peerCertPath = std::nullopt;
@@ -107,7 +107,7 @@ public:
     /**
      * @brief Configures the SSL/TLS context handle with these options.
      */
-    void configure(HandleType handle, const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv) override;
+    void configure(HandleType handle, const icp::crypto::PKIEnvironment<HandleType>& pkiEnv) override;
 };
 
 /**
@@ -123,7 +123,7 @@ private:
     static std::once_flag sslInitDone;
 
     const SSLOptions<HandleType>& options;
-    const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv;
+    const icp::crypto::PKIEnvironment<HandleType>& pkiEnv;
 
     WOLFSSL_CTX* ctx;
     WOLFSSL_CERT_MANAGER* cm;
@@ -132,7 +132,7 @@ private:
 
 public:
     explicit SSLContext(const SSLOptions<HandleType>& options = SSLOptions<HandleType>(),
-                        const iggy::crypto::PKIEnvironment<HandleType>& pkiEnv = iggy::crypto::PKIEnvironment<HandleType>());
+                        const icp::crypto::PKIEnvironment<HandleType>& pkiEnv = icp::crypto::PKIEnvironment<HandleType>());
     SSLContext(const SSLContext& other);
     SSLContext(SSLContext&& other);
     ~SSLContext();
@@ -147,4 +147,4 @@ public:
     HandleType getNativeHandle() const { return this->ctx; }
 };
 };  // namespace ssl
-};  // namespace iggy
+};  // namespace icp

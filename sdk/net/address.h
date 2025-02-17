@@ -5,7 +5,7 @@
 #include "protocol.h"
 #include "transport.h"
 
-namespace iggy {
+namespace icp {
 namespace net {
 namespace address {
 
@@ -15,9 +15,9 @@ namespace address {
 class LogicalAddress {
 private:
     ada::url url;
-    const iggy::net::protocol::ProtocolProvider* protocolProvider;
+    const icp::net::protocol::ProtocolProvider* protocolProvider;
 
-    const iggy::net::protocol::ProtocolDefinition& getProtocolDefinition() const;
+    const icp::net::protocol::ProtocolDefinition& getProtocolDefinition() const;
 
 public:
     /**
@@ -26,7 +26,7 @@ public:
      * @param protocolProvider Context object providing supported protocols and default ports.
      * @throws std::invalid_argument if the URL is invalid or the protocol is unknown.
      */
-    LogicalAddress(const std::string& url, const iggy::net::protocol::ProtocolProvider* protocolProvider);
+    LogicalAddress(const std::string& url, const icp::net::protocol::ProtocolProvider* protocolProvider);
 
     /**
      * @brief Gets the protocol; you have a guarantee that it will be one of the supported protocols from ProtocolProvider.
@@ -48,4 +48,4 @@ public:
 };
 };  // namespace address
 };  // namespace net
-};  // namespace iggy
+};  // namespace icp

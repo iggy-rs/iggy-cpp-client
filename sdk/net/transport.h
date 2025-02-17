@@ -1,6 +1,6 @@
 #pragma once
 
-namespace iggy {
+namespace icp {
 namespace net {
 namespace transport {
 
@@ -28,4 +28,4 @@ enum Transport {
 
 };  // namespace transport
 };  // namespace net
-};  // namespace iggy
+};  // namespace icp

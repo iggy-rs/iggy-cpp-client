@@ -38,4 +38,4 @@ build/
 vcpkg_installed/
 
 # E2E test
-.e2e_deploy/
+.iggy/
