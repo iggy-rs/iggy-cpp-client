@@ -8,7 +8,7 @@
 #include <vector>
 #include "ada.h"
 
-namespace iggy {
+namespace icp {
 namespace crypto {
 
 /**
@@ -32,7 +32,7 @@ public:
      * filesystem-specific path or some other convention.
      * @return A vector of bytes representing the certificate in PEM or ASN.1.
      */
-    virtual const std::vector<uint8_t> getCertificate(const std::string certPath) const = 0;
+    virtual const std::vector<uint8_t> getCertificate(const std::string& certPath) const = 0;
 };
 
 /**
@@ -58,7 +58,7 @@ public:
      * Retrieves the certificate from the filesystem, translating the abstract
      * path to a filesystem-appropriate absolute path.
      */
-    const std::vector<uint8_t> getCertificate(const std::string certPath) const override;
+    const std::vector<uint8_t> getCertificate(const std::string& certPath) const override;
 };
 
 /**
@@ -77,7 +77,7 @@ public:
      * filesystem-specific path or some other convention.
      * @return A vector of bytes representing the key in PEM or ASN.1.
      */
-    virtual const std::vector<uint8_t> getPrivateKey(const std::string keyPath) const = 0;
+    virtual const std::vector<uint8_t> getPrivateKey(const std::string& keyPath) const = 0;
 };
 
 /**
@@ -104,7 +104,7 @@ public:
      * Retrieves the private key materials from the filesystem, translating the abstract
      * path to a filesystem-appropriate absolute path.
      */
-    const std::vector<uint8_t> getPrivateKey(const std::string keyPath) const override;
+    const std::vector<uint8_t> getPrivateKey(const std::string& keyPath) const override;
 };
 
 // forward declaration
@@ -203,9 +203,9 @@ public:
 template <typename HandleType>
 class CertificateAuthority : public Configurable<HandleType> {
 private:
-    std::optional<std::string> overrideCaCertificatePath;
+    const std::optional<std::string> overrideCaCertificatePath;
     std::vector<std::string> trustedPeerCertificatePaths = std::vector<std::string>();
-    RevocationMethod<HandleType>* revocationMethod;
+    const RevocationMethod<HandleType>* revocationMethod;
 
 public:
     explicit CertificateAuthority(std::optional<std::string> overrideCaCertificatePath = std::nullopt,
@@ -234,7 +234,7 @@ public:
     /**
      * @brief Adds a trusted peer certificate path; optional -- if none, only CA-verified certificates will be trusted.
      */
-    void addTrustedPeerCertificate(const std::string certPath) { this->trustedPeerCertificatePaths.push_back(certPath); }
+    void addTrustedPeerCertificate(const std::string& certPath) { this->trustedPeerCertificatePaths.push_back(certPath); }
 
     /**
      * @brief Gets the revocation method to use for verifying certificates: CRL or OCSP.
@@ -309,4 +309,4 @@ public:
 };
 
 };  // namespace crypto
-};  // namespace iggy
+};  // namespace icp

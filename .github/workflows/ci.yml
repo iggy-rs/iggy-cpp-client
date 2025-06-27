@@ -36,10 +36,14 @@ jobs:
             - name: Install extra packages
               run: |
                   sudo apt-get update && \
-                  sudo apt-get install -y autoconf \
-                  autoconf-archive \
-                  build-essential \
-                  gcovr lcov xdg-utils
+                  sudo apt-get install -y \
+                    autoconf \
+                    autoconf-archive \
+                    build-essential \
+                    doxygen \
+                    gcovr \
+                    lcov \
+                    xdg-utils
             - name: Setup vcpkg
               uses: lukka/run-vcpkg@v11
               with:
@@ -84,3 +88,23 @@ jobs:
               env:
                   DOCKERFILE_HADOLINT: false
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Lizard Runner
+              uses: Uno-Takashi/Lizard-Runner@v3
+              with:
+                  path: ./sdk
+                  CCN: 15
+
+            - name: cppcheck
+              uses: deep5050/cppcheck-action@v3.0
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN}}
+                  enable: style,warning,performance
+                  inline_suppression: true
+                  force_language: c++
+                  std: c++20
+
+            - name: flawfinder
+              uses: david-a-wheeler/flawfinder@2.0.19
+              with:
+                  arguments: --quiet -S -D --error-level=1 sdk tests

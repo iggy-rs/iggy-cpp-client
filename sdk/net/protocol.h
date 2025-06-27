@@ -4,7 +4,7 @@
 #include <vector>
 #include "transport.h"
 
-namespace iggy {
+namespace icp {
 namespace net {
 namespace address {
 class LogicalAddress;
@@ -29,17 +29,17 @@ class ProtocolDefinition {
 private:
     std::string name;
     uint16_t defaultPort;
-    iggy::net::transport::Transport transport;
+    icp::net::transport::Transport transport;
     bool tlsSupported;
     MessageEncoding messageEncoding;
 
 public:
     ProtocolDefinition(const std::string& name,
                        uint16_t defaultPort,
-                       iggy::net::transport::Transport transport,
+                       icp::net::transport::Transport transport,
                        bool tlsSupported,
                        MessageEncoding messageEncoding)
-        : name(iggy::net::protocol::normalizeProtocolName(name))
+        : name(icp::net::protocol::normalizeProtocolName(name))
         , defaultPort(defaultPort)
         , transport(transport)
         , tlsSupported(tlsSupported)
@@ -59,9 +59,9 @@ public:
     uint16_t getDefaultPort() const { return defaultPort; }
 
     /**
-     * @brief Gets the transport for the protocol, e.g. iggy::net::transport::Transport::TCP.
+     * @brief Gets the transport for the protocol, e.g. icp::net::transport::Transport::TCP.
      */
-    iggy::net::transport::Transport getTransport() const { return transport; }
+    icp::net::transport::Transport getTransport() const { return transport; }
 
     /**
      * @brief Tests whether the protocol supports TLS; insecure and TLS protocols should be separate.
@@ -86,7 +86,7 @@ public:
      * @brief Factory method to create a logical address from a URL.
      * @param url The URL to parse in the context of this provider and its defaults.
      */
-    iggy::net::address::LogicalAddress createAddress(const std::string& url) const;
+    icp::net::address::LogicalAddress createAddress(const std::string& url) const;
 
     /**
      * @brief Enumerates all the supported protocols in the provider.
@@ -107,4 +107,4 @@ public:
 
 };  // namespace protocol
 };  // namespace net
-};  // namespace iggy
+};  // namespace icp

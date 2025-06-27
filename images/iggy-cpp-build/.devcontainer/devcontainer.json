@@ -1,8 +1,12 @@
 {
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04",
     "features": {
+        "ghcr.io/akhildevelops/devcontainer-features/pip:0": {
+            "packages": [
+                "flawfinder",
+                "lizard"
+            ]
+        },
         "ghcr.io/devcontainers/features/common-utils:2": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},

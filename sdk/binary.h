@@ -2,7 +2,7 @@
 
 #include "serialization.h"
 
-namespace iggy {
+namespace icp {
 namespace serialization {
 /**
  * @namespace binary
@@ -51,11 +51,11 @@ enum CommandCode {
  * @class BinaryWireFormat
  * @brief Simple binary serialization and deserialization for Iggy's protocol.
  */
-class BinaryWireFormat : iggy::serialization::WireFormat {
+class BinaryWireFormat : icp::serialization::WireFormat {
 public:
     BinaryWireFormat() = default;
 }
 
 }  // namespace binary
 }  // namespace serialization
-}  // namespace iggy
+}  // namespace icp

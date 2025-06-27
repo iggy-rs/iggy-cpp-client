@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_MAIN
-#include "../sdk/net/iggy.h"
+#include "../../sdk/net/iggy.h"
 #include "unit_testutils.h"
 
 TEST_CASE("Iggy protocols", UT_TAG) {
-    iggy::net::IggyProtocolProvider provider;
+    icp::net::IggyProtocolProvider provider;
 
     SECTION("enumerate supported protocols") {
         REQUIRE(provider.getSupportedProtocols().size() == 5);
